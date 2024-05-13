@@ -1,8 +1,7 @@
 package com.frontleaves.fantasticeditor.constant
 
 /**
- * 基础数据常量
- *
+ * # 基础数据常量
  * 用于存放一些基础数据常量，例如服务标题、副标题等
  *
  * @since v1.0.0
