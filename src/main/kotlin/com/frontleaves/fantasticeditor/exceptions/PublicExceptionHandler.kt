@@ -164,7 +164,7 @@ class PublicExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<BaseResponse<List<String>>> {
         log.warn("[EXCEPTION] 参数校验错误 | 错误 {} 个 ", e.bindingResult.errorCount)
-        e.fieldErrors.stream().toList().forEach {
+        e.fieldErrors.forEach {
             log.debug("\t\t<{}>[{}]: {}", it.field, it.rejectedValue, it.defaultMessage)
         }
         return ResultUtil.error(
@@ -212,19 +212,6 @@ class PublicExceptionHandler {
         e: UserAuthenticationException,
     ): ResponseEntity<BaseResponse<UserAuthenticationException.UserInfo>> {
         log.error("[EXCEPTION] 用户认证异常 | {}", e.message, e)
-        return when (e.errorType) {
-            UserAuthenticationException.ErrorType.USER_NOT_LOGIN -> {
-                ResultUtil.error(ErrorCode.USER_NOT_LOGIN, "用户未登录", e.userInfo)
-            }
-            UserAuthenticationException.ErrorType.USER_NOT_EXIST -> {
-                ResultUtil.error(ErrorCode.USER_NOT_EXIST, "用户不存在", e.userInfo)
-            }
-            UserAuthenticationException.ErrorType.WRONG_PASSWORD -> {
-                ResultUtil.error(ErrorCode.WRONG_PASSWORD, "密码错误", e.userInfo)
-            }
-            UserAuthenticationException.ErrorType.USER_BANNED -> {
-                ResultUtil.error(ErrorCode.USER_BANNED, "用户被封禁或未启用", e.userInfo)
-            }
-        }
+        return ResultUtil.error(e.errorType.errorCode, e.errorType.message, e.userInfo)
     }
 }

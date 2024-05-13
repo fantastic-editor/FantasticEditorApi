@@ -1,5 +1,6 @@
 package com.frontleaves.fantasticeditor.exceptions
 
+import com.frontleaves.fantasticeditor.utility.ErrorCode
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.validation.BindingResult
 import org.springframework.validation.ObjectError
@@ -128,11 +129,11 @@ class UserAuthenticationException(
      * @property message 错误信息
      * @constructor 创建一个错误类型
      */
-    enum class ErrorType(val message: String) {
-        USER_NOT_LOGIN("用户未登录"),
-        USER_NOT_EXIST("用户不存在"),
-        WRONG_PASSWORD("密码错误"),
-        USER_BANNED("用户被封禁"),
+    enum class ErrorType(val message: String, val errorCode: ErrorCode) {
+        USER_NOT_LOGIN("用户未登录", ErrorCode.USER_NOT_LOGIN),
+        USER_NOT_EXIST("用户不存在", ErrorCode.USER_NOT_EXIST),
+        WRONG_PASSWORD("密码错误", ErrorCode.WRONG_PASSWORD),
+        USER_BANNED("用户被封禁", ErrorCode.USER_BANNED),
     }
 
     /**
