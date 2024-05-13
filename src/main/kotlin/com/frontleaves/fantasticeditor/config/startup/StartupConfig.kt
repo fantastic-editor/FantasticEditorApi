@@ -16,9 +16,10 @@ import org.springframework.jdbc.core.JdbcTemplate
  * @property environment 环境变量
  * @property jdbcTemplate JDBC 模板
  * @constructor 创建一个系统启动配置
- * @param environment 环境变量
- * @param jdbcTemplate JDBC 模板
  * @property prepare 准备算法
+ *
+ * @since v1.0.0
+ * @author xiao_lfeng
  */
 @Configuration
 class StartupConfig(

@@ -34,3 +34,4 @@ build/
 
 ### 自定义 ###
 application-dev.yml
+logs/

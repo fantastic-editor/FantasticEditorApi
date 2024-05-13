@@ -35,16 +35,13 @@ internal class PrepareAlgorithm(private val jdbcTemplate: JdbcTemplate) {
             )
         } catch (e: DataAccessException) {
             log.debug("[STARTUP] 创建数据表 {}", tableName)
-            // 读取 resources/sql 目录下的所有 SQL 文件
+            // 读取 resources/sql 指定 SQL 文件
             val resource = ClassPathResource("/sql/$tableName.sql")
             // 创建数据表
             try {
                 val sql = FileCopyUtils.copyToString(InputStreamReader(resource.inputStream, StandardCharsets.UTF_8))
-                // 分割 SQL 语句并执行
                 val sqlStatements = sql.split(";")
-                for (statement in sqlStatements) {
-                    jdbcTemplate.execute(statement)
-                }
+                sqlStatements.forEach { statement -> jdbcTemplate.execute(statement) }
             } catch (ex: IOException) {
                 log.error("[STARTUP] 创建数据表失败 | {}", ex.message, ex)
             }
