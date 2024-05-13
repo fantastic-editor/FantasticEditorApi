@@ -1,3 +1,10 @@
 spring:
+  profiles:
+    active: dev
   application:
-    name: spring-boot-actuator
+    name: FantasticEditorAPI
+logging:
+  file:
+    path: "./logs"
+  level:
+    root: error
