@@ -12,23 +12,25 @@
  * *******************************************************************************
  */
 
--- 软件信息表
-create table fy_info
+-- 生成付费会员表
+create table fy_vip
 (
-    id         char(36)                not null
-        constraint fy_info_pk
+    vuuid        varchar(32) not null
+        constraint fy_vip_pk
             primary key,
-    key        varchar                 not null,
-    value      varchar                 not null,
-    updated_at timestamp default now() not null
+    name         varchar(30) not null,
+    display_name varchar(30) not null,
+    description  varchar     not null,
+        updated_at   timestamp default now() not null
 );
 
-comment on table fy_info is '软件信息表';
-comment on column fy_info.id is '主键';
-comment on column fy_info.key is '键';
-comment on column fy_info.value is '值';
-comment on column fy_info.updated_at is '数据更新时间';
+comment on table fy_vip is '付费会员表';
+comment on column fy_vip.vuuid is '会员 uuid 主键表';
+comment on column fy_vip.name is '会员字段';
+comment on column fy_vip.display_name is '展示名字';
+comment on column fy_vip.description is '展示名字';
+comment on column fy_role.updated_at is '更新时间';
 
-create unique index fy_info_key_uindex
-    on fy_info (key);
+create unique index fy_vip_name_uindex
+    on fy_vip (name);
 
