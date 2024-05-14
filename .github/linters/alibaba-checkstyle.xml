@@ -1,38 +1,4 @@
 <?xml version="1.0"?>
-<!--
-  ~ ********************************************************************************
-  ~ Copyright (c) 2016-NOW(至今) 筱锋
-  ~ Author: 筱锋(https://www.x-lf.com)
-  ~
-  ~ 本文件包含 SecuriValue 的源代码，该项目的所有源代码均遵循MIT开源许可证协议。
-  ~ 本代码仅进行 Java 大作业提交，个人发行版本计划使用 Go 语言重构。
-  ~ ********************************************************************************
-  ~ 许可证声明：
-  ~
-  ~ 版权所有 (c) 2016-2024 筱锋。保留所有权利。
-  ~
-  ~ 本软件是“按原样”提供的，没有任何形式的明示或暗示的保证，包括但不限于
-  ~ 对适销性、特定用途的适用性和非侵权性的暗示保证。在任何情况下，
-  ~ 作者或版权持有人均不承担因软件或软件的使用或其他交易而产生的、
-  ~ 由此引起的或以任何方式与此软件有关的任何索赔、损害或其他责任。
-  ~
-  ~ 由于作者需要进行 Java 大作业提交，所以请勿抄袭。您可以作为参考，但是
-  ~ 一定不可以抄袭，尤其是同校同学！！！
-  ~ 你们可以自己参考代码优化给你们提供思路，开源目的不是给你们抄袭的，共
-  ~ 同维护好开源的社区环境！！！
-  ~
-  ~ 使用本软件即表示您了解此声明并同意其条款。
-  ~
-  ~ 有关MIT许可证的更多信息，请查看项目根目录下的LICENSE文件或访问：
-  ~ https://opensource.org/licenses/MIT
-  ~ ********************************************************************************
-  ~ 免责声明：
-  ~
-  ~ 使用本软件的风险由用户自担。作者或版权持有人在法律允许的最大范围内，
-  ~ 对因使用本软件内容而导致的任何直接或间接的损失不承担任何责任。
-  ~ ********************************************************************************
-  -->
-
 <!DOCTYPE module PUBLIC
         "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
         "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
@@ -50,7 +16,7 @@
 
     <!-- 每行不超过140个字符 -->
     <module name="LineLength">
-        <property name="max" value="120" />
+        <property name="max" value="120"/>
     </module>
 
     <!-- 每个java文件一个语法树 -->
@@ -61,7 +27,7 @@
         <!-- 检查是否导入了多余的包 -->
         <module name="RedundantImport"/>
         <!-- 没用的import检查，比如：1.没有被用到2.重复的3.import java.lang的4.import 与该类在同一个package的 -->
-        <module name="UnusedImports" />
+        <module name="UnusedImports"/>
 
         <!-- 注释检查 -->
         <!-- 检查构造函数的javadoc -->
@@ -72,29 +38,29 @@
 
         <!-- 命名检查 -->
         <!-- 局部的final变量，包括catch中的参数的检查 -->
-        <module name="LocalFinalVariableName" />
+        <module name="LocalFinalVariableName"/>
         <!-- 局部的非final型的变量，包括catch中的参数的检查 -->
-        <module name="LocalVariableName" />
+        <module name="LocalVariableName"/>
         <!-- 包名的检查（只允许小写字母），默认^[a-z]+(\.[a-zA-Z_][a-zA-Z_0-9_]*)*$ -->
         <module name="PackageName">
-            <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$" />
+            <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
             <message key="name.invalidPattern" value="包名 ''{0}'' 要符合 ''{1}''格式."/>
         </module>
         <!-- 仅仅是static型的变量（不包括static final型）的检查 -->
-        <module name="StaticVariableName" />
+        <module name="StaticVariableName"/>
         <!-- Class或Interface名检查，默认^[A-Z][a-zA-Z0-9]*$-->
         <module name="TypeName">
             <property name="severity" value="warning"/>
             <message key="name.invalidPattern" value="名称 ''{0}'' 要符合 ''{1}''格式."/>
         </module>
         <!-- 非static型变量的检查 -->
-        <module name="MemberName" />
+        <module name="MemberName"/>
         <!-- 方法名的检查 -->
-        <module name="MethodName" />
+        <module name="MethodName"/>
         <!-- 方法的参数名 -->
-        <module name="ParameterName " />
+        <module name="ParameterName "/>
         <!-- 常量名的检查（只允许大写），默认^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$ -->
-        <module name="ConstantName" />
+        <module name="ConstantName"/>
 
         <!-- 定义检查 -->
         <!-- 检查数组类型定义的样式 -->
@@ -105,16 +71,16 @@
         <!-- 长度检查 -->
         <!-- 方法的参数个数不超过5个。 并且不对构造方法进行检查-->
         <module name="ParameterNumber">
-            <property name="max" value="8" />
+            <property name="max" value="8"/>
             <property name="ignoreOverriddenMethods" value="true"/>
-            <property name="tokens" value="METHOD_DEF" />
+            <property name="tokens" value="METHOD_DEF"/>
         </module>
 
         <!-- 空格检查-->
         <!-- 方法名后跟左圆括号"(" -->
-        <module name="MethodParamPad" />
+        <module name="MethodParamPad"/>
         <!-- 在类型转换时，不允许左圆括号右边有空格，也不允许与右圆括号左边有空格 -->
-        <module name="TypecastParenPad" />
+        <module name="TypecastParenPad"/>
         <!-- 检查在某个特定关键字之后应保留空格 -->
         <module name="NoWhitespaceAfter"/>
         <!-- 检查在某个特定关键字之前应保留空格 -->
@@ -202,10 +168,20 @@
             <property name="max" value="3"/>
         </module>
         <!-- clone方法必须调用了super.clone() -->
-        <module name="SuperClone" />
+        <module name="SuperClone"/>
         <!-- finalize 必须调用了super.finalize() -->
-        <module name="SuperFinalize" />
+        <module name="SuperFinalize"/>
 
+        <!-- 注释检查 -->
+        <!-- 检查是否有未被注释的代码 -->
+        <module name="EmptyBlock"/>
+        <!-- 检查是否有未被注释的代码 -->
+        <module name="EmptyStatement"/>
 
+        <!-- 注释检查 -->
+        <module name="JavadocMethod">
+            <property name="accessModifiers" value=""/>
+            <property name="validateThrows" value="true"/>
+        </module>
     </module>
 </module>

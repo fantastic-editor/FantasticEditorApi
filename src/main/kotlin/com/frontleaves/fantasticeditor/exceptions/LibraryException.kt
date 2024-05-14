@@ -168,3 +168,5 @@ class UserAuthenticationException(
             request.getHeader("UUID"),
         )
 }
+
+class ServerInternalErrorException(override val message: String) : RuntimeException(message)

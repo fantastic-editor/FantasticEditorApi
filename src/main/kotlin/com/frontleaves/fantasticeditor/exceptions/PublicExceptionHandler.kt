@@ -214,4 +214,17 @@ class PublicExceptionHandler {
         log.error("[EXCEPTION] 用户认证异常 | {}", e.message, e)
         return ResultUtil.error(e.errorType.errorCode, e.errorType.message, e.userInfo)
     }
+
+    /**
+     * ## 服务器内部错误异常处理
+     * 用于处理服务器内部错误异常, 当服务器内部错误异常发生时，将会自动捕获并处理，不会影响系统的正常运行
+     *
+     * @param e 服务器内部错误 ServerInternalErrorException
+     * @return 返回服务器内部错误异常信息
+     */
+    @ExceptionHandler(ServerInternalErrorException::class)
+    fun handleServerInternalErrorException(e: ServerInternalErrorException): ResponseEntity<BaseResponse<ServerInternalErrorException>> {
+        log.error("[EXCEPTION] 服务器内部错误 | {}", e.message, e)
+        return ResultUtil.error(ErrorCode.SERVER_INTERNAL_ERROR, e.message, e)
+    }
 }
