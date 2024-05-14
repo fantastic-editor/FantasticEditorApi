@@ -2,11 +2,10 @@ package com.frontleaves.fantasticeditor.utility.redis
 
 import com.frontleaves.fantasticeditor.annotations.Slf4j.Companion.log
 import com.frontleaves.fantasticeditor.exceptions.ServerInternalErrorException
-import com.frontleaves.fantasticeditor.utility.ProcessingUtil
+import com.frontleaves.fantasticeditor.utility.BasicUtil.objectToMap
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.lang.NonNull
-import sun.jvm.hotspot.oops.CellTypeState.value
-import java.util.*
+import java.util.Objects
 import java.util.concurrent.TimeUnit
 
 /**
@@ -342,7 +341,7 @@ class RedisUtil(private val redisTemplate: RedisTemplate<String, Any>) {
         value: V,
     ): Boolean {
         try {
-            redisTemplate.opsForHash<Any, Any>().putAll(key, ProcessingUtil.objectToMap(value))
+            redisTemplate.opsForHash<Any, Any>().putAll(key, objectToMap(value))
             return true
         } catch (e: IllegalAccessException) {
             log.warn("[REDIS] <Func:hashSet> 插入对象 [{}] 无法转换为 Map 对象", value.javaClass.getName())
@@ -369,7 +368,7 @@ class RedisUtil(private val redisTemplate: RedisTemplate<String, Any>) {
         time: Long,
     ): Boolean {
         return try {
-            redisTemplate.opsForHash<Any, Any>().putAll(key, ProcessingUtil.objectToMap(value))
+            redisTemplate.opsForHash<Any, Any>().putAll(key, objectToMap(value))
             if (time > 0) {
                 expire(key, time)
             } else {
