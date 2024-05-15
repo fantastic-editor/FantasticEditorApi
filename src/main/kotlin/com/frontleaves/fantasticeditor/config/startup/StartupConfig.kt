@@ -53,10 +53,64 @@ class StartupConfig(
      */
     @Bean
     @Order(1)
-    fun prepareStart(): CommandLineRunner? {
+    fun prepareStart(): CommandLineRunner {
         return CommandLineRunner {
             log.info("========== SYSTEM PREPARE START ==========")
             prepare = PrepareAlgorithm(jdbcTemplate)
+        }
+    }
+
+    /**
+     * ## 系统启动准备检查
+     * 用于定义系统启动时进行数据表完整性的检查；该部分内容会检查已链接的数据库中是否包含所需要的数据内容，若包含则不会进行任何操作，
+     * 若不包含则会自动创建数据表；注意数据表若有外键约束请注意先后顺序
+     *
+     * @return CommandLineRunner
+     */
+    @Bean
+    @Order(2)
+    fun prepareTable(): CommandLineRunner {
+        return CommandLineRunner {
+            log.info("[STARTUP] 正在进行数据表完整性检查...")
+            prepare.table("info")
+            prepare.table("permission")
+            prepare.table("role")
+            prepare.table("vip")
+            prepare.table("user")
+        }
+    }
+
+    /**
+     * ## 系统启动准备检查
+     * 用于定义 fy_info 数据表内数据内容的定义，该表是一张固定表，用于存储系统的基本信息；系统将会检查表内是否存在指定数据，
+     * 若不存在则会自动创建数据
+     *
+     * @return CommandLineRunner
+     */
+    @Bean
+    @Order(3)
+    fun prepareInfoData(): CommandLineRunner {
+        return CommandLineRunner {
+            log.info("[STARTUP] 正在进行 fy_info 表完整性检查...")
+            prepare.infoDataPrepare("title", "妙笔智编")
+            prepare.infoDataPrepare("subTitle", "一个结合大小AI模型技术，实现智能润色、多媒体信息提取和智能格式排版等功能，以优化学习和工作体验的智能平台")
+        }
+    }
+
+    /**
+     * ## 系统启动准备检查
+     * 用于定义 fy_permission 数据表内数据内容的定义，该表是一张固定表，用于存储系统的权限信息；系统将会检查表内是否存在指定数据，
+     * 若不存在则会自动创建数据
+     *
+     * @return CommandLineRunner
+     */
+    @Bean
+    @Order(4)
+    fun preparePermissionData(): CommandLineRunner {
+        return CommandLineRunner {
+            log.info("[STARTUP] 正在进行 fy_permission 表完整性检查...")
+            prepare.permission("user:allPermission", "用户操作接口", null)
+            prepare.permission("user:userCurrent", "用户当前信息", "user:allPermission")
         }
     }
 

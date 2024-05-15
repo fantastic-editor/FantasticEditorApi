@@ -16,12 +16,13 @@ package com.frontleaves.fantasticeditor.config.startup
 
 import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
 import org.springframework.core.io.ClassPathResource
-import org.springframework.dao.DataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.util.FileCopyUtils
 import java.io.IOException
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
+import java.sql.Timestamp
+import java.util.*
 
 /**
  * # 准备算法
@@ -42,23 +43,91 @@ internal class PrepareAlgorithm(private val jdbcTemplate: JdbcTemplate) {
     fun table(tableName: String) {
         try {
             // 检查数据库是否完整
-            jdbcTemplate.queryForObject(
+            jdbcTemplate.query(
                 "SELECT table_name FROM information_schema.tables WHERE table_name = ?",
-                String::class.java,
+                { rs, _ -> rs.getString("table_name") },
                 "fy_$tableName",
-            )
-        } catch (e: DataAccessException) {
+            ).first()
+        } catch (e: NoSuchElementException) {
             log.debug("[STARTUP] 创建数据表 {}", tableName)
             // 读取 resources/sql 指定 SQL 文件
-            val resource = ClassPathResource("/sql/$tableName.sql")
+            val resource = ClassPathResource("/sql/fy_$tableName.sql")
             // 创建数据表
             try {
                 val sql = FileCopyUtils.copyToString(InputStreamReader(resource.inputStream, StandardCharsets.UTF_8))
-                val sqlStatements = sql.split(";")
-                sqlStatements.forEach { statement -> jdbcTemplate.execute(statement) }
+                sql
+                    .replace(Regex("""(?s)/\*.*?\*/"""), "")
+                    .split(";")
+                    .forEach { statement -> jdbcTemplate.execute(statement) }
             } catch (ex: IOException) {
                 log.error("[STARTUP] 创建数据表失败 | {}", ex.message, ex)
             }
+        }
+    }
+
+    /**
+     * ## 准备数据
+     * 用于准备数据，准备 fy_info 数据表的基本数据
+     *
+     * @param key 键
+     * @param value 值
+     */
+    fun infoDataPrepare(key: String, value: String) {
+        try {
+            jdbcTemplate.query(
+                "SELECT key FROM fy_info WHERE key = ?",
+                { rs, _ -> rs.getString("key") },
+                key,
+            ).first()
+        } catch (e: NoSuchElementException) {
+            log.debug("[STARTUP] 准备 fy_info 表数据 {}", key)
+            jdbcTemplate.update(
+                "INSERT INTO fy_info (id, key, value, updated_at) VALUES (?, ?, ?, ?)",
+                UUID.randomUUID().toString(),
+                key,
+                value,
+                Timestamp(System.currentTimeMillis()),
+            )
+        }
+    }
+
+    /**
+     * ## 准备权限数据
+     * 用于准备权限数据
+     *
+     * @param permission 权限
+     * @param description 描述
+     * @param parentPermission 父权限
+     */
+    fun permission(permission: String, description: String, parentPermission: String?) {
+        try {
+            jdbcTemplate.query(
+                "SELECT pid FROM fy_permission WHERE permission = ?",
+                { rs, _ -> rs.getLong("pid") },
+                permission,
+            ).first()
+        } catch (e: NoSuchElementException) {
+            var parentPid: Long? = null
+            log.debug("[STARTUP] 准备 fy_permission 表数据 {}", permission)
+            takeIf { !parentPermission.isNullOrBlank() }?.let {
+                // 查询父权限是否存在
+                try {
+                    parentPid = jdbcTemplate.query(
+                        "SELECT pid FROM fy_permission WHERE permission = ?",
+                        { rs, _ -> rs.getLong("pid") },
+                        parentPermission,
+                    ).first()
+                } catch (e: NoSuchElementException) {
+                    log.error("[STARTUP] 父权限不存在 | {}", parentPermission)
+                    throw e
+                }
+            }
+            jdbcTemplate.update(
+                "INSERT INTO fy_permission (permission, description, parent) VALUES (?, ?, ?)",
+                permission,
+                description,
+                parentPid,
+            )
         }
     }
 }

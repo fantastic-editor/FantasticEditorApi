@@ -42,7 +42,7 @@ create table fy_user
     mail_verify       boolean   default false not null,
     phone_verify      boolean   default false not null,
     basic_information json                    not null,
-    role              integer                 not null
+    role              varchar(32)             not null
         constraint fy_user_fy_role_ruuid_fk
             references fy_role
             on update cascade on delete set null,

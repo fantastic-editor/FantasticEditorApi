@@ -16,6 +16,7 @@ package com.frontleaves.fantasticeditor
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.scheduling.annotation.EnableScheduling
 
@@ -23,6 +24,8 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableScheduling
 @SpringBootApplication
 class FantasticEditorApplication
+
+lateinit var context: ConfigurableApplicationContext
 
 /**
  * ## 主函数
@@ -33,5 +36,5 @@ class FantasticEditorApplication
  * @author xiao_lfeng | xiangZr-hhh | DC_DC
  */
 fun main(args: Array<String>) {
-    runApplication<FantasticEditorApplication>(*args)
+    context = runApplication<FantasticEditorApplication>(*args)
 }
