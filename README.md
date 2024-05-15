@@ -5,7 +5,7 @@
 
 ## 简易看板
 
-![Alt](https://repobeats.axiom.co/api/embed/6348bf0ac762cbc82a095920961ca0fd76074521.svg "Repobeats analytics image")
+![Alt](https://repobeats.axiom.co/api/embed/e113147a0a22c6fdfbe6c49caac945aae8c52f37.svg "Repobeats analytics image")
 
 ## 项目成员
 
