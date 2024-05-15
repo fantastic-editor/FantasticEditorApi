@@ -12,45 +12,42 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.controllers.v1
+package com.frontleaves.fantasticeditor.controllers
 
-import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
-import com.frontleaves.fantasticeditor.context
-import org.springframework.jdbc.core.JdbcTemplate
+import com.frontleaves.fantasticeditor.models.dto.CsrfGetDTO
+import com.frontleaves.fantasticeditor.utility.BaseResponse
+import com.frontleaves.fantasticeditor.utility.ResultUtil
+import jakarta.servlet.http.HttpServletRequest
+import org.springframework.http.ResponseEntity
+import org.springframework.security.web.csrf.CsrfTokenRepository
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 /**
- * 重置控制器
+ * CSRF 控制器
  *
- * 用于重置系统的控制器
+ * 用于处理 CSRF 相关请求
  *
  * @since v1.0.0
- * @constructor 创建一个重置控制器
+ * @constructor 创建一个 CSRF 控制器
+ * @author xiao_lfeng
  */
 @RestController
-@RequestMapping("/api/v1/reset")
-class ResetController(
-    private val jdbcTemplate: JdbcTemplate,
+@RequestMapping("/api/v1/csrf")
+class CsrfController(
+    private val csrfTokenRepository: CsrfTokenRepository,
 ) {
 
     /**
-     * 重置数据
+     * 获取 CSRF Token
      *
-     * 用于重置数据库操作的控制器
+     * 用于获取 CSRF Token
      */
-    @GetMapping("/database")
-    fun resetDatabase() {
-        val getTable = jdbcTemplate.query(
-            "SELECT table_name FROM information_schema.tables WHERE table_name LIKE ?",
-            { rs, _ -> rs.getString("table_name") },
-            "%fy_%",
-        ).toList()
-        getTable.forEach { table ->
-            jdbcTemplate.execute("DROP TABLE IF EXISTS $table CASCADE")
-        }
-        log.info("[SERVER] 数据库已重置，所有数据表已删除，请重新启动系统！")
-        context.close()
+    @GetMapping("/token")
+    fun getCsrfToken(request: HttpServletRequest): ResponseEntity<BaseResponse<CsrfGetDTO>> {
+        val csrfGetDTO = CsrfGetDTO()
+        csrfGetDTO.token = csrfTokenRepository.generateToken(request).token
+        return ResultUtil.success("获取 CSRF Token 成功", csrfGetDTO)
     }
 }

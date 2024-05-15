@@ -1,0 +1,32 @@
+name: 补丁
+description: 创建一个补丁功能工单，用于发放给开发者进行功能开发，用于修复已有功能的问题
+title: "[PATCH] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 注意事项
+        
+        请在右侧选择好标签，项目选择 **项目周期工程** ，指派成员指派给需要完成的功能的开发者。
+        
+        标题请按需求填写！
+        
+        ---
+  - type: input
+    id: patch-name
+    attributes:
+      label: 改进接口或功能点
+      description: 请输入接口的名称。
+      placeholder: 例如：UserController/查询用户信息
+    validations:
+      required: true
+
+  - type: textarea
+    id: patch-description
+    attributes:
+      label: 改进需求描述
+      description: 请描述改进的需求，包括改进的原因、改进的目的等。
+      placeholder: 详细描述改进的原因、目的等。
+    validations:
+      required: true
