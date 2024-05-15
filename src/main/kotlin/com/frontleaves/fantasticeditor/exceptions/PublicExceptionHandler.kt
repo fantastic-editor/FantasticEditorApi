@@ -16,7 +16,7 @@
 
 package com.frontleaves.fantasticeditor.exceptions
 
-import com.frontleaves.fantasticeditor.annotations.Slf4j.Companion.log
+import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
 import com.frontleaves.fantasticeditor.utility.BaseResponse
 import com.frontleaves.fantasticeditor.utility.ErrorCode
 import com.frontleaves.fantasticeditor.utility.ResultUtil

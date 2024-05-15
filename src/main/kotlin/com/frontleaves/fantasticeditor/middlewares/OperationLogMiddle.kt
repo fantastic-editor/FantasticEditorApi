@@ -14,7 +14,7 @@
 
 package com.frontleaves.fantasticeditor.middlewares
 
-import com.frontleaves.fantasticeditor.annotations.Slf4j.Companion.log
+import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
@@ -40,7 +40,7 @@ class OperationLogMiddle {
             "|| execution(* com.frontleaves.fantasticeditor.controllers.*.*.*(..))",
     )
     fun controllerLog(joinPoint: JoinPoint) {
-        log.info("[CONTROL] 执行方法 {}:{}", joinPoint.signature.javaClass.simpleName, joinPoint.signature.name)
+        log.info("[CONTROL] 执行方法 {}:{}", joinPoint.signature.declaringType.simpleName, joinPoint.signature.name)
     }
 
     /**
@@ -49,7 +49,7 @@ class OperationLogMiddle {
      */
     @Before("execution(* com.frontleaves.fantasticeditor.services.*.*(..))")
     fun serviceLog(joinPoint: JoinPoint) {
-        log.info("[SERVICE] 执行方法 {}:{}", joinPoint.signature.javaClass.simpleName, joinPoint.signature.name)
+        log.info("[SERVICE] 执行方法 {}:{}", joinPoint.signature.declaringType.simpleName, joinPoint.signature.name)
     }
 
     /**
@@ -58,6 +58,6 @@ class OperationLogMiddle {
      */
     @Before("execution(* com.frontleaves.fantasticeditor.dao.*.*(..))")
     fun daoLog(joinPoint: JoinPoint) {
-        log.info("[DAO] 执行方法 {}:{}", joinPoint.signature.javaClass.simpleName, joinPoint.signature.name)
+        log.info("[DAO] 执行方法 {}:{}", joinPoint.signature.declaringType.simpleName, joinPoint.signature.name)
     }
 }

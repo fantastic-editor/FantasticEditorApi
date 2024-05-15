@@ -12,31 +12,24 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.utility
+package com.frontleaves.fantasticeditor.models.vo
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import jakarta.validation.constraints.NotBlank
 
 /**
- * # 基础响应类
- * 用于定义一个基础的响应类，用于定义一个基础的响应类
+ * ## 用户登录VO
+ * 用于接收用户登录信息
  *
  * @since v1.0.0
- * @property output 输出的信息
- * @property code 输出的状态码
- * @property message 输出的消息
- * @property errorMessage 输出的错误消息
- * @property data 输出的数据
- * @constructor 创建一个基础响应类
+ * @constructor 创建一个用户登录VO
+ * @property username 用户名
+ * @property password 密码
+ * @author xiao_lfeng
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-data class BaseResponse<E>(
-    @NotBlank
-    val output: String,
-    @NotBlank
-    val code: Int,
-    @NotBlank
-    val message: String,
-    val errorMessage: String?,
-    val data: E?,
-)
+class AuthUserLoginVO {
+    @NotBlank(message = "用户名不能为空")
+    var username: String? = null
+
+    @NotBlank(message = "密码不能为空")
+    var password: String? = null
+}

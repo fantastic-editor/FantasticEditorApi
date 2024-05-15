@@ -12,31 +12,31 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.utility
+package com.frontleaves.fantasticeditor.config.custom
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import jakarta.validation.constraints.NotBlank
+import org.springframework.security.web.csrf.CsrfToken
 
 /**
- * # 基础响应类
- * 用于定义一个基础的响应类，用于定义一个基础的响应类
+ * # 自定义 CSRF Token
+ * 用于自定义 CSRF Token
  *
  * @since v1.0.0
- * @property output 输出的信息
- * @property code 输出的状态码
- * @property message 输出的消息
- * @property errorMessage 输出的错误消息
- * @property data 输出的数据
- * @constructor 创建一个基础响应类
+ * @author xiao_lfeng
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-data class BaseResponse<E>(
-    @NotBlank
-    val output: String,
-    @NotBlank
-    val code: Int,
-    @NotBlank
-    val message: String,
-    val errorMessage: String?,
-    val data: E?,
-)
+class CustomCsrfToken(
+    private val headerName: String,
+    private val parameterName: String,
+    private val token: String?,
+) : CsrfToken {
+    override fun getHeaderName(): String {
+        return headerName
+    }
+
+    override fun getParameterName(): String {
+        return parameterName
+    }
+
+    override fun getToken(): String? {
+        return token
+    }
+}

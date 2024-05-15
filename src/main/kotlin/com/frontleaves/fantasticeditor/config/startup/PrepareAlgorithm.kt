@@ -14,7 +14,7 @@
 
 package com.frontleaves.fantasticeditor.config.startup
 
-import com.frontleaves.fantasticeditor.annotations.Slf4j.Companion.log
+import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
 import org.springframework.core.io.ClassPathResource
 import org.springframework.dao.DataAccessException
 import org.springframework.jdbc.core.JdbcTemplate

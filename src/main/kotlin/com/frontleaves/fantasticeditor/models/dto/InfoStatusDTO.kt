@@ -12,31 +12,34 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.utility
+package com.frontleaves.fantasticeditor.models.dto
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import jakarta.validation.constraints.NotBlank
 
 /**
- * # 基础响应类
- * 用于定义一个基础的响应类，用于定义一个基础的响应类
+ * ## 信息状态数据传输对象
+ * 用于传输信息状态数据, 例如代理主机, 代理端口等; 在 `InfoController` 中使用
  *
  * @since v1.0.0
- * @property output 输出的信息
- * @property code 输出的状态码
- * @property message 输出的消息
- * @property errorMessage 输出的错误消息
- * @property data 输出的数据
- * @constructor 创建一个基础响应类
+ * @constructor 创建一个信息状态数据传输对象
+ * @author xiao_lfeng
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-data class BaseResponse<E>(
+class InfoStatusDTO {
     @NotBlank
-    val output: String,
+    var proxyHost: String? = null
+
     @NotBlank
-    val code: Int,
+    var charset: String? = null
+
     @NotBlank
-    val message: String,
-    val errorMessage: String?,
-    val data: E?,
-)
+    var timeZone: String? = null
+
+    @NotBlank
+    var osName: String? = null
+
+    @NotBlank
+    var userCountry: String? = null
+
+    @NotBlank
+    var startTime: String? = null
+}

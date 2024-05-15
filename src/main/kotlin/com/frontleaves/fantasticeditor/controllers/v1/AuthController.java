@@ -14,12 +14,16 @@
 
 package com.frontleaves.fantasticeditor.controllers.v1;
 
-import com.frontleaves.fantasticeditor.annotations.Slf4j;
+import com.frontleaves.fantasticeditor.models.vo.AuthUserLoginVO;
 import com.frontleaves.fantasticeditor.utility.BaseResponse;
 import com.frontleaves.fantasticeditor.utility.ResultUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -32,8 +36,9 @@ import org.springframework.web.bind.annotation.RestController;
  * @since v1.0.0
  */
 @Slf4j
+@RestController
 @RequiredArgsConstructor
-@RestController("/api/v1/auth")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 
     /**
@@ -44,7 +49,10 @@ public class AuthController {
      * @return 登录结果
      */
     @PostMapping("/login")
-    public ResponseEntity<BaseResponse<Void>> userLogin() {
+    public ResponseEntity<BaseResponse<Void>> userLogin(
+            @RequestBody @Validated AuthUserLoginVO authUserLoginVO
+    ) {
+        // 获取登录
         return ResultUtil.success("登录成功");
     }
 }

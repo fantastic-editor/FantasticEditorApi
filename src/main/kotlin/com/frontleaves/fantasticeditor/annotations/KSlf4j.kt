@@ -12,31 +12,24 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.utility
+package com.frontleaves.fantasticeditor.annotations
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import jakarta.validation.constraints.NotBlank
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
- * # 基础响应类
- * 用于定义一个基础的响应类，用于定义一个基础的响应类
+ * # Slf4j 注解
+ * 用于在类上添加 Slf4j 日志
  *
  * @since v1.0.0
- * @property output 输出的信息
- * @property code 输出的状态码
- * @property message 输出的消息
- * @property errorMessage 输出的错误消息
- * @property data 输出的数据
- * @constructor 创建一个基础响应类
+ * @see Logger
+ * @author xiao_lfeng
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-data class BaseResponse<E>(
-    @NotBlank
-    val output: String,
-    @NotBlank
-    val code: Int,
-    @NotBlank
-    val message: String,
-    val errorMessage: String?,
-    val data: E?,
-)
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class KSlf4j {
+    companion object {
+        val <reified T> T.log: Logger
+            inline get() = LoggerFactory.getLogger(T::class.java)
+    }
+}

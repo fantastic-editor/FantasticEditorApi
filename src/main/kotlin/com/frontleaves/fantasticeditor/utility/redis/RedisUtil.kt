@@ -14,11 +14,12 @@
 
 package com.frontleaves.fantasticeditor.utility.redis
 
-import com.frontleaves.fantasticeditor.annotations.Slf4j.Companion.log
+import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
 import com.frontleaves.fantasticeditor.exceptions.ServerInternalErrorException
 import com.frontleaves.fantasticeditor.utility.BasicUtil.objectToMap
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.lang.NonNull
+import org.springframework.stereotype.Component
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -31,6 +32,7 @@ import java.util.concurrent.TimeUnit
  * @since v1.0.0
  * @author xiao_lfeng
  */
+@Component
 class RedisUtil(private val redisTemplate: RedisTemplate<String, Any>) {
     // ************************************ Redis Common ************************************
 
@@ -244,32 +246,32 @@ class RedisUtil(private val redisTemplate: RedisTemplate<String, Any>) {
      * 获取 key 对应的哈希表中给定域的值
      *
      * @param key       键
-     * @param hashField 项
-     * @param clazz     期望获取的数据类型
      * @param <V>       期望获取的单例数据类型
      * @return 值
-     </V> */
-    fun <V> hashGet(
+     */
+    fun hashGet(
+        key: String,
+    ): Map<String, Any>? {
+        val getResult = redisTemplate.opsForHash<String, Any>().entries(key)
+        return takeIf { getResult.isNotEmpty() }?.let { getResult } ?: run {
+            log.warn("[REDIS] <Func:hashGet> 数据为空")
+            null
+        }
+    }
+
+    /**
+     * ## HashGetField
+     * 获取 key 对应哈希表中给定域的值
+     *
+     * @param key       键
+     * @param hashField 项
+     * @return 值
+     */
+    fun hashGetField(
         key: String,
         hashField: String,
-        clazz: Class<V>,
-    ): V? {
-        val getResult = redisTemplate.opsForHash<Any, Any>()[key, hashField]
-        if (Objects.nonNull(getResult)) {
-            if (clazz.isInstance(getResult)) {
-                return clazz.cast(getResult)
-            } else {
-                log.warn(
-                    "[REDIS] <Func:hashGet> 数据类型不匹配，期望类型 [{}] 实际类型 [{}]",
-                    clazz.name,
-                    getResult!!.javaClass.name,
-                )
-                return null
-            }
-        } else {
-            log.warn("[REDIS] <Func:hashGet> 数据为空")
-            return null
-        }
+    ): Any? {
+        return redisTemplate.opsForHash<Any, Any>()[key, hashField]
     }
 
     /**
@@ -382,7 +384,11 @@ class RedisUtil(private val redisTemplate: RedisTemplate<String, Any>) {
         time: Long,
     ): Boolean {
         return try {
-            redisTemplate.opsForHash<Any, Any>().putAll(key, objectToMap(value))
+            if (value is Map<*, *>) {
+                redisTemplate.opsForHash<Any, Any>().putAll(key, value)
+            } else {
+                redisTemplate.opsForHash<Any, Any>().putAll(key, objectToMap(value))
+            }
             if (time > 0) {
                 expire(key, time)
             } else {
@@ -393,7 +399,7 @@ class RedisUtil(private val redisTemplate: RedisTemplate<String, Any>) {
             log.warn("[REDIS] <Func:hashSet|Time> 插入对象 [{}] 无法转换为 Map 对象", value.javaClass.getName())
             false
         } catch (e: Exception) {
-            log.warn("[REDIS] <Func:hashSet|Time> 数据插入失败")
+            log.warn("[REDIS] <Func:hashSet|Time> 数据插入失败 | {}", e.message)
             false
         }
     }

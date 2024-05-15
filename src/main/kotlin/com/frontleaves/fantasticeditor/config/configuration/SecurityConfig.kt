@@ -14,17 +14,19 @@
 
 package com.frontleaves.fantasticeditor.config.configuration
 
-import com.frontleaves.fantasticeditor.annotations.Slf4j.Companion.log
+import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
+import com.frontleaves.fantasticeditor.config.custom.CustomCsrfRepository
 import com.frontleaves.fantasticeditor.config.filter.CorsAllowFilter
+import com.frontleaves.fantasticeditor.config.filter.CsrfAllowFilter
 import com.frontleaves.fantasticeditor.config.filter.RequestHeaderFilter
+import com.frontleaves.fantasticeditor.utility.redis.RedisUtil
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.configurers.CorsConfigurer
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
-import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.csrf.CsrfFilter
+import org.springframework.security.web.csrf.CsrfTokenRepository
 
 /**
  * # SpringSecurity 安全配置
@@ -34,7 +36,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * @author xiao_lfeng
  */
 @Configuration
-class SecurityConfig {
+class SecurityConfig(private val redisUtil: RedisUtil) {
     /**
      * 配置安全过滤器链
      *
@@ -46,9 +48,10 @@ class SecurityConfig {
     fun filterChain(security: HttpSecurity): SecurityFilterChain {
         log.info("[CONFIG] 安全配置初始化...")
         return security
-            .csrf { it: CsrfConfigurer<HttpSecurity> -> it.disable() }
-            .cors { it: CorsConfigurer<HttpSecurity> -> it.disable() }
-            .formLogin { it: FormLoginConfigurer<HttpSecurity> -> it.disable() }
+            .csrf { it.disable() }
+            .cors { it.disable() }
+            .formLogin { it.disable() }
+            .addFilterAfter(CsrfAllowFilter(csrfTokenRepository()), CsrfFilter::class.java)
             .addFilterBefore(RequestHeaderFilter(), UsernamePasswordAuthenticationFilter::class.java)
             .addFilterBefore(CorsAllowFilter(), RequestHeaderFilter::class.java)
             .authorizeHttpRequests {
@@ -56,5 +59,10 @@ class SecurityConfig {
                     .permitAll().anyRequest().permitAll()
             }
             .build()
+    }
+
+    @Bean
+    fun csrfTokenRepository(): CsrfTokenRepository {
+        return CustomCsrfRepository(redisUtil)
     }
 }

@@ -17,7 +17,7 @@ package com.frontleaves.fantasticeditor.config.configuration
 import com.baomidou.mybatisplus.annotation.DbType
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor
-import com.frontleaves.fantasticeditor.annotations.Slf4j.Companion.log
+import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
