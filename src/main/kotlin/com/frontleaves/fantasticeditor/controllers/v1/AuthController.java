@@ -14,7 +14,12 @@
 
 package com.frontleaves.fantasticeditor.controllers.v1;
 
+import com.frontleaves.fantasticeditor.exceptions.CheckFailureException;
+import com.frontleaves.fantasticeditor.models.dto.UserCurrentDTO;
 import com.frontleaves.fantasticeditor.models.vo.AuthUserLoginVO;
+import com.frontleaves.fantasticeditor.models.vo.AuthUserRegisterVO;
+import com.frontleaves.fantasticeditor.services.interfaces.SMSService;
+import com.frontleaves.fantasticeditor.services.interfaces.UserService;
 import com.frontleaves.fantasticeditor.utility.BaseResponse;
 import com.frontleaves.fantasticeditor.utility.ResultUtil;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +45,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
 public class AuthController {
+    private final SMSService smsService;
+    private final UserService userService;
 
     /**
      * 用户登录
@@ -54,5 +61,19 @@ public class AuthController {
     ) {
         // 获取登录
         return ResultUtil.success("登录成功");
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<BaseResponse<UserCurrentDTO>> userRegister(
+            @RequestBody @Validated AuthUserRegisterVO authUserRegisterVO
+    ) {
+        // 对验证码进行校验
+        boolean verifyCode = smsService.checkCode(authUserRegisterVO.getPhone(), authUserRegisterVO.getVerifyCode());
+        if (!verifyCode) {
+            throw new CheckFailureException("手机验证码错误");
+        }
+        // 注册用户
+        UserCurrentDTO getUserCurrent = userService.userRegister(authUserRegisterVO);
+        return ResultUtil.success("注册成功", getUserCurrent);
     }
 }

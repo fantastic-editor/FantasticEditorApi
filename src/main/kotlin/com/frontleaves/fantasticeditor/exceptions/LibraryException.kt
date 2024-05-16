@@ -211,3 +211,17 @@ class ServerInternalErrorException(override val message: String) : RuntimeExcept
  * @author xiao_lfeng
  */
 class NoPermissionException(override val message: String, val permission: String) : RuntimeException(message)
+
+/**
+ * # 检查失败异常
+ * 用于定义检查失败异常；
+ *
+ * @since v1.0.0
+ * @see RuntimeException
+ * @property message 异常信息
+ * @constructor 创建一个检查失败异常
+ * @param message 异常信息
+ * @return RuntimeException
+ * @author xiao_lfeng
+ */
+class CheckFailureException(override val message: String) : RuntimeException(message)

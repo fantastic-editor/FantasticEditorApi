@@ -95,7 +95,7 @@ object Util {
      * @param password 密码
      * @return 加密后的密码
      */
-    fun generatePassword(password: String): String {
+    fun encryptPassword(password: String): String {
         val base64Password = makeStringToBase64(password)
         return BCrypt.hashpw(base64Password, BCrypt.gensalt())
     }
@@ -156,5 +156,43 @@ object Util {
             }
         }
         return instance
+    }
+
+    /**
+     * ## 生成随机数字
+     * 根据 `size` 大小，生成指定大小的随机数
+     *
+     * @param size 位数
+     * @return 随机数
+     */
+    fun generateNumber(size: Int): String {
+        val numberBuild = StringBuilder()
+        var number = 0
+        while (number++ < size) {
+            numberBuild.append(Random().apply { setSeed(System.currentTimeMillis()) }.nextInt(10))
+        }
+        return numberBuild.toString()
+    }
+
+    /**
+     * ## 复制对象属性
+     * 复制对象属性
+     *
+     * @param source 源对象
+     * @param target 目标对象
+     */
+    fun <T : Any, R : Any> copyProperties(source: T, target: Class<R>): R {
+        val sourceClass = source::class.java
+        for (sourceField in sourceClass.declaredFields) {
+            try {
+                sourceField.isAccessible = true
+                val targetField = target.getDeclaredField(sourceField.name)
+                targetField.isAccessible = true
+                targetField.set(target, sourceField.get(source))
+            } catch (e: NoSuchFieldException) {
+                // Ignore if the target object does not have the field
+            }
+        }
+        return target.getDeclaredConstructor().newInstance()
     }
 }

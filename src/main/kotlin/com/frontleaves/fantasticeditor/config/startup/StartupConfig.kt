@@ -146,7 +146,7 @@ class StartupConfig(
                     "console",
                     "console@fe.com",
                     "18888888888",
-                    Util.generatePassword("admin"),
+                    Util.encryptPassword("admin"),
                     Util.makeUUID().toString().replace("-", ""),
                     "{}",
                     getRole,

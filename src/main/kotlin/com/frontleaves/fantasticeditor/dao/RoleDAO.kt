@@ -47,7 +47,28 @@ class RoleDAO(private val redisUtil: RedisUtil) : ServiceImpl<RoleMapper, FyRole
         return redisUtil.hashGet("role:uuid:$ruuid").takeIf { !it.isNullOrEmpty() }?.let {
             Util.mapToObject(it, FyRoleDO::class.java)
         } ?: run {
-            this.getOne(QueryWrapper<FyRoleDO>().eq("uuid", ruuid))
+            this.getOne(QueryWrapper<FyRoleDO>().eq("uuid", ruuid))?.run {
+                redisUtil.hashSet("role:uuid:$ruuid", Util.objectToMap(this), 3600 * 24)
+                this
+            }
+        }
+    }
+
+    /**
+     * ## 通过角色名获取角色
+     * 通过角色名获取角色的基本信息
+     *
+     * @param roleName 角色名
+     * @return 角色实体类
+     */
+    fun getRoleByRoleName(roleName: String): FyRoleDO? {
+        return redisUtil.hashGet("role:name:$roleName").takeIf { !it.isNullOrEmpty() }?.let {
+            Util.mapToObject(it, FyRoleDO::class.java)
+        } ?: run {
+            this.getOne(QueryWrapper<FyRoleDO>().eq("role_name", roleName))?.run {
+                redisUtil.hashSet("role:name:$roleName", Util.objectToMap(this), 3600 * 24)
+                this
+            }
         }
     }
 }

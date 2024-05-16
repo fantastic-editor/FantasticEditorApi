@@ -12,49 +12,38 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.entity
+package com.frontleaves.fantasticeditor.models.dto
 
-import com.baomidou.mybatisplus.annotation.TableName
 import java.sql.Timestamp
 
 /**
- * # 用户实体类
- * 用于定义用户实体类；
+ * # 当前用户数据传输对象
+ * 用于定义当前用户数据传输对象；
  *
  * @since v1.0.0
  * @property uuid 用户唯一标识
  * @property username 用户名
  * @property email 邮箱
  * @property phone 手机号
- * @property password 密码
- * @property oldPassword 旧密码
  * @property avatar 头像
- * @property optAuth 操作权限
- * @property mailVerify 邮箱验证
- * @property phoneVerify 手机验证
  * @property basicInformation 基本信息
  * @property role 角色
  * @property vip 付费会员
  * @property createdAt 创建时间
  * @property updatedAt 更新时间
- * @constructor 创建一个用户实体类
+ * @constructor 创建一个当前用户数据传输对象
+ * @return UserCurrentDTO
  * @author xiao_lfeng
  */
-@TableName("fy_user")
-data class FyUserDO(
+data class UserCurrentDTO(
     val uuid: String,
     val username: String,
     val email: String,
     val phone: String,
-    val password: String,
-    val oldPassword: String? = null,
     val avatar: String? = null,
-    val otpAuth: String? = null,
-    val mailVerify: Boolean,
-    val phoneVerify: Boolean,
     val basicInformation: String,
     val role: String,
     val vip: String? = null,
     val createdAt: Timestamp? = null,
-    val updatedAt: Timestamp? = null,
+    val updatedAt: Timestamp,
 )
