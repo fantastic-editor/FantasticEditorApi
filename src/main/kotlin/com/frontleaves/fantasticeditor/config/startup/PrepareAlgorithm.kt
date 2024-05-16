@@ -130,4 +130,31 @@ internal class PrepareAlgorithm(private val jdbcTemplate: JdbcTemplate) {
             )
         }
     }
+
+    /**
+     * ## 添加角色
+     * 用于添加角色, 用于系统启动时添加角色
+     *
+     * @param roleName 角色名
+     * @param displayName 显示名
+     */
+    fun addRole(roleName: String, displayName: String, description: String) {
+        try {
+            jdbcTemplate.query(
+                "SELECT ruuid FROM fy_role WHERE name = ?",
+                { rs, _ -> rs.getString("ruuid") },
+                roleName,
+            ).first()
+        } catch (e: NoSuchElementException) {
+            log.debug("[STARTUP] 准备 fy_role 表数据 {}", roleName)
+            jdbcTemplate.update(
+                "INSERT INTO fy_role (ruuid, name, display_name, description, permissions) VALUES (?, ?, ?, ?, ?::jsonb)",
+                UUID.randomUUID().toString().replace("-", ""),
+                roleName,
+                displayName,
+                description,
+                "[]",
+            )
+        }
+    }
 }

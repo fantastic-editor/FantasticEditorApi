@@ -15,19 +15,21 @@
 -- 生成付费会员表
 create table fy_vip
 (
-    vuuid        varchar(32) not null
+    vuuid        varchar(32)                  not null
         constraint fy_vip_pk
             primary key,
-    name         varchar(30) not null,
-    display_name varchar(30) not null,
-    description  varchar     not null,
-        updated_at   timestamp default now() not null
+    name         varchar(30)                  not null,
+    display_name varchar(30)                  not null,
+    price        decimal(10, 2) default 0     not null,
+    description  varchar                      not null,
+    updated_at   timestamp      default now() not null
 );
 
 comment on table fy_vip is '付费会员表';
 comment on column fy_vip.vuuid is '会员 uuid 主键表';
 comment on column fy_vip.name is '会员字段';
 comment on column fy_vip.display_name is '展示名字';
+comment on column fy_vip.price is '价格';
 comment on column fy_vip.description is '展示名字';
 comment on column fy_role.updated_at is '更新时间';
 

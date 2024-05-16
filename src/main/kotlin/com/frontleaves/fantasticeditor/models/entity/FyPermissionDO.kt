@@ -12,20 +12,23 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.mappers
-
-import com.baomidou.mybatisplus.core.mapper.BaseMapper
-import com.frontleaves.fantasticeditor.models.entity.FyInfoDO
-import org.apache.ibatis.annotations.Mapper
+package com.frontleaves.fantasticeditor.models.entity
 
 /**
- * # 基本信息映射器
- * 用于定义基本信息映射器; fy_info 表的映射器;
+ * # 权限实体类
+ * 用于定义权限实体类；
  *
  * @since v1.0.0
- * @see BaseMapper
- * @property FyInfoDO 基本信息实体类
+ * @property pid 权限唯一标识
+ * @property permission 权限
+ * @property description 权限描述
+ * @property parent 父权限
+ * @constructor 创建一个权限实体类
  * @author xiao_lfeng
  */
-@Mapper
-interface InfoMapper : BaseMapper<FyInfoDO>
+data class FyPermissionDO(
+    val pid: Long? = null,
+    val permission: String? = null,
+    val description: String? = null,
+    val parent: Long? = null,
+)

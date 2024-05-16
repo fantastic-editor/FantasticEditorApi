@@ -144,6 +144,8 @@ class UserAuthenticationException(
      * @constructor 创建一个错误类型
      */
     enum class ErrorType(val message: String, val errorCode: ErrorCode) {
+        TOKEN_EXPIRED("令牌过期或不存在", ErrorCode.TOKEN_EXPIRED),
+        PERMISSION_DENIED("权限不足", ErrorCode.PERMISSION_DENIED),
         USER_NOT_LOGIN("用户未登录", ErrorCode.USER_NOT_LOGIN),
         USER_NOT_EXIST("用户不存在", ErrorCode.USER_NOT_EXIST),
         WRONG_PASSWORD("密码错误", ErrorCode.WRONG_PASSWORD),
@@ -183,4 +185,29 @@ class UserAuthenticationException(
         )
 }
 
+/**
+ * # 服务器内部错误异常
+ * 用于定义服务器内部错误异常；
+ *
+ * @since v1.0.0
+ * @see RuntimeException
+ * @property message 异常信息
+ * @constructor 创建一个服务器内部错误异常
+ * @author xiao_lfeng
+ */
 class ServerInternalErrorException(override val message: String) : RuntimeException(message)
+
+/**
+ * # 无权限异常
+ * 用于定义无权限异常；
+ *
+ * @since v1.0.0
+ * @see RuntimeException
+ * @property message 异常信息
+ * @property permission 权限
+ * @constructor 创建一个无权限异常
+ * @param permission 权限
+ * @param message 异常信息
+ * @author xiao_lfeng
+ */
+class NoPermissionException(override val message: String, val permission: String) : RuntimeException(message)

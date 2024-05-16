@@ -16,6 +16,9 @@ package com.frontleaves.fantasticeditor.controllers
 
 import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
 import com.frontleaves.fantasticeditor.context
+import com.frontleaves.fantasticeditor.utility.BaseResponse
+import com.frontleaves.fantasticeditor.utility.ResultUtil
+import org.springframework.http.ResponseEntity
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -41,7 +44,7 @@ class ResetController(
      * 用于重置数据库操作的控制器
      */
     @GetMapping("/database")
-    fun resetDatabase() {
+    fun resetDatabase(): ResponseEntity<BaseResponse<Void>> {
         val getTable = jdbcTemplate.query(
             "SELECT table_name FROM information_schema.tables WHERE table_name LIKE ?",
             { rs, _ -> rs.getString("table_name") },
@@ -50,7 +53,11 @@ class ResetController(
         getTable.forEach { table ->
             jdbcTemplate.execute("DROP TABLE IF EXISTS $table CASCADE")
         }
-        log.info("[SERVER] 数据库已重置，所有数据表已删除，请重新启动系统！")
-        context.close()
+        Thread {
+            Thread.sleep(2000)
+            log.info("[SERVER] 数据库已重置，所有数据表已删除，请重新启动系统！")
+            context.close()
+        }.start()
+        return ResultUtil.success("数据库已重置，请重新启动系统")
     }
 }

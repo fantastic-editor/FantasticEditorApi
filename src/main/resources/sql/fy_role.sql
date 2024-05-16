@@ -21,6 +21,7 @@ create table fy_role
     name         varchar(30)             not null,
     display_name varchar(30)             not null,
     description  varchar                 not null,
+    permissions  json                   not null,
     updated_at   timestamp default now() not null
 );
 
@@ -29,6 +30,7 @@ comment on column fy_role.ruuid is '角色主键';
 comment on column fy_role.name is '角色名字';
 comment on column fy_role.display_name is '展示名字';
 comment on column fy_role.description is '角色描述';
+comment on column fy_role.permissions is '角色权限';
 comment on column fy_role.updated_at is '更新时间';
 
 create unique index fy_role_role_uindex

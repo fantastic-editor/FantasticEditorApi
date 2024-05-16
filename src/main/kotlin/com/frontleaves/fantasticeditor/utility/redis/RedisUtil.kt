@@ -16,7 +16,7 @@ package com.frontleaves.fantasticeditor.utility.redis
 
 import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
 import com.frontleaves.fantasticeditor.exceptions.ServerInternalErrorException
-import com.frontleaves.fantasticeditor.utility.BasicUtil.objectToMap
+import com.frontleaves.fantasticeditor.utility.Util.objectToMap
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.lang.NonNull
 import org.springframework.stereotype.Component
@@ -254,7 +254,7 @@ class RedisUtil(private val redisTemplate: RedisTemplate<String, Any>) {
     ): Map<String, Any>? {
         val getResult = redisTemplate.opsForHash<String, Any>().entries(key)
         return takeIf { getResult.isNotEmpty() }?.let { getResult } ?: run {
-            log.warn("[REDIS] <Func:hashGet> 数据为空")
+            log.warn("[REDIS] <Func:hashGet> 数据 $key 为空")
             null
         }
     }

@@ -33,6 +33,8 @@ enum class ErrorCode(val output: String, val code: Int, val message: String) {
     WRONG_PASSWORD("WrongPassword", 40103, "密码错误"),
     USER_BANNED("UserBanned", 40104, "用户被封禁或未启用"),
     CSRF_TOKEN_ERROR("CsrfTokenError", 40105, "CSRF 错误"),
+    TOKEN_EXPIRED("TokenExpired", 40106, "Token 过期"),
+    PERMISSION_DENIED("PermissionDenied", 40301, "权限不足"),
     REQUEST_METHOD_NOT_ALLOWED("RequestMethodNotAllowed", 40301, "请求方法不允许"),
     VERIFY_CODE_ERROR("VerifyCodeError", 40302, "验证码错误"),
     MAIL_ERROR("MailError", 40303, "邮件发送失败"),
