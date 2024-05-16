@@ -29,7 +29,7 @@ import java.sql.Timestamp
  * @property password 密码
  * @property oldPassword 旧密码
  * @property avatar 头像
- * @property optAuth 操作权限
+ * @property otpAuth 操作权限
  * @property mailVerify 邮箱验证
  * @property phoneVerify 手机验证
  * @property basicInformation 基本信息
