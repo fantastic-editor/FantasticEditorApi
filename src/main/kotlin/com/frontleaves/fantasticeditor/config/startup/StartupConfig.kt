@@ -15,6 +15,7 @@
 package com.frontleaves.fantasticeditor.config.startup
 
 import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
+import com.frontleaves.fantasticeditor.utility.Util
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -111,6 +112,46 @@ class StartupConfig(
             log.info("[STARTUP] 正在进行 fy_permission 表完整性检查...")
             prepare.permission("user:allPermission", "用户操作接口", null)
             prepare.permission("user:userCurrent", "用户当前信息", "user:allPermission")
+
+            prepare.addRole("console", "超级管理员", "系统最高权限")
+            prepare.addRole("admin", "管理员", "系统管理员")
+            prepare.addRole("user", "用户", "普通用户")
+        }
+    }
+
+    @Bean
+    @Order(10)
+    fun prepareConsoleUser(): CommandLineRunner {
+        return CommandLineRunner {
+            log.info("[STARTUP] 正在进行系统管理员账户检查...")
+            val superAdminUUID = Util.makeUUIDByString("SuperConsoleUserForFantasticEditor")
+            try {
+                jdbcTemplate.query(
+                    "SELECT username FROM fy_user WHERE uuid = ?",
+                    { rs, _ -> rs.getString("username") },
+                    superAdminUUID.toString().replace("-", ""),
+                )
+            } catch (e: Exception) {
+                val getRole = jdbcTemplate.query(
+                    "SELECT ruuid FROM fy_role WHERE name = ?",
+                    { rs, _ -> rs.getString("ruuid") },
+                    "console",
+                ).first()
+                jdbcTemplate.update(
+                    """INSERT INTO fy_user
+                        | (uuid, username, email, phone, password, otp_auth, basic_information, role)
+                        | VALUES (?, ?, ?, ?, ?, ?, ?::jsonb, ?)
+                    """.trimMargin(),
+                    superAdminUUID.toString().replace("-", ""),
+                    "console",
+                    "console@fe.com",
+                    "18888888888",
+                    Util.generatePassword("admin"),
+                    Util.makeUUID().toString().replace("-", ""),
+                    "{}",
+                    getRole,
+                )
+            }
         }
     }
 

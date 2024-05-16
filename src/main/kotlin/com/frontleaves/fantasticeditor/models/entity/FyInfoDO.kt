@@ -31,8 +31,8 @@ import java.sql.Timestamp
  */
 @TableName("fy_info")
 data class FyInfoDO(
-    val id: String,
-    val key: String,
-    val value: String,
-    val updatedAt: Timestamp,
+    val id: String? = null,
+    val key: String? = null,
+    val value: String? = null,
+    val updatedAt: Timestamp? = null,
 )

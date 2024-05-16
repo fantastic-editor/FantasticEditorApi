@@ -12,20 +12,17 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.mappers
-
-import com.baomidou.mybatisplus.core.mapper.BaseMapper
-import com.frontleaves.fantasticeditor.models.entity.FyInfoDO
-import org.apache.ibatis.annotations.Mapper
+package com.frontleaves.fantasticeditor.annotations
 
 /**
- * # 基本信息映射器
- * 用于定义基本信息映射器; fy_info 表的映射器;
+ * ## 权限检查注解
+ * 用于检查用户是否有权限访问某个接口
  *
  * @since v1.0.0
- * @see BaseMapper
- * @property FyInfoDO 基本信息实体类
+ * @constructor 创建一个权限检查注解
+ * @property value 权限值
  * @author xiao_lfeng
  */
-@Mapper
-interface InfoMapper : BaseMapper<FyInfoDO>
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class CheckPermission(val value: String = "")

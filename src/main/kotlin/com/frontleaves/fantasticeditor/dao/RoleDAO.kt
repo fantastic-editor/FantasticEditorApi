@@ -14,22 +14,40 @@
 
 package com.frontleaves.fantasticeditor.dao
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.extension.service.IService
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
-import com.frontleaves.fantasticeditor.mappers.InfoMapper
-import com.frontleaves.fantasticeditor.models.entity.FyInfoDO
+import com.frontleaves.fantasticeditor.mappers.RoleMapper
+import com.frontleaves.fantasticeditor.models.entity.FyRoleDO
+import com.frontleaves.fantasticeditor.utility.Util
+import com.frontleaves.fantasticeditor.utility.redis.RedisUtil
 import org.springframework.stereotype.Repository
 
 /**
- * # 基本信息数据访问对象
- * 用于定义基本信息数据访问对象；
+ * # 角色数据访问对象
+ * 用于定义角色数据访问对象；
  *
  * @since v1.0.0
  * @see ServiceImpl
- * @property InfoMapper 基本信息映射器
- * @property FyInfoDO 基本信息实体类
- * @constructor 创建一个基本信息数据访问对象
+ * @see IService
+ * @constructor 创建一个角色数据访问对象
  * @author xiao_lfeng
  */
 @Repository
-class InfoDAO : ServiceImpl<InfoMapper, FyInfoDO>(), IService<FyInfoDO>
+class RoleDAO(private val redisUtil: RedisUtil) : ServiceImpl<RoleMapper, FyRoleDO>(), IService<FyRoleDO> {
+
+    /**
+     * ## 通过UUID获取角色
+     * 通过UUID获取角色的基本信息
+     *
+     * @param ruuid 角色UUID
+     * @return 角色实体类
+     */
+    fun getRoleByRUUID(ruuid: String): FyRoleDO? {
+        return redisUtil.hashGet("role:uuid:$ruuid").takeIf { !it.isNullOrEmpty() }?.let {
+            Util.mapToObject(it, FyRoleDO::class.java)
+        } ?: run {
+            this.getOne(QueryWrapper<FyRoleDO>().eq("uuid", ruuid))
+        }
+    }
+}

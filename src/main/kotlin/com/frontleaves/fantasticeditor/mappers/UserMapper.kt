@@ -15,17 +15,16 @@
 package com.frontleaves.fantasticeditor.mappers
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper
-import com.frontleaves.fantasticeditor.models.entity.FyInfoDO
+import com.frontleaves.fantasticeditor.models.entity.FyUserDO
 import org.apache.ibatis.annotations.Mapper
 
 /**
- * # 基本信息映射器
- * 用于定义基本信息映射器; fy_info 表的映射器;
+ * # 用户映射器
+ * 用于定义用户映射器；
  *
  * @since v1.0.0
- * @see BaseMapper
- * @property FyInfoDO 基本信息实体类
+ * @constructor 创建一个用户映射器
  * @author xiao_lfeng
  */
 @Mapper
-interface InfoMapper : BaseMapper<FyInfoDO>
+interface UserMapper : BaseMapper<FyUserDO>

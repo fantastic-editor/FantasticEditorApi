@@ -12,20 +12,27 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.mappers
+package com.frontleaves.fantasticeditor.models.entity
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper
-import com.frontleaves.fantasticeditor.models.entity.FyInfoDO
-import org.apache.ibatis.annotations.Mapper
+import java.sql.Timestamp
 
 /**
- * # 基本信息映射器
- * 用于定义基本信息映射器; fy_info 表的映射器;
+ * # 角色实体类
+ * 用于定义角色实体类；
  *
  * @since v1.0.0
- * @see BaseMapper
- * @property FyInfoDO 基本信息实体类
+ * @property ruuid 角色唯一标识
+ * @property name 角色名称
+ * @property displayName 角色显示名称
+ * @property permissions 角色权限
+ * @property updatedAt 更新时间
+ * @constructor 创建一个角色实体类
  * @author xiao_lfeng
  */
-@Mapper
-interface InfoMapper : BaseMapper<FyInfoDO>
+data class FyRoleDO(
+    val ruuid: String? = null,
+    val name: String? = null,
+    val displayName: String? = null,
+    val permissions: String? = null,
+    val updatedAt: Timestamp? = null,
+)

@@ -12,20 +12,29 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.mappers
+package com.frontleaves.fantasticeditor.models.entity
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper
-import com.frontleaves.fantasticeditor.models.entity.FyInfoDO
-import org.apache.ibatis.annotations.Mapper
+import java.sql.Timestamp
 
 /**
- * # 基本信息映射器
- * 用于定义基本信息映射器; fy_info 表的映射器;
+ * # 付费会员实体类
+ * 用于定义付费会员实体类；
  *
  * @since v1.0.0
- * @see BaseMapper
- * @property FyInfoDO 基本信息实体类
+ * @property vuuid 会员唯一标识
+ * @property name 会员名
+ * @property displayName 显示名
+ * @property price 价格
+ * @property description 描述
+ * @property updatedAt 更新时间
+ * @constructor 创建一个付费会员实体类
  * @author xiao_lfeng
  */
-@Mapper
-interface InfoMapper : BaseMapper<FyInfoDO>
+data class FyVipDO(
+    val vuuid: String? = null,
+    val name: String? = null,
+    val displayName: String? = null,
+    val price: Long? = null,
+    val description: String? = null,
+    val updatedAt: Timestamp? = null,
+)
