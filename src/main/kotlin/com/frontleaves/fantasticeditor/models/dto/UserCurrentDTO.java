@@ -12,20 +12,43 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.dto
+package com.frontleaves.fantasticeditor.models.dto;
 
-import jakarta.validation.constraints.NotBlank
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
 
 /**
- * CSRF Get DTO
- *
- * 用于处理 CSRF 相关请求
+ * 当前用户信息数据传输对象
+ * <p>
+ * 用于返回当前用户信息; 有关用户的基本信息, 角色组, VIP组等;
+ * 在 {@code UserController} 中使用;
  *
  * @since v1.0.0
- * @constructor 创建一个 CSRF Get DTO
  * @author xiao_lfeng
  */
-class CsrfGetDTO {
-    @NotBlank
-    var token: String? = null
+@Data
+@NoArgsConstructor
+public class UserCurrentDTO {
+    // 用户唯一标识
+    public String uuid;
+    // 用户名
+    public String username;
+    // 邮箱
+    public String email;
+    // 手机号
+    public String phone;
+    // 头像
+    public String avatar;
+    // 基本信息
+    public String basicInformation;
+    // 角色组
+    public String role;
+    // VIP组
+    public String vip;
+    // 创建时间
+    public Timestamp createdAt;
+    // 更新时间
+    public Timestamp updatedAt;
 }

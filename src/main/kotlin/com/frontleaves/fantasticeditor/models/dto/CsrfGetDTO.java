@@ -12,34 +12,21 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.dto
+package com.frontleaves.fantasticeditor.models.dto;
 
-import jakarta.validation.constraints.NotBlank
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * ## 信息状态数据传输对象
- * 用于传输信息状态数据, 例如代理主机, 代理端口等; 在 `InfoController` 中使用
+ * CSRF Get 数据传输对象
+ * <p/>
+ * 用于处理 CSRF 相关请求; 在 {@code CsrfController} 中使用;
  *
  * @since v1.0.0
- * @constructor 创建一个信息状态数据传输对象
  * @author xiao_lfeng
  */
-class InfoStatusDTO {
-    @NotBlank
-    var proxyHost: String? = null
-
-    @NotBlank
-    var charset: String? = null
-
-    @NotBlank
-    var timeZone: String? = null
-
-    @NotBlank
-    var osName: String? = null
-
-    @NotBlank
-    var userCountry: String? = null
-
-    @NotBlank
-    var startTime: String? = null
+@Data
+@NoArgsConstructor
+public class CsrfGetDTO {
+    public String token;
 }

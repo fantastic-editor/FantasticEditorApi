@@ -12,24 +12,31 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.vo
+package com.frontleaves.fantasticeditor.models.vo;
 
-import jakarta.validation.constraints.NotBlank
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
- * ## 用户登录VO
- * 用于接收用户登录信息
+ * 百度短信模板VO
+ * <p>
+ * 用于发送百度短信模板内容
  *
  * @since v1.0.0
- * @constructor 创建一个用户登录VO
- * @property username 用户名
- * @property password 密码
+ * @version v1.0.0
  * @author xiao_lfeng
  */
-class AuthUserLoginVO {
-    @NotBlank(message = "用户名不能为空")
-    var username: String? = null
-
-    @NotBlank(message = "密码不能为空")
-    var password: String? = null
+@Data
+@Accessors(chain = true)
+@NoArgsConstructor
+public class SmsContentVO {
+    // 联系人（客户人）
+    public String contactPerson;
+    // 类型名称
+    public String typeName;
+    // 验证码
+    public String code;
+    // 服务名称
+    public String service;
 }

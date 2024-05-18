@@ -12,24 +12,37 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.vo
+package com.frontleaves.fantasticeditor.models.vo.api;
 
-import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.Pattern
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-class AuthUserRegisterVO {
+/**
+ * 用户注册VO
+ * <p>
+ * 用于接收用户注册信息
+ *
+ * @since v1.0.0
+ * @version v1.0.0
+ * @author xiao_lfeng
+ */
+@Data
+@NoArgsConstructor
+public class AuthUserRegisterVO {
     @Pattern(regexp = "^[0-9A-Za-z-_]+$", message = "用户名格式不正确，用户名仅允许数字密码以及“-”和“_”组合")
-    val username: String? = null
+    public String username;
 
-    @Pattern(regexp = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*\$", message = "请输入正确的邮箱格式")
-    val email: String? = null
+    @Pattern(regexp = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", message = "请输入正确的邮箱格式")
+    public String email;
 
-    @Pattern(regexp = "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}\$", message = "请输入正确的手机号")
-    val phone: String? = null
+    @Pattern(regexp = "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", message = "请输入正确的手机号")
+    public String phone;
 
     @NotBlank(message = "密码不能为空")
-    val password: String? = null
+    public String password;
 
     @Pattern(regexp = "^[0-9A-Za-z]{6,10}", message = "请输入正确的验证码格式")
-    val verifyCode: String? = null
+    public String verifyCode;
 }
