@@ -15,7 +15,7 @@
 package com.frontleaves.fantasticeditor.mappers
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper
-import com.frontleaves.fantasticeditor.models.entity.FyUserDO
+import com.frontleaves.fantasticeditor.models.entity.sql.SqlUserDO
 import org.apache.ibatis.annotations.Mapper
 
 /**
@@ -27,4 +27,4 @@ import org.apache.ibatis.annotations.Mapper
  * @author xiao_lfeng
  */
 @Mapper
-interface UserMapper : BaseMapper<FyUserDO>
+interface UserMapper : BaseMapper<SqlUserDO>

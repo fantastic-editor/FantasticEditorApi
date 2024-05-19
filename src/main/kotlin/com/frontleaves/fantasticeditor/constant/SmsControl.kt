@@ -14,7 +14,18 @@
 
 package com.frontleaves.fantasticeditor.constant
 
-enum class SMSControl(val typeName: String, val description: String) {
-    SEND_CODE("sendCode", "发送验证码"),
+/**
+ * ## 短信类型模板
+ * 用于定义短信类型模板，包含短信类型名称和描述，用于短信服务接口，会显示在短信发送记录以及短信发送对方收信
+ *
+ * @since v1.0.0
+ * @property typeName 短信类型名称
+ * @property description 短信类型描述
+ * @constructor 创建一个短信类型模板
+ * @return SmsControl
+ * @author xiao_lfeng
+ */
+enum class SmsControl(val typeName: String, val description: String) {
+    USER_REGISTER("UserRegister", "注册账户"),
     CHECK_CODE("checkCode", "检查验证码"),
 }

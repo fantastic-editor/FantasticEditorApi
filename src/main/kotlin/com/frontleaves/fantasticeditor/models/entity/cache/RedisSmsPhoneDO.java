@@ -12,13 +12,28 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.dao
+package com.frontleaves.fantasticeditor.models.entity.cache;
 
-import com.baomidou.mybatisplus.extension.service.IService
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
-import com.frontleaves.fantasticeditor.mappers.PermissionMapper
-import com.frontleaves.fantasticeditor.models.entity.sql.SqlPermissionDO
-import org.springframework.stereotype.Repository
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
-@Repository
-class PermissionDAO : ServiceImpl<PermissionMapper, SqlPermissionDO>(), IService<SqlPermissionDO>
+
+/**
+ * 短信验证码实体
+ * <p>
+ * 用于存储短信验证码的实体，包括手机号、验证码、过期时间、发送时间、发送频率等信息
+ *
+ * @since v1.0.0
+ * @version v1.0.0
+ * @author xiao_lfeng
+ */
+@Data
+@NoArgsConstructor
+@Accessors(chain = true)
+public class RedisSmsPhoneDO {
+    private String phone;
+    private String code;
+    private String sendAt;
+    private String frequency;
+}

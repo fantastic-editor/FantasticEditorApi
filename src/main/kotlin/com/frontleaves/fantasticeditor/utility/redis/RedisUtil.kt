@@ -16,7 +16,7 @@ package com.frontleaves.fantasticeditor.utility.redis
 
 import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
 import com.frontleaves.fantasticeditor.exceptions.ServerInternalErrorException
-import com.frontleaves.fantasticeditor.utility.Util.objectToMap
+import com.google.gson.Gson
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.lang.NonNull
 import org.springframework.stereotype.Component
@@ -33,7 +33,10 @@ import java.util.concurrent.TimeUnit
  * @author xiao_lfeng
  */
 @Component
-class RedisUtil(private val redisTemplate: RedisTemplate<String, Any>) {
+class RedisUtil(
+    private val redisTemplate: RedisTemplate<String, Any>,
+    private val gson: Gson,
+) {
     // ************************************ Redis Common ************************************
 
     /**
@@ -338,7 +341,7 @@ class RedisUtil(private val redisTemplate: RedisTemplate<String, Any>) {
             redisTemplate.opsForHash<Any, Any>().put(key, field, value)
             return true
         } catch (e: Exception) {
-            log.warn("[REDIS] <Func:hashPut> 数据插入失败")
+            log.warn("[REDIS] <Func:hashPut> 数据插入失败 | {}", e.message, e)
             return false
         }
     }
@@ -357,13 +360,14 @@ class RedisUtil(private val redisTemplate: RedisTemplate<String, Any>) {
         value: V,
     ): Boolean {
         try {
-            redisTemplate.opsForHash<Any, Any>().putAll(key, objectToMap(value))
+            val getHash = gson.fromJson<HashMap<String, String?>>(gson.toJson(value), HashMap::class.java)
+            redisTemplate.opsForHash<Any, Any>().putAll(key, getHash)
             return true
         } catch (e: IllegalAccessException) {
             log.warn("[REDIS] <Func:hashSet> 插入对象 [{}] 无法转换为 Map 对象", value.javaClass.getName())
             return false
         } catch (e: Exception) {
-            log.warn("[REDIS] <Func:hashSet> 数据插入失败")
+            log.warn("[REDIS] <Func:hashSet> 数据插入失败 | {}", e.message, e)
             return false
         }
     }
@@ -384,11 +388,8 @@ class RedisUtil(private val redisTemplate: RedisTemplate<String, Any>) {
         time: Long,
     ): Boolean {
         return try {
-            if (value is Map<*, *>) {
-                redisTemplate.opsForHash<Any, Any>().putAll(key, value)
-            } else {
-                redisTemplate.opsForHash<Any, Any>().putAll(key, objectToMap(value))
-            }
+            val getHash = gson.fromJson<HashMap<String, String?>>(gson.toJson(value), HashMap::class.java)
+            redisTemplate.opsForHash<Any, Any>().putAll(key, getHash)
             if (time > 0) {
                 expire(key, time)
             } else {

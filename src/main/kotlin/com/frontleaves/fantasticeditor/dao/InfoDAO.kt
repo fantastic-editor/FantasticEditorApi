@@ -17,7 +17,7 @@ package com.frontleaves.fantasticeditor.dao
 import com.baomidou.mybatisplus.extension.service.IService
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import com.frontleaves.fantasticeditor.mappers.InfoMapper
-import com.frontleaves.fantasticeditor.models.entity.FyInfoDO
+import com.frontleaves.fantasticeditor.models.entity.sql.SqlInfoDO
 import org.springframework.stereotype.Repository
 
 /**
@@ -32,4 +32,4 @@ import org.springframework.stereotype.Repository
  * @author xiao_lfeng
  */
 @Repository
-class InfoDAO : ServiceImpl<InfoMapper, FyInfoDO>(), IService<FyInfoDO>
+class InfoDAO : ServiceImpl<InfoMapper, SqlInfoDO>(), IService<SqlInfoDO>

@@ -18,7 +18,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.extension.service.IService
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import com.frontleaves.fantasticeditor.mappers.RoleMapper
-import com.frontleaves.fantasticeditor.models.entity.FyRoleDO
+import com.frontleaves.fantasticeditor.models.entity.sql.SqlRoleDO
 import com.frontleaves.fantasticeditor.utility.Util
 import com.frontleaves.fantasticeditor.utility.redis.RedisUtil
 import org.springframework.stereotype.Repository
@@ -34,7 +34,7 @@ import org.springframework.stereotype.Repository
  * @author xiao_lfeng
  */
 @Repository
-class RoleDAO(private val redisUtil: RedisUtil) : ServiceImpl<RoleMapper, FyRoleDO>(), IService<FyRoleDO> {
+class RoleDAO(private val redisUtil: RedisUtil) : ServiceImpl<RoleMapper, SqlRoleDO>(), IService<SqlRoleDO> {
 
     /**
      * ## 通过UUID获取角色
@@ -43,11 +43,11 @@ class RoleDAO(private val redisUtil: RedisUtil) : ServiceImpl<RoleMapper, FyRole
      * @param ruuid 角色UUID
      * @return 角色实体类
      */
-    fun getRoleByRUUID(ruuid: String): FyRoleDO? {
+    fun getRoleByRUUID(ruuid: String): SqlRoleDO? {
         return redisUtil.hashGet("role:uuid:$ruuid").takeIf { !it.isNullOrEmpty() }?.let {
-            Util.mapToObject(it, FyRoleDO::class.java)
+            Util.mapToObject(it, SqlRoleDO::class.java)
         } ?: run {
-            this.getOne(QueryWrapper<FyRoleDO>().eq("uuid", ruuid))?.run {
+            this.getOne(QueryWrapper<SqlRoleDO>().eq("uuid", ruuid))?.run {
                 redisUtil.hashSet("role:uuid:$ruuid", Util.objectToMap(this), 3600 * 24)
                 this
             }
@@ -61,11 +61,11 @@ class RoleDAO(private val redisUtil: RedisUtil) : ServiceImpl<RoleMapper, FyRole
      * @param roleName 角色名
      * @return 角色实体类
      */
-    fun getRoleByRoleName(roleName: String): FyRoleDO? {
+    fun getRoleByRoleName(roleName: String): SqlRoleDO? {
         return redisUtil.hashGet("role:name:$roleName").takeIf { !it.isNullOrEmpty() }?.let {
-            Util.mapToObject(it, FyRoleDO::class.java)
+            Util.mapToObject(it, SqlRoleDO::class.java)
         } ?: run {
-            this.getOne(QueryWrapper<FyRoleDO>().eq("role_name", roleName))?.run {
+            this.getOne(QueryWrapper<SqlRoleDO>().eq("role_name", roleName))?.run {
                 redisUtil.hashSet("role:name:$roleName", Util.objectToMap(this), 3600 * 24)
                 this
             }

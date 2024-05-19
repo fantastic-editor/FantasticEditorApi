@@ -18,7 +18,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.extension.service.IService
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import com.frontleaves.fantasticeditor.mappers.UserMapper
-import com.frontleaves.fantasticeditor.models.entity.FyUserDO
+import com.frontleaves.fantasticeditor.models.entity.sql.SqlUserDO
 import com.frontleaves.fantasticeditor.utility.Util
 import com.frontleaves.fantasticeditor.utility.redis.RedisUtil
 import org.springframework.stereotype.Repository
@@ -30,14 +30,14 @@ import org.springframework.stereotype.Repository
  * @since v1.0.0
  * @see ServiceImpl
  * @property UserMapper 用户映射器
- * @property FyUserDO 用户实体类
+ * @property SqlUserDO 用户实体类
  * @constructor 创建一个用户数据访问对象
  * @author xiao_lfeng
  */
 @Repository
 class UserDAO(
     private val redisUtil: RedisUtil,
-) : ServiceImpl<UserMapper, FyUserDO>(), IService<FyUserDO> {
+) : ServiceImpl<UserMapper, SqlUserDO>(), IService<SqlUserDO> {
 
     /**
      * ## 通过UUID获取用户
@@ -46,11 +46,11 @@ class UserDAO(
      * @param uuid 用户UUID
      * @return 用户实体类
      */
-    fun getUserByUUID(uuid: String): FyUserDO? {
+    fun getUserByUUID(uuid: String): SqlUserDO? {
         return redisUtil.hashGet("user:uuid:$uuid").takeIf { !it.isNullOrEmpty() }?.let {
-            Util.mapToObject(it, FyUserDO::class.java)
+            Util.mapToObject(it, SqlUserDO::class.java)
         } ?: run {
-            this.getOne(QueryWrapper<FyUserDO>().eq("uuid", uuid))
+            this.getOne(QueryWrapper<SqlUserDO>().eq("uuid", uuid))
         }
     }
 
@@ -61,11 +61,11 @@ class UserDAO(
      * @param username 用户名
      * @return 用户实体类
      */
-    fun getUserByUsername(username: String): FyUserDO? {
+    fun getUserByUsername(username: String): SqlUserDO? {
         return redisUtil.hashGet("user:username:$username").takeIf { !it.isNullOrEmpty() }?.let {
-            Util.mapToObject(it, FyUserDO::class.java)
+            Util.mapToObject(it, SqlUserDO::class.java)
         } ?: run {
-            this.getOne(QueryWrapper<FyUserDO>().eq("username", username))
+            this.getOne(QueryWrapper<SqlUserDO>().eq("username", username))
         }
     }
 
@@ -76,11 +76,11 @@ class UserDAO(
      * @param email 邮箱
      * @return 用户实体类
      */
-    fun getUserByEmail(email: String): FyUserDO? {
+    fun getUserByEmail(email: String): SqlUserDO? {
         return redisUtil.hashGet("user:email:$email").takeIf { !it.isNullOrEmpty() }?.let {
-            Util.mapToObject(it, FyUserDO::class.java)
+            Util.mapToObject(it, SqlUserDO::class.java)
         } ?: run {
-            this.getOne(QueryWrapper<FyUserDO>().eq("email", email))
+            this.getOne(QueryWrapper<SqlUserDO>().eq("email", email))
         }
     }
 
@@ -91,11 +91,11 @@ class UserDAO(
      * @param phone 手机号
      * @return 用户实体类
      */
-    fun getUserByPhone(phone: String): FyUserDO? {
+    fun getUserByPhone(phone: String): SqlUserDO? {
         return redisUtil.hashGet("user:phone:$phone").takeIf { !it.isNullOrEmpty() }?.let {
-            Util.mapToObject(it, FyUserDO::class.java)
+            Util.mapToObject(it, SqlUserDO::class.java)
         } ?: run {
-            this.getOne(QueryWrapper<FyUserDO>().eq("phone", phone))
+            this.getOne(QueryWrapper<SqlUserDO>().eq("phone", phone))
         }
     }
 }
