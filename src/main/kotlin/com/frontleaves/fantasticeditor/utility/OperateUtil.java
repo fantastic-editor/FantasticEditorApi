@@ -46,8 +46,11 @@ public class OperateUtil {
      *
      * @param phone 手机号
      */
-    public void checkSmsResendAble(String phone) {
-        RedisSmsPhoneDO smsPhone = Util.INSTANCE.mapToObject(redisUtil.hashGet("sms:code:" + phone), RedisSmsPhoneDO.class);
+    public void checkSmsResendAble(final String phone) {
+        RedisSmsPhoneDO smsPhone = Util.INSTANCE.mapToObject(
+                redisUtil.hashGet("sms:code:" + phone),
+                RedisSmsPhoneDO.class
+        );
         if (smsPhone != null) {
             // 15分钟检查
             if (Long.parseLong(smsPhone.getFrequency()) >= 5) {

@@ -42,7 +42,7 @@ public class ResultUtil {
      * @param message 输出的 message 信息
      * @return 输出一个成功的结果
      */
-    public static @NotNull ResponseEntity<BaseResponse<Void>> success(String message) {
+    public static @NotNull ResponseEntity<BaseResponse<Void>> success(final String message) {
         log.info("[RESULT] [{}]{} | {}", 200, "Success", "成功");
         return ResponseEntity
                 .ok(new BaseResponse<>("Success", 200, message, null, null));
@@ -58,7 +58,7 @@ public class ResultUtil {
      * @param data    输出的数据
      * @return 输出一个成功的结果
      */
-    public static <T> @NotNull ResponseEntity<BaseResponse<T>> success(String message, @NotNull T data) {
+    public static <T> @NotNull ResponseEntity<BaseResponse<T>> success(final String message, final @NotNull T data) {
         log.info("[RESULT] [{}]{} | {}(数据: {})", 200, "Success", "成功", data.getClass().getSimpleName());
         return ResponseEntity
                 .ok(new BaseResponse<>("Success", 200, message, null, data));
@@ -77,9 +77,9 @@ public class ResultUtil {
      * @return 输出一个失败的结果
      */
     public static <T> @NotNull ResponseEntity<BaseResponse<T>> error(
-            ErrorCode errorCode,
-            String errorMessage,
-            @Nullable T data
+            final ErrorCode errorCode,
+            final String errorMessage,
+            final @Nullable T data
     ) {
         if (data != null) {
             log.info(

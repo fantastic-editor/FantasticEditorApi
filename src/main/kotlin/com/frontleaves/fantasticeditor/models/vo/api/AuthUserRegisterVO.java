@@ -37,7 +37,10 @@ public class AuthUserRegisterVO {
     @Pattern(regexp = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", message = "请输入正确的邮箱格式")
     public String email;
 
-    @Pattern(regexp = "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", message = "请输入正确的手机号")
+    @Pattern(
+            regexp = "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$",
+            message = "请输入正确的手机号"
+    )
     public String phone;
 
     @NotBlank(message = "密码不能为空")

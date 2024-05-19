@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
      */
     @NotNull
     @Override
-    public UserCurrentDTO userRegister(@NotNull AuthUserRegisterVO authUserRegisterVO) {
+    public UserCurrentDTO userRegister(final @NotNull AuthUserRegisterVO authUserRegisterVO) {
         assert authUserRegisterVO.getUsername() != null;
         assert authUserRegisterVO.getEmail() != null;
         assert authUserRegisterVO.getPhone() != null;
@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void sendRegisterPhoneCode(@NotNull String phone) {
+    public void sendRegisterPhoneCode(final @NotNull String phone) {
         // 对手机号内容进行检查，检查缓存中是否存在
         operateUtil.checkSmsResendAble(phone);
         // 检查此手机是否已被注册
@@ -122,7 +122,10 @@ public class UserServiceImpl implements UserService {
                 .setCode(getNumberCode)
                 .setSendAt(String.valueOf(System.currentTimeMillis()))
                 .setFrequency("1");
-        RedisSmsPhoneDO getPhoneCode = Util.INSTANCE.mapToObject(redisUtil.hashGet("sms:code:" + phone), RedisSmsPhoneDO.class);
+        RedisSmsPhoneDO getPhoneCode = Util.INSTANCE.mapToObject(
+                redisUtil.hashGet("sms:code:" + phone),
+                RedisSmsPhoneDO.class
+        );
         if (getPhoneCode != null) {
             smsPhoneDO.setFrequency(String.valueOf(Long.parseLong(getPhoneCode.getFrequency()) + 1));
         }
