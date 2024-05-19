@@ -12,27 +12,28 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.entity
+package com.frontleaves.fantasticeditor.models.entity.sql;
 
-import java.sql.Timestamp
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
- * # 角色实体类
- * 用于定义角色实体类；
+ * 权限实体类
+ * <p>
+ * 用于定义权限实体类；
  *
  * @since v1.0.0
- * @property ruuid 角色唯一标识
- * @property name 角色名称
- * @property displayName 角色显示名称
- * @property permissions 角色权限
- * @property updatedAt 更新时间
- * @constructor 创建一个角色实体类
  * @author xiao_lfeng
  */
-data class FyRoleDO(
-    val ruuid: String? = null,
-    val name: String? = null,
-    val displayName: String? = null,
-    val permissions: String? = null,
-    val updatedAt: Timestamp? = null,
-)
+@Data
+@NoArgsConstructor
+@TableName("fy_permission")
+@Accessors(chain = true)
+public class SqlPermissionDO {
+    public Long pid;
+    public String permission;
+    public String description;
+    public Long parent;
+}

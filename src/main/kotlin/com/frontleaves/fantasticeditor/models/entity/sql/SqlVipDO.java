@@ -12,29 +12,32 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.entity
+package com.frontleaves.fantasticeditor.models.entity.sql;
 
-import java.sql.Timestamp
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
+import java.sql.Timestamp;
 
 /**
- * # 付费会员实体类
+ * 付费会员实体类
+ * <p>
  * 用于定义付费会员实体类；
  *
  * @since v1.0.0
- * @property vuuid 会员唯一标识
- * @property name 会员名
- * @property displayName 显示名
- * @property price 价格
- * @property description 描述
- * @property updatedAt 更新时间
- * @constructor 创建一个付费会员实体类
  * @author xiao_lfeng
  */
-data class FyVipDO(
-    val vuuid: String? = null,
-    val name: String? = null,
-    val displayName: String? = null,
-    val price: Long? = null,
-    val description: String? = null,
-    val updatedAt: Timestamp? = null,
-)
+@Data
+@NoArgsConstructor
+@TableName("fy_vip")
+@Accessors(chain = true)
+public class SqlVipDO {
+    public String vuuid;
+    public String name;
+    public String displayName;
+    public Long price;
+    public String description;
+    public Timestamp updatedAt;
+}

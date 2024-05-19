@@ -12,27 +12,30 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.entity
+package com.frontleaves.fantasticeditor.models.entity.sql;
 
-import com.baomidou.mybatisplus.annotation.TableName
-import java.sql.Timestamp
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
+import java.sql.Timestamp;
 
 /**
- * # 基本信息实体类
+ * 基本信息实体类
+ * <p>
  * 用于定义基本信息实体类；
  *
  * @since v1.0.0
- * @property id 唯一标识
- * @property key 键
- * @property value 值
- * @property updatedAt 更新时间
- * @constructor 创建一个基本信息实体类
  * @author xiao_lfeng
  */
+@Data
+@NoArgsConstructor
 @TableName("fy_info")
-data class FyInfoDO(
-    val id: String? = null,
-    val key: String? = null,
-    val value: String? = null,
-    val updatedAt: Timestamp? = null,
-)
+@Accessors(chain = true)
+public class SqlInfoDO {
+    public String id;
+    public String key;
+    public String value;
+    public Timestamp updatedAt;
+}
