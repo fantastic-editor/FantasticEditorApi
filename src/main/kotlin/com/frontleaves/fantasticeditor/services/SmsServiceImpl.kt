@@ -77,7 +77,6 @@ class SmsServiceImpl(
         }
         log.info("发送短信验证码：${BceDataConstant.bceSmsSignatureID}")
         val smsResponse = smsClient.sendMessage(smsRequest)
-        log.info("发送短信验证码：$smsResponse")
         return smsResponse != null && smsResponse.isSuccess
     }
 
@@ -92,10 +91,15 @@ class SmsServiceImpl(
     override fun checkCode(phone: String?, verifyCode: String?): Boolean {
         return takeIf { phone.isNullOrBlank() || verifyCode.isNullOrBlank() }?.let { false }
             ?: run {
-                redisUtil.get("sms:code:$phone").takeIf { it == verifyCode }?.let {
-                    redisUtil.delete("sms:$phone")
-                    true
-                } ?: run { false }
+                val getData = redisUtil.hashGet("sms:code:$phone")
+                if (getData != null) {
+                    getData.takeIf { it["code"] == verifyCode }?.let {
+                        redisUtil.delete("sms:code:$phone")
+                        true
+                    } ?: run { false }
+                } else {
+                    false
+                }
             }
     }
 }

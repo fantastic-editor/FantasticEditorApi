@@ -14,3 +14,9 @@ logging:
   level:
     com.frontleaves.fantasticeditor: debug
     com.frontleaves.fantasticeditor.mappers: debug
+baidu:
+  access-key: need_set
+  secret-key: need_set
+  sms:
+    template-id: need_set
+    signature-id: need_set

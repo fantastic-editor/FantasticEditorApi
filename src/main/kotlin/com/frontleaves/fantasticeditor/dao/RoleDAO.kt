@@ -47,7 +47,7 @@ class RoleDAO(private val redisUtil: RedisUtil) : ServiceImpl<RoleMapper, SqlRol
         return redisUtil.hashGet("role:uuid:$ruuid").takeIf { !it.isNullOrEmpty() }?.let {
             Util.mapToObject(it, SqlRoleDO::class.java)
         } ?: run {
-            this.getOne(QueryWrapper<SqlRoleDO>().eq("uuid", ruuid))?.run {
+            this.getOne(QueryWrapper<SqlRoleDO>().eq(SqlRoleDO::ruuid.name, ruuid))?.run {
                 redisUtil.hashSet("role:uuid:$ruuid", Util.objectToMap(this), 3600 * 24)
                 this
             }
@@ -65,8 +65,8 @@ class RoleDAO(private val redisUtil: RedisUtil) : ServiceImpl<RoleMapper, SqlRol
         return redisUtil.hashGet("role:name:$roleName").takeIf { !it.isNullOrEmpty() }?.let {
             Util.mapToObject(it, SqlRoleDO::class.java)
         } ?: run {
-            this.getOne(QueryWrapper<SqlRoleDO>().eq("role_name", roleName))?.run {
-                redisUtil.hashSet("role:name:$roleName", Util.objectToMap(this), 3600 * 24)
+            this.getOne(QueryWrapper<SqlRoleDO>().eq(SqlRoleDO::name.name, roleName))?.run {
+                redisUtil.hashSet("role:name:$roleName", this, 3600 * 24)
                 this
             }
         }

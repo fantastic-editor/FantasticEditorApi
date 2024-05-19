@@ -21,7 +21,7 @@ create table fy_role
     name         varchar(30)             not null,
     display_name varchar(30)             not null,
     description  varchar                 not null,
-    permissions  json                   not null,
+    permissions  varchar                 not null,
     updated_at   timestamp default now() not null
 );
 

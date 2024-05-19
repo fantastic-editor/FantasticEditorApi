@@ -32,6 +32,7 @@ import com.frontleaves.fantasticeditor.utility.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -86,18 +87,20 @@ public class UserServiceImpl implements UserService {
         assert getRole.getRuuid() != null;
         // 创建用户
         SqlUserDO user = new SqlUserDO()
-                .setUuid(Util.INSTANCE.makeUUID().toString().replace("-", ""))
+                .setUuid(Util.INSTANCE.makeNoDashUUID())
                 .setUsername(authUserRegisterVO.getUsername())
                 .setEmail(authUserRegisterVO.getEmail())
                 .setPhone(authUserRegisterVO.getPhone())
                 .setPassword(Util.INSTANCE.encryptPassword(authUserRegisterVO.getPassword()))
-                .setOtpAuth(Util.INSTANCE.makeUUID().toString().replace("-", ""))
+                .setOtpAuth(Util.INSTANCE.makeNoDashUUID())
                 .setMailVerify(false)
-                .setPhoneVerify(false)
-                .setBasicInformation("{}")
+                .setPhoneVerify(true)
+                .setBasicInformation("{1=1}")
                 .setRole(getRole.getRuuid());
         if (userDAO.save(user)) {
-            return Util.INSTANCE.copyProperties(user, UserCurrentDTO.class);
+            UserCurrentDTO getUserCurrent = new UserCurrentDTO();
+            BeanUtils.copyProperties(user, getUserCurrent);
+            return getUserCurrent;
         } else {
             throw new BusinessException("用户注册失败", ErrorCode.OPERATION_FAILED);
         }
@@ -107,6 +110,11 @@ public class UserServiceImpl implements UserService {
     public void sendRegisterPhoneCode(@NotNull String phone) {
         // 对手机号内容进行检查，检查缓存中是否存在
         operateUtil.checkSmsResendAble(phone);
+        // 检查此手机是否已被注册
+        SqlUserDO getUser = userDAO.getUserByPhone(phone);
+        if (getUser != null) {
+            throw new BusinessException("手机号已被注册", ErrorCode.USER_EXIST);
+        }
         // 新建验证码并存入缓存
         String getNumberCode = Util.INSTANCE.generateNumber(6);
         RedisSmsPhoneDO smsPhoneDO = new RedisSmsPhoneDO()

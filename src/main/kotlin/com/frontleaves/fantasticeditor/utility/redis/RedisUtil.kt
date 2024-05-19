@@ -16,6 +16,7 @@ package com.frontleaves.fantasticeditor.utility.redis
 
 import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
 import com.frontleaves.fantasticeditor.exceptions.ServerInternalErrorException
+import com.frontleaves.fantasticeditor.utility.Util
 import com.google.gson.Gson
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.lang.NonNull
@@ -360,8 +361,7 @@ class RedisUtil(
         value: V,
     ): Boolean {
         try {
-            val getHash = gson.fromJson<HashMap<String, String?>>(gson.toJson(value), HashMap::class.java)
-            redisTemplate.opsForHash<Any, Any>().putAll(key, getHash)
+            redisTemplate.opsForHash<Any, Any>().putAll(key, Util.objectToMap(value))
             return true
         } catch (e: IllegalAccessException) {
             log.warn("[REDIS] <Func:hashSet> 插入对象 [{}] 无法转换为 Map 对象", value.javaClass.getName())
@@ -388,8 +388,7 @@ class RedisUtil(
         time: Long,
     ): Boolean {
         return try {
-            val getHash = gson.fromJson<HashMap<String, String?>>(gson.toJson(value), HashMap::class.java)
-            redisTemplate.opsForHash<Any, Any>().putAll(key, getHash)
+            redisTemplate.opsForHash<Any, Any>().putAll(key, Util.objectToMap(value))
             if (time > 0) {
                 expire(key, time)
             } else {

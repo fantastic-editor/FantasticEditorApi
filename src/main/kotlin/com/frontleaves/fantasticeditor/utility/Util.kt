@@ -71,6 +71,16 @@ object Util {
     }
 
     /**
+     * ## 生成无破折号的 UUID
+     * 生成一个无破折号的 UUID
+     *
+     * @return UUID 字符串
+     */
+    fun makeNoDashUUID(): String {
+        return UUID.randomUUID().toString().replace("-", "")
+    }
+
+    /**
      * ## 通过字符串 UUID 生成 UUID
      * 通过字符串 UUID 生成一个 UUID
      *

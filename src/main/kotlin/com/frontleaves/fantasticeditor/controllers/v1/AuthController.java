@@ -16,20 +16,19 @@ package com.frontleaves.fantasticeditor.controllers.v1;
 
 import com.frontleaves.fantasticeditor.exceptions.CheckFailureException;
 import com.frontleaves.fantasticeditor.models.dto.UserCurrentDTO;
-import com.frontleaves.fantasticeditor.models.vo.AuthUserLoginVO;
-import com.frontleaves.fantasticeditor.models.vo.AuthUserRegisterVO;
-import com.frontleaves.fantasticeditor.services.interfaces.SMSService;
+import com.frontleaves.fantasticeditor.models.vo.api.AuthUserLoginVO;
+import com.frontleaves.fantasticeditor.models.vo.api.AuthUserRegisterVO;
+import com.frontleaves.fantasticeditor.services.interfaces.SmsService;
 import com.frontleaves.fantasticeditor.services.interfaces.UserService;
 import com.frontleaves.fantasticeditor.utility.BaseResponse;
 import com.frontleaves.fantasticeditor.utility.ResultUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 权限控制器
@@ -45,7 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
 public class AuthController {
-    private final SMSService smsService;
+    private final SmsService smsService;
     private final UserService userService;
 
     /**
@@ -63,6 +62,14 @@ public class AuthController {
         return ResultUtil.success("登录成功");
     }
 
+    /**
+     * 用户注册
+     * <p>
+     * 用户注册，使用用户名和密码注册
+     *
+     * @return 注册结果
+     */
+    @Transactional
     @PostMapping("/register")
     public ResponseEntity<BaseResponse<UserCurrentDTO>> userRegister(
             @RequestBody @Validated AuthUserRegisterVO authUserRegisterVO
@@ -75,5 +82,25 @@ public class AuthController {
         // 注册用户
         UserCurrentDTO getUserCurrent = userService.userRegister(authUserRegisterVO);
         return ResultUtil.success("注册成功", getUserCurrent);
+    }
+
+    /**
+     * 发送注册短信验证码
+     * <p>
+     * 发送注册短信验证码；用于用户注册时的手机验证码
+     *
+     * @return 发送结果
+     */
+    @Transactional
+    @GetMapping("/register/sms")
+    public ResponseEntity<BaseResponse<Void>> sendRegisterSmsCode(
+            @NotNull @RequestParam String phone
+    ) {
+        if (!phone.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$")) {
+            throw new CheckFailureException("手机号格式错误");
+        }
+        // 发送验证码
+        userService.sendRegisterPhoneCode(phone);
+        return ResultUtil.success("发送成功");
     }
 }
