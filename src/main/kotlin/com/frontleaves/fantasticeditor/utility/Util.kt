@@ -14,6 +14,7 @@
 
 package com.frontleaves.fantasticeditor.utility
 
+import com.frontleaves.fantasticeditor.exceptions.BusinessException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.crypto.bcrypt.BCrypt
 import java.util.*
@@ -34,15 +35,18 @@ object Util {
      * @param obj 对象
      * @return Map
      */
-    @Throws(IllegalAccessException::class)
     fun objectToMap(obj: Any): Map<String, Any> {
-        val map: MutableMap<String, Any> = HashMap()
-        val clazz: Class<*> = obj.javaClass
-        for (field in clazz.declaredFields) {
-            field.isAccessible = true
-            map[field.name] = field[obj]
+        try {
+            val map = HashMap<String, Any>()
+            val clazz: Class<*> = obj.javaClass
+            for (field in clazz.declaredFields) {
+                field.isAccessible = true
+                map[field.name] = field[obj]
+            }
+            return map
+        } catch (e: Exception) {
+            throw BusinessException(e.message!!, ErrorCode.SERVER_INTERNAL_ERROR, true)
         }
-        return map
     }
 
     /**
@@ -147,15 +151,19 @@ object Util {
      * @param obj 对象
      * @return 对象
      */
-    fun <V : Any> mapToObject(map: Map<String, *>, obj: Class<V>): V {
-        val instance = obj.getDeclaredConstructor().newInstance()
-        for (field in obj.declaredFields) {
-            field.isAccessible = true
-            if (map.containsKey(field.name)) {
-                field.set(instance, map[field.name])
+    fun <V : Any> mapToObject(map: Map<String, *>?, obj: Class<V>): V? {
+        if (!map.isNullOrEmpty()) {
+            val instance = obj.getDeclaredConstructor().newInstance()
+            for (field in obj.declaredFields) {
+                field.isAccessible = true
+                if (map.containsKey(field.name)) {
+                    field.set(instance, map[field.name])
+                }
             }
+            return instance
+        } else {
+            return null
         }
-        return instance
     }
 
     /**
@@ -169,7 +177,7 @@ object Util {
         val numberBuild = StringBuilder()
         var number = 0
         while (number++ < size) {
-            numberBuild.append(Random().apply { setSeed(System.currentTimeMillis()) }.nextInt(10))
+            numberBuild.append(Random().nextInt(10))
         }
         return numberBuild.toString()
     }

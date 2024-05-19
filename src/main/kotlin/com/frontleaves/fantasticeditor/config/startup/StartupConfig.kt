@@ -15,6 +15,7 @@
 package com.frontleaves.fantasticeditor.config.startup
 
 import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
+import com.frontleaves.fantasticeditor.constant.BceDataConstant
 import com.frontleaves.fantasticeditor.utility.Util
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Bean
@@ -28,7 +29,7 @@ import org.springframework.jdbc.core.JdbcTemplate
  * 用于配置系统启动时的相关配置
  *
  * @since v1.0.0
- * @property environment 环境变量
+ * @property env 环境变量
  * @property jdbcTemplate JDBC 模板
  * @constructor 创建一个系统启动配置
  * @property prepare 准备算法
@@ -38,7 +39,7 @@ import org.springframework.jdbc.core.JdbcTemplate
  */
 @Configuration
 class StartupConfig(
-    private val environment: Environment,
+    private val env: Environment,
     private val jdbcTemplate: JdbcTemplate,
 ) {
     /**
@@ -152,6 +153,16 @@ class StartupConfig(
                     getRole,
                 )
             }
+        }
+    }
+
+    @Bean
+    @Order(90)
+    fun prepareEnd(): CommandLineRunner {
+        return CommandLineRunner {
+            log.info("[STARTUP] 全局常量配置器")
+            BceDataConstant.bceSmsTemplateID = env.getProperty("baidu.sms.template-id")
+            BceDataConstant.bceSmsSignatureID = env.getProperty("baidu.sms.signature-id")
         }
     }
 

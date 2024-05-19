@@ -12,23 +12,16 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.entity
+package com.frontleaves.fantasticeditor.constant
 
 /**
- * # 权限实体类
- * 用于定义权限实体类；
+ * # 基础数据常量
+ * 用于存放一些基础数据常量，例如服务标题、副标题等
  *
  * @since v1.0.0
- * @property pid 权限唯一标识
- * @property permission 权限
- * @property description 权限描述
- * @property parent 父权限
- * @constructor 创建一个权限实体类
  * @author xiao_lfeng
  */
-data class FyPermissionDO(
-    val pid: Long? = null,
-    val permission: String? = null,
-    val description: String? = null,
-    val parent: Long? = null,
-)
+data object BceDataConstant {
+    var bceSmsSignatureID: String? = null
+    var bceSmsTemplateID: String? = null
+}

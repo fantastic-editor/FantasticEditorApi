@@ -16,11 +16,14 @@ package com.frontleaves.fantasticeditor.services
 
 import com.baidubce.services.sms.SmsClient
 import com.baidubce.services.sms.model.SendMessageV3Request
+import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
 import com.frontleaves.fantasticeditor.constant.BaseDataConstant
-import com.frontleaves.fantasticeditor.constant.SMSControl
+import com.frontleaves.fantasticeditor.constant.BceDataConstant
+import com.frontleaves.fantasticeditor.constant.SmsControl
 import com.frontleaves.fantasticeditor.models.vo.SmsContentVO
 import com.frontleaves.fantasticeditor.services.interfaces.SmsService
 import com.frontleaves.fantasticeditor.utility.redis.RedisUtil
+import com.google.gson.Gson
 import org.springframework.stereotype.Service
 
 /**
@@ -35,7 +38,8 @@ import org.springframework.stereotype.Service
 @Service
 class SmsServiceImpl(
     private val redisUtil: RedisUtil,
-    private val smsService: SmsClient,
+    private val smsClient: SmsClient,
+    private val gson: Gson,
 ) : SmsService {
 
     /**
@@ -47,31 +51,33 @@ class SmsServiceImpl(
      * @param type 短信类型
      * @return Boolean
      */
-    override fun sendCode(phone: String, code: String, type: SMSControl): Boolean {
-        if (!phone.matches(Regex("^1[3-9]\\d{9}$"))) {
+    override fun sendCode(phone: String, code: String, type: SmsControl): Boolean {
+        if (!phone.matches(
+                Regex("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}\$"),
+            )
+        ) {
             throw IllegalArgumentException("手机号格式错误")
         }
-        redisUtil.set("sms:code:$phone", code, 900L)
         val smsRequest = SendMessageV3Request().let { request ->
-            request.also {
+            request.also { it ->
                 it.mobile = phone
-                it.template = BaseDataConstant.BCE_SMS_TEMPLATE_ID
-                it.signatureId = BaseDataConstant.BCE_SMS_SIGNATURE_ID
+                it.template = BceDataConstant.bceSmsTemplateID
+                it.signatureId = BceDataConstant.bceSmsSignatureID
                 it.contentVar = HashMap<String, String>().also { map ->
-                    val getClass = SmsContentVO().apply {
-                        this.contactPerson = ""
-                        this.typeName = type.typeName
-                        this.code = code
-                        this.service = BaseDataConstant.SERVICE_TITLE
-                    }.javaClass
-                    getClass.declaredFields.forEach { field ->
-                        field.isAccessible = true
-                        map[field.name] = field[getClass].toString()
+                    val getSmsContent = SmsContentVO().also { sms ->
+                        sms.contactPerson = ""
+                        sms.typeName = type.description
+                        sms.code = code
+                        sms.service = BaseDataConstant.SERVICE_TITLE
                     }
+                    val getObject = gson.toJsonTree(getSmsContent).asJsonObject
+                    getObject.keySet().forEach { map[it] = getObject[it].asString }
                 }
             }
         }
-        val smsResponse = smsService.sendMessage(smsRequest)
+        log.info("发送短信验证码：${BceDataConstant.bceSmsSignatureID}")
+        val smsResponse = smsClient.sendMessage(smsRequest)
+        log.info("发送短信验证码：$smsResponse")
         return smsResponse != null && smsResponse.isSuccess
     }
 

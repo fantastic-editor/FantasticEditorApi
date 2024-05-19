@@ -14,7 +14,7 @@
 
 package com.frontleaves.fantasticeditor.services.interfaces
 
-import com.frontleaves.fantasticeditor.constant.SMSControl
+import com.frontleaves.fantasticeditor.constant.SmsControl
 
 /**
  * ## 短信服务接口
@@ -36,7 +36,7 @@ interface SmsService {
      * @param type 短信类型
      * @return Boolean
      */
-    fun sendCode(phone: String, code: String, type: SMSControl): Boolean
+    fun sendCode(phone: String, code: String, type: SmsControl): Boolean
 
     /**
      * ## 检查验证码

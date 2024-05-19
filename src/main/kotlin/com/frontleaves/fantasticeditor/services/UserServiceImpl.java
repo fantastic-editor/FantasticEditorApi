@@ -14,16 +14,21 @@
 
 package com.frontleaves.fantasticeditor.services;
 
+import com.frontleaves.fantasticeditor.constant.SmsControl;
 import com.frontleaves.fantasticeditor.dao.RoleDAO;
 import com.frontleaves.fantasticeditor.dao.UserDAO;
 import com.frontleaves.fantasticeditor.exceptions.BusinessException;
 import com.frontleaves.fantasticeditor.models.dto.UserCurrentDTO;
-import com.frontleaves.fantasticeditor.models.entity.FyRoleDO;
-import com.frontleaves.fantasticeditor.models.entity.FyUserDO;
-import com.frontleaves.fantasticeditor.models.vo.AuthUserRegisterVO;
+import com.frontleaves.fantasticeditor.models.entity.cache.RedisSmsPhoneDO;
+import com.frontleaves.fantasticeditor.models.entity.sql.SqlRoleDO;
+import com.frontleaves.fantasticeditor.models.entity.sql.SqlUserDO;
+import com.frontleaves.fantasticeditor.models.vo.api.AuthUserRegisterVO;
+import com.frontleaves.fantasticeditor.services.interfaces.SmsService;
 import com.frontleaves.fantasticeditor.services.interfaces.UserService;
 import com.frontleaves.fantasticeditor.utility.ErrorCode;
+import com.frontleaves.fantasticeditor.utility.OperateUtil;
 import com.frontleaves.fantasticeditor.utility.Util;
+import com.frontleaves.fantasticeditor.utility.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -34,10 +39,10 @@ import org.springframework.stereotype.Service;
  * <p>
  * 用于处理用户相关的业务逻辑
  *
- * @since v1.0.0
+ * @author xiao_lfeng
  * @version v1.0.0
  * @see UserService
- * @author xiao_lfeng
+ * @since v1.0.0
  */
 @Slf4j
 @Service
@@ -45,6 +50,9 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private final UserDAO userDAO;
     private final RoleDAO roleDAO;
+    private final RedisUtil redisUtil;
+    private final OperateUtil operateUtil;
+    private final SmsService smsService;
 
     /**
      * 用户注册
@@ -62,7 +70,7 @@ public class UserServiceImpl implements UserService {
         assert authUserRegisterVO.getPhone() != null;
         assert authUserRegisterVO.getPassword() != null;
         // 获取信息查询用户
-        FyUserDO getUser = userDAO.getUserByUsername(authUserRegisterVO.getUsername());
+        SqlUserDO getUser = userDAO.getUserByUsername(authUserRegisterVO.getUsername());
         if (getUser == null) {
             getUser = userDAO.getUserByEmail(authUserRegisterVO.getEmail());
         }
@@ -73,31 +81,50 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException("用户已存在", ErrorCode.USER_EXIST);
         }
         // 获取基本用户组
-        FyRoleDO getRole = roleDAO.getRoleByRoleName("user");
+        SqlRoleDO getRole = roleDAO.getRoleByRoleName("user");
         assert getRole != null;
         assert getRole.getRuuid() != null;
         // 创建用户
-        FyUserDO user = new FyUserDO(
-                Util.INSTANCE.makeUUID().toString().replace("-", ""),
-                authUserRegisterVO.getUsername(),
-                authUserRegisterVO.getEmail(),
-                authUserRegisterVO.getPhone(),
-                Util.INSTANCE.encryptPassword(authUserRegisterVO.getPassword()),
-                null,
-                null,
-                Util.INSTANCE.makeUUID().toString().replace("-", ""),
-                false,
-                false,
-                "{}",
-                getRole.getRuuid(),
-                null,
-                null,
-                null
-        );
+        SqlUserDO user = new SqlUserDO()
+                .setUuid(Util.INSTANCE.makeUUID().toString().replace("-", ""))
+                .setUsername(authUserRegisterVO.getUsername())
+                .setEmail(authUserRegisterVO.getEmail())
+                .setPhone(authUserRegisterVO.getPhone())
+                .setPassword(Util.INSTANCE.encryptPassword(authUserRegisterVO.getPassword()))
+                .setOtpAuth(Util.INSTANCE.makeUUID().toString().replace("-", ""))
+                .setMailVerify(false)
+                .setPhoneVerify(false)
+                .setBasicInformation("{}")
+                .setRole(getRole.getRuuid());
         if (userDAO.save(user)) {
             return Util.INSTANCE.copyProperties(user, UserCurrentDTO.class);
         } else {
             throw new BusinessException("用户注册失败", ErrorCode.OPERATION_FAILED);
+        }
+    }
+
+    @Override
+    public void sendRegisterPhoneCode(@NotNull String phone) {
+        // 对手机号内容进行检查，检查缓存中是否存在
+        operateUtil.checkSmsResendAble(phone);
+        // 新建验证码并存入缓存
+        String getNumberCode = Util.INSTANCE.generateNumber(6);
+        RedisSmsPhoneDO smsPhoneDO = new RedisSmsPhoneDO()
+                .setPhone(phone)
+                .setCode(getNumberCode)
+                .setSendAt(String.valueOf(System.currentTimeMillis()))
+                .setFrequency("1");
+        RedisSmsPhoneDO getPhoneCode = Util.INSTANCE.mapToObject(redisUtil.hashGet("sms:code:" + phone), RedisSmsPhoneDO.class);
+        if (getPhoneCode != null) {
+            smsPhoneDO.setFrequency(String.valueOf(Long.parseLong(getPhoneCode.getFrequency()) + 1));
+        }
+        if (redisUtil.hashSet("sms:code:" + phone, smsPhoneDO, 15 * 60)) {
+            // 发送验证码
+            if (!smsService.sendCode(phone, getNumberCode, SmsControl.USER_REGISTER)) {
+                throw new BusinessException("发送失败", ErrorCode.OPERATION_FAILED);
+            }
+        } else {
+            throw new BusinessException("发送失败", ErrorCode.OPERATION_FAILED);
         }
     }
 }

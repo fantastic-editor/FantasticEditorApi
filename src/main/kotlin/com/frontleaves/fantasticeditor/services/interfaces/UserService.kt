@@ -15,7 +15,7 @@
 package com.frontleaves.fantasticeditor.services.interfaces
 
 import com.frontleaves.fantasticeditor.models.dto.UserCurrentDTO
-import com.frontleaves.fantasticeditor.models.vo.AuthUserRegisterVO
+import com.frontleaves.fantasticeditor.models.vo.api.AuthUserRegisterVO
 
 /**
  * ## 用户服务接口
@@ -34,4 +34,12 @@ interface UserService {
      * @return UserCurrentDTO
      */
     fun userRegister(authUserRegisterVO: AuthUserRegisterVO): UserCurrentDTO
+
+    /**
+     * ## 用户注册短信验证码
+     * 用于用户注册进行的短信验证码操作，发送短信验证码有效时间十五分钟，存储数据存储在 redis 缓存中。将会返回是否成功发送 SMS 的结果。
+     *
+     * @return 成功发送返回真，否则返回假
+     */
+    fun sendRegisterPhoneCode(phone: String)
 }
