@@ -30,13 +30,14 @@ class BusinessException(
     val errorMessage: String,
     val errorCode: ErrorCode,
     val data: Any?,
+    val errorOutput: Boolean,
 ) : RuntimeException(errorMessage) {
-    /**
-     * # 创建一个业务异常
-     *
-     * @param message 业务返回自定义报错消息
-     * @param errorCode 业务返回报错状态码
-     * @constructor 创建一个业务异常，不包含数据
-     */
-    constructor(message: String, errorCode: ErrorCode) : this(message, errorCode, null)
+    constructor(message: String, errorCode: ErrorCode) : this(message, errorCode, null, false)
+    constructor(message: String, errorCode: ErrorCode, data: Any?) : this(message, errorCode, data, false)
+    constructor(message: String, errorCode: ErrorCode, errorOutput: Boolean) : this(
+        message,
+        errorCode,
+        null,
+        errorOutput,
+    )
 }

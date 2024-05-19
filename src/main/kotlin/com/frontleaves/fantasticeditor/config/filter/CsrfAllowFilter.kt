@@ -40,8 +40,14 @@ class CsrfAllowFilter(
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        log.debug("[FILTER] 检查 CSRF Token...")
         if ("POST" == request.method || "post" == request.method) {
+            // 检查是否为本地地址
+            val getRequestURL = request.requestURL.toString()
+            if (getRequestURL.contains("localhost") || getRequestURL.contains("127.0.0.1")) {
+                filterChain.doFilter(request, response)
+                return
+            }
+            log.debug("[FILTER] 检查 CSRF 是否正确")
             val csrfToken = csrfRepository.loadToken(request)
             val getToken = request.getHeader(csrfToken.headerName)
             if (getToken != null && getToken == csrfToken.token) {

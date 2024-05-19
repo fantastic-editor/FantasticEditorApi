@@ -15,8 +15,8 @@
 package com.frontleaves.fantasticeditor.mappers
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper
-import com.frontleaves.fantasticeditor.models.entity.FyPermissionDO
+import com.frontleaves.fantasticeditor.models.entity.sql.SqlPermissionDO
 import org.apache.ibatis.annotations.Mapper
 
 @Mapper
-interface PermissionMapper : BaseMapper<FyPermissionDO>
+interface PermissionMapper : BaseMapper<SqlPermissionDO>

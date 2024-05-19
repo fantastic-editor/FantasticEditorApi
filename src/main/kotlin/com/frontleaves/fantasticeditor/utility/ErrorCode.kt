@@ -34,6 +34,7 @@ enum class ErrorCode(val output: String, val code: Int, val message: String) {
     USER_BANNED("UserBanned", 40104, "用户被封禁或未启用"),
     CSRF_TOKEN_ERROR("CsrfTokenError", 40105, "CSRF 错误"),
     TOKEN_EXPIRED("TokenExpired", 40106, "Token 过期"),
+    OVER_SPEED("OverSpeed", 42901, "操作过快"),
     PERMISSION_DENIED("PermissionDenied", 40301, "权限不足"),
     REQUEST_METHOD_NOT_ALLOWED("RequestMethodNotAllowed", 40301, "请求方法不允许"),
     VERIFY_CODE_ERROR("VerifyCodeError", 40302, "验证码错误"),
@@ -41,6 +42,7 @@ enum class ErrorCode(val output: String, val code: Int, val message: String) {
     OPERATION_FAILED("OperationFailed", 40304, "操作失败"),
     USER_EXIST("UserExist", 40305, "用户已存在"),
     LOGIN_ACCESS("LoginAccess", 40306, "用户已登录"),
+    CHECK_FAILURE("CheckFailure", 40307, "检查失败"),
     PAGE_NOT_FOUND("PageNotFound", 40401, "页面未找到"),
     SERVER_INTERNAL_ERROR("ServerInternalError", 50001, "服务器内部错误"),
 }

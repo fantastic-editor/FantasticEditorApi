@@ -73,8 +73,13 @@ class PublicExceptionHandler {
      */
     @ExceptionHandler(BusinessException::class)
     fun handleBusinessException(e: BusinessException): ResponseEntity<BaseResponse<Any>> {
-        log.warn("[EXCEPTION] <{}>{} | {}", e.errorCode.code, e.errorCode.message, e.errorMessage)
-        return ResultUtil.error(e.errorCode, e.errorMessage, e.data)
+        if (e.errorOutput) {
+            log.warn("[EXCEPTION] <{}>{} | {}", e.errorCode.code, e.errorCode.message, e.errorMessage, e)
+            return ResultUtil.error(e.errorCode, e.errorMessage, e)
+        } else {
+            log.warn("[EXCEPTION] <{}>{} | {}", e.errorCode.code, e.errorCode.message, e.errorMessage)
+            return ResultUtil.error(e.errorCode, e.errorMessage, e.data)
+        }
     }
 
     /**
@@ -240,5 +245,11 @@ class PublicExceptionHandler {
     fun handleServerInternalErrorException(e: ServerInternalErrorException): ResponseEntity<BaseResponse<ServerInternalErrorException>> {
         log.error("[EXCEPTION] 服务器内部错误 | {}", e.message, e)
         return ResultUtil.error(ErrorCode.SERVER_INTERNAL_ERROR, e.message, e)
+    }
+
+    @ExceptionHandler(CheckFailureException::class)
+    fun handleCheckFailureException(e: CheckFailureException): ResponseEntity<BaseResponse<CheckFailureException>> {
+        log.error("[EXCEPTION] 检查失败异常 | {}", e.message)
+        return ResultUtil.error(ErrorCode.CHECK_FAILURE, e.message, null)
     }
 }
