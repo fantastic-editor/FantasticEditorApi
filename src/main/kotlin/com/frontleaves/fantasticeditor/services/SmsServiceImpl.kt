@@ -16,9 +16,10 @@ package com.frontleaves.fantasticeditor.services
 
 import com.baidubce.services.sms.SmsClient
 import com.baidubce.services.sms.model.SendMessageV3Request
+import com.frontleaves.fantasticeditor.constant.BaseDataConstant
 import com.frontleaves.fantasticeditor.constant.SMSControl
-import com.frontleaves.fantasticeditor.models.vo.SMSContentVO
-import com.frontleaves.fantasticeditor.services.interfaces.SMSService
+import com.frontleaves.fantasticeditor.models.vo.SmsContentVO
+import com.frontleaves.fantasticeditor.services.interfaces.SmsService
 import com.frontleaves.fantasticeditor.utility.redis.RedisUtil
 import org.springframework.stereotype.Service
 
@@ -32,10 +33,10 @@ import org.springframework.stereotype.Service
  * @author xiao_lfeng
  */
 @Service
-class SMSServiceImpl(
+class SmsServiceImpl(
     private val redisUtil: RedisUtil,
     private val smsService: SmsClient,
-) : SMSService {
+) : SmsService {
 
     /**
      * ## 发送验证码
@@ -54,10 +55,15 @@ class SMSServiceImpl(
         val smsRequest = SendMessageV3Request().let { request ->
             request.also {
                 it.mobile = phone
-                it.template = "sms-tmpl-oqFrSI97834"
-                it.signatureId = "sms-sign-WFcmgf06972"
+                it.template = BaseDataConstant.BCE_SMS_TEMPLATE_ID
+                it.signatureId = BaseDataConstant.BCE_SMS_SIGNATURE_ID
                 it.contentVar = HashMap<String, String>().also { map ->
-                    val getClass = SMSContentVO("", type.description, code).javaClass
+                    val getClass = SmsContentVO().apply {
+                        this.contactPerson = ""
+                        this.typeName = type.typeName
+                        this.code = code
+                        this.service = BaseDataConstant.SERVICE_TITLE
+                    }.javaClass
                     getClass.declaredFields.forEach { field ->
                         field.isAccessible = true
                         map[field.name] = field[getClass].toString()

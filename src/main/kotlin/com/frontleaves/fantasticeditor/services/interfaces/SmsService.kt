@@ -25,7 +25,7 @@ import com.frontleaves.fantasticeditor.constant.SMSControl
  * @return Boolean
  * @author xiao_lfeng
  */
-interface SMSService {
+interface SmsService {
 
     /**
      * ## 发送验证码
