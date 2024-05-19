@@ -495,13 +495,13 @@ class RedisUtil(private val redisTemplate: RedisTemplate<String, Any>) {
      * @param <V>    期望添加的数据类型
      * @return 是否成功
      </V> */
-    fun <V> setHasKey(
+    fun <V : Any> setHasKey(
         key: String,
         values: V,
     ): Boolean {
         return try {
-            val getBool = redisTemplate.opsForSet().isMember(key, values)
-            getBool != null && getBool.get(key)?.let { java.lang.Boolean.TRUE == it } ?: false
+            val isMember = redisTemplate.opsForSet().isMember(key, values) ?: false
+            isMember
         } catch (e: Exception) {
             log.warn("[REDIS] <Func:setPut> 数据插入失败")
             false
