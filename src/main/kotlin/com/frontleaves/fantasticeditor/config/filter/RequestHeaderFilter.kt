@@ -14,7 +14,7 @@
 
 package com.frontleaves.fantasticeditor.config.filter
 
-import com.frontleaves.fantasticeditor.exceptions.RequestHeaderNotMatchException
+import com.frontleaves.fantasticeditor.exceptions.library.RequestHeaderNotMatchException
 import com.frontleaves.fantasticeditor.utility.ErrorCode
 import com.frontleaves.fantasticeditor.utility.ResultUtil
 import com.google.gson.Gson
@@ -39,10 +39,9 @@ class RequestHeaderFilter : OncePerRequestFilter() {
         try {
             // 检查请求头是否为 application/json
             val checkHasSwaggerApi = (
-                request.requestURI.matches("/v3/api\\S+$".toRegex()) ||
-                    request.requestURI.matches("/swagger\\S+$".toRegex()) ||
-                    request.requestURI.matches("/".toRegex()) ||
-                    request.requestURI.matches("/favicon.ico".toRegex())
+                request.requestURI.matches("/".toRegex()) ||
+                    request.requestURI.matches("/favicon.ico".toRegex()) ||
+                    request.requestURI.matches("/info".toRegex())
                 )
             if (request.contentType == null) {
                 throw RequestHeaderNotMatchException("content-type 不能为空")

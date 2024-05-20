@@ -14,7 +14,9 @@
 
 package com.frontleaves.fantasticeditor.controllers
 
+import com.frontleaves.fantasticeditor.constant.BaseDataConstant
 import com.frontleaves.fantasticeditor.models.dto.InfoStatusDTO
+import com.frontleaves.fantasticeditor.models.dto.InfoWebDTO
 import com.frontleaves.fantasticeditor.utility.BaseResponse
 import com.frontleaves.fantasticeditor.utility.ResultUtil
 import org.springframework.core.io.ClassPathResource
@@ -37,9 +39,9 @@ import java.text.SimpleDateFormat
 @RestController
 class IndexController {
     /**
-     * 网站状态
+     * 状态查询
      *
-     * 用于检查网站状态
+     * 用于检查网站状态, 如系统信息等状态概要表, 用于检查网站是否正常运行
      *
      * @return 返回网站状态
      */
@@ -66,7 +68,6 @@ class IndexController {
      *
      * 用于获取网站图标
      *
-     * @param response 响应对象
      * @return 返回网站图标
      */
     @GetMapping("/favicon.ico")
@@ -80,5 +81,21 @@ class IndexController {
         } else {
             return null
         }
+    }
+
+    /**
+     * 获取全局概要信息
+     *
+     * 用于获取信息, 用于获取前端一些需要展示的信息，如网站名称等。允许网站进行热修改操作
+     *
+     * @return 返回信息
+     */
+    @GetMapping("/info")
+    fun getInformation(): ResponseEntity<BaseResponse<InfoWebDTO>> {
+        val infoWeb = InfoWebDTO().also {
+            it.title = BaseDataConstant.SERVICE_TITLE
+            it.subTitle = BaseDataConstant.SERVICE_SUB_TITLE
+        }
+        return ResultUtil.success("获取信息成功", infoWeb)
     }
 }

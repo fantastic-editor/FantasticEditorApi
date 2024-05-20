@@ -14,7 +14,7 @@
 
 package com.frontleaves.fantasticeditor.controllers.v1;
 
-import com.frontleaves.fantasticeditor.exceptions.CheckFailureException;
+import com.frontleaves.fantasticeditor.exceptions.library.CheckFailureException;
 import com.frontleaves.fantasticeditor.models.dto.UserCurrentDTO;
 import com.frontleaves.fantasticeditor.models.vo.api.AuthUserLoginVO;
 import com.frontleaves.fantasticeditor.models.vo.api.AuthUserRegisterVO;
@@ -64,7 +64,7 @@ public class AuthController {
     }
 
     /**
-     * 用户注册。
+     * 用户注册
      * <p>
      * 用户注册，使用用户名和密码注册。
      *
