@@ -15,18 +15,15 @@
 package com.frontleaves.fantasticeditor.constant
 
 /**
- * # 基础数据常量
- * 用于存放一些基础数据常量，例如服务标题、副标题等
+ * ## 邮件模板枚举类
+ * 用于定义邮件模板，包含邮件模板的描述和模板名称
  *
  * @since v1.0.0
+ * @property description 邮件模板描述
+ * @property template 邮件模板名称
  * @author xiao_lfeng
  */
-data object BaseDataConstant {
-    const val SERVICE_TITLE = "妙笔智编"
-    const val SERVICE_SUB_TITLE = "一个结合大小AI模型技术，通过百度飞桨AI Studio和文心ERNIE SDK开发的在线文档编辑器，旨在提高用户处理多模态信息的效率，实现智能润色、多媒体信息提取和智能格式排版等功能，以优化学习和工作体验。"
-
-    var mailHost: String = "smtp.qiye.aliyun.com"
-    var mailPort: Int = 25
-    var mailUsername: String? = null
-    var mailPassword: String? = null
+enum class MailTemplateEnum(val subject: String, val template: String, val description: String, val hashCode: Boolean) {
+    USER_REGISTER("用户注册", "user-register", "用户进行注册时候所发送的内容", true),
+    USER_LOGIN("用户登录", "user-login", "用户进行登录时候所发送的内容", true),
 }

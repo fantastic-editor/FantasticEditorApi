@@ -19,7 +19,7 @@ import com.frontleaves.fantasticeditor.dao.RoleDAO;
 import com.frontleaves.fantasticeditor.dao.UserDAO;
 import com.frontleaves.fantasticeditor.exceptions.BusinessException;
 import com.frontleaves.fantasticeditor.models.dto.UserCurrentDTO;
-import com.frontleaves.fantasticeditor.models.entity.cache.RedisSmsPhoneDO;
+import com.frontleaves.fantasticeditor.models.entity.redis.RedisSmsCodeDO;
 import com.frontleaves.fantasticeditor.models.entity.sql.SqlRoleDO;
 import com.frontleaves.fantasticeditor.models.entity.sql.SqlUserDO;
 import com.frontleaves.fantasticeditor.models.vo.api.AuthUserRegisterVO;
@@ -117,14 +117,14 @@ public class UserServiceImpl implements UserService {
         }
         // 新建验证码并存入缓存
         String getNumberCode = Util.INSTANCE.generateNumber(6);
-        RedisSmsPhoneDO smsPhoneDO = new RedisSmsPhoneDO()
+        RedisSmsCodeDO smsPhoneDO = new RedisSmsCodeDO()
                 .setPhone(phone)
                 .setCode(getNumberCode)
                 .setSendAt(String.valueOf(System.currentTimeMillis()))
                 .setFrequency("1");
-        RedisSmsPhoneDO getPhoneCode = Util.INSTANCE.mapToObject(
+        RedisSmsCodeDO getPhoneCode = Util.INSTANCE.mapToObject(
                 redisUtil.hashGet("sms:code:" + phone),
-                RedisSmsPhoneDO.class
+                RedisSmsCodeDO.class
         );
         if (getPhoneCode != null) {
             smsPhoneDO.setFrequency(String.valueOf(Long.parseLong(getPhoneCode.getFrequency()) + 1));

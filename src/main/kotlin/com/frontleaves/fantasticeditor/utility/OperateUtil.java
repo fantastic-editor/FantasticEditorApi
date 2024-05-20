@@ -15,7 +15,7 @@
 package com.frontleaves.fantasticeditor.utility;
 
 import com.frontleaves.fantasticeditor.exceptions.BusinessException;
-import com.frontleaves.fantasticeditor.models.entity.cache.RedisSmsPhoneDO;
+import com.frontleaves.fantasticeditor.models.entity.redis.RedisSmsCodeDO;
 import com.frontleaves.fantasticeditor.utility.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -47,9 +47,9 @@ public class OperateUtil {
      * @param phone 手机号
      */
     public void checkSmsResendAble(final String phone) {
-        RedisSmsPhoneDO smsPhone = Util.INSTANCE.mapToObject(
+        RedisSmsCodeDO smsPhone = Util.INSTANCE.mapToObject(
                 redisUtil.hashGet("sms:code:" + phone),
-                RedisSmsPhoneDO.class
+                RedisSmsCodeDO.class
         );
         if (smsPhone != null) {
             // 15分钟检查

@@ -1,3 +1,7 @@
+logging:
+  level:
+    com.frontleaves.fantasticeditor: debug
+    com.frontleaves.fantasticeditor.mappers: debug
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -10,10 +14,11 @@ spring:
       host: localhost
       database: 0
       password: ""
-logging:
-  level:
-    com.frontleaves.fantasticeditor: debug
-    com.frontleaves.fantasticeditor.mappers: debug
+  mail:
+    default-encoding: utf-8
+    host: smtp.qq.com
+    username: your-email-username
+    password: your-email-password-or-authorization-code
 baidu:
   access-key: need_set
   secret-key: need_set

@@ -14,6 +14,7 @@
 
 package com.frontleaves.fantasticeditor.config.configuration
 
+import com.frontleaves.fantasticeditor.constant.BaseDataConstant
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.env.Environment
@@ -43,10 +44,10 @@ class MailConfig(private val env: Environment) {
         return JavaMailSenderImpl()
             .apply {
                 defaultEncoding = "UTF-8"
-                host = env.getProperty("spring.mail.host")
-                port = 25
-                username = env.getProperty("spring.mail.username")
-                password = env.getProperty("spring.mail.password")
+                host = BaseDataConstant.mailHost
+                port = BaseDataConstant.mailPort
+                username = BaseDataConstant.mailUsername
+                password = BaseDataConstant.mailPassword
                 javaMailProperties.also {
                     it["mail.smtp.auth"] = "true"
                     it["mail.smtp.starttls.enable"] = "true"

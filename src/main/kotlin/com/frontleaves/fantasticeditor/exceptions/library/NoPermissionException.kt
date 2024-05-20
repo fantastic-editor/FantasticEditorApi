@@ -12,21 +12,19 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.constant
+package com.frontleaves.fantasticeditor.exceptions.library
 
 /**
- * # 基础数据常量
- * 用于存放一些基础数据常量，例如服务标题、副标题等
+ * # 无权限异常
+ * 用于定义无权限异常；
  *
  * @since v1.0.0
+ * @see RuntimeException
+ * @property message 异常信息
+ * @property permission 权限
+ * @constructor 创建一个无权限异常
+ * @param permission 权限
+ * @param message 异常信息
  * @author xiao_lfeng
  */
-data object BaseDataConstant {
-    const val SERVICE_TITLE = "妙笔智编"
-    const val SERVICE_SUB_TITLE = "一个结合大小AI模型技术，通过百度飞桨AI Studio和文心ERNIE SDK开发的在线文档编辑器，旨在提高用户处理多模态信息的效率，实现智能润色、多媒体信息提取和智能格式排版等功能，以优化学习和工作体验。"
-
-    var mailHost: String = "smtp.qiye.aliyun.com"
-    var mailPort: Int = 25
-    var mailUsername: String? = null
-    var mailPassword: String? = null
-}
+class NoPermissionException(override val message: String, val permission: String) : RuntimeException(message)

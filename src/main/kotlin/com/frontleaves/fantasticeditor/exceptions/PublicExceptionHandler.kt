@@ -17,6 +17,7 @@
 package com.frontleaves.fantasticeditor.exceptions
 
 import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
+import com.frontleaves.fantasticeditor.exceptions.library.*
 import com.frontleaves.fantasticeditor.utility.BaseResponse
 import com.frontleaves.fantasticeditor.utility.ErrorCode
 import com.frontleaves.fantasticeditor.utility.ResultUtil
@@ -247,6 +248,13 @@ class PublicExceptionHandler {
         return ResultUtil.error(ErrorCode.SERVER_INTERNAL_ERROR, e.message, e)
     }
 
+    /**
+     * ## 检查失败异常处理
+     * 用于处理检查失败异常, 当检查失败异常发生时，将会自动捕获并处理，不会影响系统的正常运行
+     *
+     * @param e 检查失败异常 CheckFailureException
+     * @return 返回检查失败异常信息
+     */
     @ExceptionHandler(CheckFailureException::class)
     fun handleCheckFailureException(e: CheckFailureException): ResponseEntity<BaseResponse<CheckFailureException>> {
         log.error("[EXCEPTION] 检查失败异常 | {}", e.message)

@@ -12,28 +12,16 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.entity.cache;
-
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
+package com.frontleaves.fantasticeditor.exceptions.library
 
 /**
- * 短信验证码实体
- * <p>
- * 用于存储短信验证码的实体，包括手机号、验证码、过期时间、发送时间、发送频率等信息
+ * # 服务器内部错误异常
+ * 用于定义服务器内部错误异常；
  *
  * @since v1.0.0
- * @version v1.0.0
+ * @see RuntimeException
+ * @property message 异常信息
+ * @constructor 创建一个服务器内部错误异常
  * @author xiao_lfeng
  */
-@Data
-@NoArgsConstructor
-@Accessors(chain = true)
-public class RedisSmsPhoneDO {
-    private String phone;
-    private String code;
-    private String sendAt;
-    private String frequency;
-}
+class ServerInternalErrorException(override val message: String) : RuntimeException(message)

@@ -15,6 +15,7 @@
 package com.frontleaves.fantasticeditor.config.startup
 
 import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
+import com.frontleaves.fantasticeditor.constant.BaseDataConstant
 import com.frontleaves.fantasticeditor.constant.BceDataConstant
 import com.frontleaves.fantasticeditor.utility.Util
 import org.springframework.boot.CommandLineRunner
@@ -163,6 +164,10 @@ class StartupConfig(
             log.info("[STARTUP] 全局常量配置器")
             BceDataConstant.bceSmsTemplateID = env.getProperty("baidu.sms.template-id")
             BceDataConstant.bceSmsSignatureID = env.getProperty("baidu.sms.signature-id")
+
+            BaseDataConstant.mailHost = env.getProperty("spring.mail.host")!!
+            BaseDataConstant.mailUsername = env.getProperty("spring.mail.username")!!
+            BaseDataConstant.mailPassword = env.getProperty("spring.mail.password")!!
         }
     }
 

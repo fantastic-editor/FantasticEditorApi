@@ -21,13 +21,17 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.env.Environment
 
+/**
+ * ## 百度配置
+ * 用于配置百度相关的配置, 如 SMS 等
+ */
 @Configuration
 class BaiduConfig(
     private val env: Environment,
 ) {
 
     @Bean
-    fun smsService(): SmsClient {
+    fun smsClient(): SmsClient {
         val smsConfig = SmsClientConfiguration().also { config ->
             config.credentials = DefaultBceCredentials(
                 env.getProperty("baidu.access-key"),

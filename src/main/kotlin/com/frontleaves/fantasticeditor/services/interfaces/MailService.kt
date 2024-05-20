@@ -14,4 +14,36 @@
 
 package com.frontleaves.fantasticeditor.services.interfaces
 
-interface MailService
+import com.frontleaves.fantasticeditor.constant.MailTemplateEnum
+
+/**
+ * ## 邮件服务接口
+ * 用于发送邮件, 邮件模板由 [MailTemplateEnum] 枚举类定义
+ *
+ * @see MailTemplateEnum
+ * @since v1.0.0
+ * @author xiao_lfeng
+ */
+interface MailService {
+    /**
+     * ## 发送邮件
+     * 发送邮件, 邮件模板由 [MailTemplateEnum] 枚举类定义, 模板参数由 [parameters] 指定; 邮件地址由 [email] 指定;
+     * 根据模板和参数生成邮件内容, 并发送邮件
+     *
+     * @param email 邮件地址
+     * @param template 邮件模板
+     * @param parameters 模板参数
+     */
+    fun sendMail(email: String, template: MailTemplateEnum, parameters: Map<String, String?>)
+
+    /**
+     * ## 发送验证码邮件
+     * 发送验证码邮件, 邮件模板由 [MailTemplateEnum] 枚举类定义, 验证码由 [verifyCode] 指定; 邮件地址由 [email] 指定;
+     * 根据模板和验证码生成邮件内容, 并发送邮件
+     *
+     * @param email 邮件地址
+     * @param verifyCode 验证码
+     * @param template 邮件模板
+     */
+    fun sendVerifyCodeMail(email: String, verifyCode: String, template: MailTemplateEnum)
+}
