@@ -25,4 +25,4 @@ package com.frontleaves.fantasticeditor.annotations
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class CheckPermission(val value: String = "")
+annotation class NeedPermission(val value: String = "")

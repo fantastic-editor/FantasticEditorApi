@@ -97,9 +97,8 @@ internal class PrepareAlgorithm(private val jdbcTemplate: JdbcTemplate) {
      *
      * @param permission 权限
      * @param description 描述
-     * @param parentPermission 父权限
      */
-    fun permission(permission: String, description: String, parentPermission: String?) {
+    fun permission(permission: String, description: String) {
         try {
             jdbcTemplate.query(
                 "SELECT pid FROM fy_permission WHERE permission = ?",
@@ -107,26 +106,11 @@ internal class PrepareAlgorithm(private val jdbcTemplate: JdbcTemplate) {
                 permission,
             ).first()
         } catch (e: NoSuchElementException) {
-            var parentPid: Long? = null
             log.debug("[STARTUP] 准备 fy_permission 表数据 {}", permission)
-            takeIf { !parentPermission.isNullOrBlank() }?.let {
-                // 查询父权限是否存在
-                try {
-                    parentPid = jdbcTemplate.query(
-                        "SELECT pid FROM fy_permission WHERE permission = ?",
-                        { rs, _ -> rs.getLong("pid") },
-                        parentPermission,
-                    ).first()
-                } catch (e: NoSuchElementException) {
-                    log.error("[STARTUP] 父权限不存在 | {}", parentPermission)
-                    throw e
-                }
-            }
             jdbcTemplate.update(
-                "INSERT INTO fy_permission (permission, description, parent) VALUES (?, ?, ?)",
+                "INSERT INTO fy_permission (permission, description) VALUES (?, ?)",
                 permission,
                 description,
-                parentPid,
             )
         }
     }

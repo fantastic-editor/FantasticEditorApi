@@ -112,8 +112,7 @@ class StartupConfig(
     fun preparePermissionData(): CommandLineRunner {
         return CommandLineRunner {
             log.info("[STARTUP] 正在进行 fy_permission 表完整性检查...")
-            prepare.permission("user:allPermission", "用户操作接口", null)
-            prepare.permission("user:userCurrent", "用户当前信息", "user:allPermission")
+            prepare.permission("user:userCurrent", "用户当前信息")
 
             prepare.addRole("console", "超级管理员", "系统最高权限")
             prepare.addRole("admin", "管理员", "系统管理员")

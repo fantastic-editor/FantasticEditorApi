@@ -14,11 +14,52 @@
 
 package com.frontleaves.fantasticeditor.dao
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.service.IService
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import com.frontleaves.fantasticeditor.mappers.PermissionMapper
 import com.frontleaves.fantasticeditor.models.entity.sql.SqlPermissionDO
 import org.springframework.stereotype.Repository
 
+/**
+ * # 权限数据访问对象
+ * 用于访问权限数据
+ *
+ * @since v1.0.0
+ * @constructor 创建一个权限数据访问对象
+ */
 @Repository
-class PermissionDAO : ServiceImpl<PermissionMapper, SqlPermissionDO>(), IService<SqlPermissionDO>
+class PermissionDAO : ServiceImpl<PermissionMapper, SqlPermissionDO>(), IService<SqlPermissionDO> {
+    /**
+     * ## 获取所有权限
+     * 获取所有权限, 返回权限列表
+     *
+     * @return 权限列表
+     */
+    fun getAllPermissions(): List<SqlPermissionDO> {
+        return this.list()
+    }
+
+    /**
+     * ## 根据搜索条件获取权限列表
+     *
+     * @param search 搜索条件
+     * @param page 页码
+     * @param size 每页大小
+     * @return 权限列表
+     */
+    fun getPermissionsBySearch(search: String?, page: Long, size: Long): List<SqlPermissionDO> {
+        return if (search.isNullOrBlank()) {
+            this.page(Page(page, size)).records
+        } else {
+            this.page(
+                Page(page, size),
+                QueryWrapper<SqlPermissionDO>()
+                    .like(SqlPermissionDO::permission.name, search)
+                    .or()
+                    .like(SqlPermissionDO::description.name, search),
+            ).records
+        }
+    }
+}

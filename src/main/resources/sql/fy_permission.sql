@@ -19,18 +19,13 @@ create table fy_permission
         constraint fy_permission_pk
             primary key,
     permission  varchar not null,
-    description varchar not null,
-    parent      bigint
-        constraint fy_permission_fy_permission_pid_fk
-            references fy_permission
-            on update cascade on delete set null
+    description varchar not null
 );
 
 comment on table fy_permission is '权限表';
 comment on column fy_permission.pid is '权限主键';
 comment on column fy_permission.permission is '权限字段';
 comment on column fy_permission.description is '权限描述';
-comment on column fy_permission.parent is '父权限组';
 comment on constraint fy_permission_fy_permission_pid_fk on fy_permission is 'permission 权限表 pid 外键约束';
 
 create unique index fy_permission_permission_uindex

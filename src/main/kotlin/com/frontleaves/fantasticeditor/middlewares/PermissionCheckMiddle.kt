@@ -14,10 +14,10 @@
 
 package com.frontleaves.fantasticeditor.middlewares
 
-import com.frontleaves.fantasticeditor.annotations.CheckPermission
+import com.frontleaves.fantasticeditor.annotations.NeedPermission
 import com.frontleaves.fantasticeditor.dao.RoleDAO
 import com.frontleaves.fantasticeditor.dao.UserDAO
-import com.frontleaves.fantasticeditor.exceptions.UserAuthenticationException
+import com.frontleaves.fantasticeditor.exceptions.library.UserAuthenticationException
 import com.frontleaves.fantasticeditor.utility.Util
 import com.frontleaves.fantasticeditor.utility.redis.RedisUtil
 import com.google.gson.Gson
@@ -53,7 +53,7 @@ class PermissionCheckMiddle(
      *
      * @param joinPoint 切入点
      */
-    @Before("@annotation(com.frontleaves.fantasticeditor.annotations.CheckPermission)")
+    @Before("@annotation(com.frontleaves.fantasticeditor.annotations.NeedPermission)")
     fun checkPermission(joinPoint: JoinPoint) {
         val servletRequest = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
         val request = servletRequest.request
@@ -63,8 +63,8 @@ class PermissionCheckMiddle(
 
         // 获取方法签名
         val signature = joinPoint.signature as MethodSignature
-        val checkPermission = signature.method.getAnnotation(CheckPermission::class.java)
-        val getNeedPermission = checkPermission.value
+        val needPermission = signature.method.getAnnotation(NeedPermission::class.java)
+        val getNeedPermission = needPermission.value
 
         if (getUserAuthorization.isNullOrBlank() || getUserUUID.isNullOrBlank()) {
             throw UserAuthenticationException(UserAuthenticationException.ErrorType.USER_NOT_LOGIN, request)
