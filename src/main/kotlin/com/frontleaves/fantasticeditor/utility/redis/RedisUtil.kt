@@ -15,7 +15,7 @@
 package com.frontleaves.fantasticeditor.utility.redis
 
 import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
-import com.frontleaves.fantasticeditor.exceptions.ServerInternalErrorException
+import com.frontleaves.fantasticeditor.exceptions.library.ServerInternalErrorException
 import com.frontleaves.fantasticeditor.utility.Util
 import com.google.gson.Gson
 import org.springframework.data.redis.core.RedisTemplate
