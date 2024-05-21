@@ -15,6 +15,7 @@
 package com.frontleaves.fantasticeditor.services.interfaces
 
 import com.frontleaves.fantasticeditor.models.dto.UserCurrentDTO
+import com.frontleaves.fantasticeditor.models.vo.api.AuthUserLoginVO
 import com.frontleaves.fantasticeditor.models.vo.api.AuthUserRegisterVO
 
 /**
@@ -42,4 +43,13 @@ interface UserService {
      * @return 成功发送返回真，否则返回假
      */
     fun sendRegisterPhoneCode(phone: String)
+
+    /**
+     * ## 用户登录
+     * 用于用户登录
+     *
+     * @param authUserLoginVO 用户登录信息
+     * @return UserCurrentDTO
+     */
+    fun userLogin(authUserLoginVO: AuthUserLoginVO): Boolean
 }

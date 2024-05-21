@@ -22,6 +22,7 @@ import com.frontleaves.fantasticeditor.models.dto.UserCurrentDTO;
 import com.frontleaves.fantasticeditor.models.entity.redis.RedisSmsCodeDO;
 import com.frontleaves.fantasticeditor.models.entity.sql.SqlRoleDO;
 import com.frontleaves.fantasticeditor.models.entity.sql.SqlUserDO;
+import com.frontleaves.fantasticeditor.models.vo.api.AuthUserLoginVO;
 import com.frontleaves.fantasticeditor.models.vo.api.AuthUserRegisterVO;
 import com.frontleaves.fantasticeditor.services.interfaces.SmsService;
 import com.frontleaves.fantasticeditor.services.interfaces.UserService;
@@ -137,5 +138,14 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new BusinessException("发送失败", ErrorCode.OPERATION_FAILED);
         }
+    }
+
+    @Override
+    public boolean userLogin(@NotNull AuthUserLoginVO authUserLoginVO) {
+        SqlUserDO sqlUserDO = userDAO.getUserByUsername(authUserLoginVO.getUsername());
+        if (sqlUserDO == null) {
+            return false;
+        }
+        return Util.INSTANCE.encryptPassword(authUserLoginVO.getPassword()).equals(sqlUserDO.getPassword());
     }
 }

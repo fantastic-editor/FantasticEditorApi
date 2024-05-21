@@ -2,6 +2,12 @@ logging:
   level:
     com.frontleaves.fantasticeditor: debug
     com.frontleaves.fantasticeditor.mappers: debug
+baidu:
+  access-key: ALTAKIhysgAUX1neDDu6H3fK9M
+  secret-key: 551d33123feb4b529b7aa2c33f7e030f
+  sms:
+    template-id: sms-tmpl-NywLwW73955
+    signature-id: sms-sign-lUwWVm82965
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
