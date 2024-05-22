@@ -128,10 +128,10 @@ class StartupConfig(
             val superAdminUUID = Util.makeUUIDByString("SuperConsoleUserForFantasticEditor")
             try {
                 jdbcTemplate.query(
-                    "SELECT username FROM fy_user WHERE uuid = ?",
-                    { rs, _ -> rs.getString("username") },
+                    "SELECT uuid FROM fy_user WHERE uuid = ?",
+                    { rs, _ -> rs.getString("uuid") },
                     superAdminUUID.toString().replace("-", ""),
-                )
+                ).first()
             } catch (e: Exception) {
                 val getRole = jdbcTemplate.query(
                     "SELECT ruuid FROM fy_role WHERE name = ?",
@@ -141,7 +141,7 @@ class StartupConfig(
                 jdbcTemplate.update(
                     """INSERT INTO fy_user
                         | (uuid, username, email, phone, password, otp_auth, basic_information, role)
-                        | VALUES (?, ?, ?, ?, ?, ?, ?::jsonb, ?)
+                        | VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                     """.trimMargin(),
                     superAdminUUID.toString().replace("-", ""),
                     "console",
