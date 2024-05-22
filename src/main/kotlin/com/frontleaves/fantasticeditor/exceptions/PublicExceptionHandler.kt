@@ -28,6 +28,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.MissingRequestHeaderException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.servlet.resource.NoResourceFoundException
 import java.util.*
 
 /**
@@ -259,5 +260,18 @@ class PublicExceptionHandler {
     fun handleCheckFailureException(e: CheckFailureException): ResponseEntity<BaseResponse<CheckFailureException>> {
         log.error("[EXCEPTION] 检查失败异常 | {}", e.message)
         return ResultUtil.error(ErrorCode.CHECK_FAILURE, e.message, null)
+    }
+
+    /**
+     * ## 资源未找到异常处理
+     * 用于处理资源未找到异常, 当资源未找到异常发生时，将会自动捕获并处理，不会影响系统的正常运行
+     *
+     * @param e 资源未找到异常 NoResourceFoundException
+     * @return 返回资源未找到异常信息
+     */
+    @ExceptionHandler(NoResourceFoundException::class)
+    fun handleNoResourceFoundException(e: NoResourceFoundException): ResponseEntity<BaseResponse<NoResourceFoundException>> {
+        log.error("[EXCEPTION] 资源未找到异常 | {}", e.message, e)
+        return ResultUtil.error(ErrorCode.PAGE_NOT_FOUND, "资源未找到", e)
     }
 }
