@@ -94,7 +94,9 @@ class IndexController {
     fun getInformation(): ResponseEntity<BaseResponse<InfoWebDTO>> {
         val infoWeb = InfoWebDTO().also {
             it.title = BaseDataConstant.SERVICE_TITLE
-            it.subTitle = BaseDataConstant.SERVICE_SUB_TITLE
+            it.subTitle = "高效协作与轻松创作的利器"
+            it.webDescription = BaseDataConstant.SERVICE_SUB_TITLE
+            it.webIcon = "http://localhost:8080/favicon.ico"
         }
         return ResultUtil.success("获取信息成功", infoWeb)
     }

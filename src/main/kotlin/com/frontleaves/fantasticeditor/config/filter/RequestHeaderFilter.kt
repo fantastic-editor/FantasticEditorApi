@@ -43,11 +43,14 @@ class RequestHeaderFilter : OncePerRequestFilter() {
                     request.requestURI.matches("/favicon.ico".toRegex()) ||
                     request.requestURI.matches("/info".toRegex())
                 )
-            if (request.contentType == null) {
+            if (request.contentType == null && !checkHasSwaggerApi) {
                 throw RequestHeaderNotMatchException("content-type 不能为空")
-            }
-            if (!request.contentType.contains("application/json") && !checkHasSwaggerApi) {
-                throw RequestHeaderNotMatchException("请求类型需要为 application/json")
+            } else {
+                if (!checkHasSwaggerApi) {
+                    if (!request.contentType.contains("application/json")) {
+                        throw RequestHeaderNotMatchException("请求类型需要为 application/json")
+                    }
+                }
             }
             // 检查请求头是否包含正确的 User-Agent
             if (request.getHeader("User-Agent") == null || request.getHeader("User-Agent").isEmpty()) {

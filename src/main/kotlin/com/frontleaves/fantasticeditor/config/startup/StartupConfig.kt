@@ -161,8 +161,9 @@ class StartupConfig(
     fun prepareEnd(): CommandLineRunner {
         return CommandLineRunner {
             log.info("[STARTUP] 全局常量配置器")
-            BceDataConstant.bceSmsTemplateID = env.getProperty("baidu.sms.template-id")
+            BceDataConstant.bceSmsTemplateID = env.getProperty("baidu.sms.template-sms-id")
             BceDataConstant.bceSmsSignatureID = env.getProperty("baidu.sms.signature-id")
+            BceDataConstant.bceBusinessTemplateID = env.getProperty("baidu.sms.template-business-id")
 
             BaseDataConstant.mailHost = env.getProperty("spring.mail.host")!!
             BaseDataConstant.mailUsername = env.getProperty("spring.mail.username")!!
