@@ -23,5 +23,6 @@ baidu:
   access-key: need_set
   secret-key: need_set
   sms:
-    template-id: need_set
+    template-sms-id: need_set
+    template-business-id: need_set
     signature-id: need_set
