@@ -141,11 +141,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean userLogin(@NotNull AuthUserLoginVO authUserLoginVO) {
+    public boolean userLogin(@NotNull final AuthUserLoginVO authUserLoginVO) {
         SqlUserDO sqlUserDO = userDAO.getUserByUsername(authUserLoginVO.getUsername());
         if (sqlUserDO == null) {
             return false;
         }
-        return Util.INSTANCE.encryptPassword(authUserLoginVO.getPassword()).equals(sqlUserDO.getPassword());
+        return Util.INSTANCE.verifyPassword(authUserLoginVO.getPassword(), sqlUserDO.getPassword());
     }
 }
