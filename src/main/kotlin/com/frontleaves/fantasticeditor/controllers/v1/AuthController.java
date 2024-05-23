@@ -60,6 +60,9 @@ public class AuthController {
             @RequestBody @Validated final AuthUserLoginVO authUserLoginVO
     ) {
         // 获取登录
+        if (!userService.userLogin(authUserLoginVO)) {
+            throw new CheckFailureException("登录失败");
+        }
         return ResultUtil.success("登录成功");
     }
 
