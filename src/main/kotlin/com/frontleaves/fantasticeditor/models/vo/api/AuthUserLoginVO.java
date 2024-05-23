@@ -24,9 +24,9 @@ import lombok.NoArgsConstructor;
  * <p>
  * 用于接收用户登录信息
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 @Data
 @NoArgsConstructor
