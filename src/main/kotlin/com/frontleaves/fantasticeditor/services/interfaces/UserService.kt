@@ -46,7 +46,7 @@ interface UserService {
 
     /**
      * ## 用户登录
-     * 用于用户登录
+     * 用于用户登录，将使用选择语句和正则表达式判断用户登录方式,并校验用户登录信息
      *
      * @param authUserLoginVO 用户登录信息
      * @return UserCurrentDTO

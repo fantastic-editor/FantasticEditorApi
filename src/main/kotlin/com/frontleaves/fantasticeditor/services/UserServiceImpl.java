@@ -1,7 +1,7 @@
 /*
  * *******************************************************************************
  * Copyright (C) 2024-NOW(至今) 妙笔智编
- * Author: 锋楪技术团队
+ * Author: 锋楪技术团队123456
  *
  * 本文件包含 妙笔智编「FantasticEditor」 的源代码，该项目的所有源代码均遵循MIT开源许可证协议。
  * 本代码仅允许在十三届软件杯比赛授权比赛方可直接使用
@@ -35,6 +35,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 用户服务实现
@@ -142,10 +145,47 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean userLogin(@NotNull final AuthUserLoginVO authUserLoginVO) {
-        SqlUserDO sqlUserDO = userDAO.getUserByUsername(authUserLoginVO.getUsername());
-        if (sqlUserDO == null) {
-            return false;
+        // 定义邮箱的正则表达式
+        String emailRegex =
+                "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
+        Pattern emailPattern = Pattern.compile(emailRegex);
+        // 定义手机号的正则表达式
+        String phoneRegex = "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$";
+        Pattern phonePattern = Pattern.compile(phoneRegex);
+        // 先判断传入的username为什么类型
+        String username = authUserLoginVO.getUsername();
+        Matcher emailMatcher = emailPattern.matcher(username);
+        Matcher phoneMatcher = phonePattern.matcher(username);
+        if (emailMatcher.matches()) {
+            SqlUserDO sqlUserDO = userDAO.getUserByEmail(username);
+            if (sqlUserDO == null) {
+                return false;
+            }
+            if (!sqlUserDO.getMailVerify()) {
+                throw new BusinessException("邮箱未验证", ErrorCode.OPERATION_FAILED);
+            }
+            if (!Util.INSTANCE.verifyPassword(authUserLoginVO.getPassword(), sqlUserDO.getPassword())) {
+                throw new BusinessException("邮箱或密码错误", ErrorCode.OPERATION_FAILED);
+            }
+            return true;
+        } else if (phoneMatcher.matches()) {
+            SqlUserDO sqlUserDO = userDAO.getUserByPhone(username);
+            if (sqlUserDO == null) {
+                return false;
+            }
+            if (!Util.INSTANCE.verifyPassword(authUserLoginVO.getPassword(), sqlUserDO.getPassword())) {
+                throw new BusinessException("手机号或密码错误", ErrorCode.OPERATION_FAILED);
+            }
+            return true;
+        } else {
+            SqlUserDO sqlUserDO = userDAO.getUserByUsername(username);
+            if (sqlUserDO == null) {
+                return false;
+            }
+            if (!Util.INSTANCE.verifyPassword(authUserLoginVO.getPassword(), sqlUserDO.getPassword())) {
+                throw new BusinessException("用户名或密码错误", ErrorCode.OPERATION_FAILED);
+            }
+            return true;
         }
-        return Util.INSTANCE.verifyPassword(authUserLoginVO.getPassword(), sqlUserDO.getPassword());
     }
 }

@@ -61,7 +61,7 @@ public class AuthController {
     ) {
         // 获取登录
         if (!userService.userLogin(authUserLoginVO)) {
-            throw new CheckFailureException("用户名或密码错误");
+            throw new CheckFailureException("登录失败");
         }
         return ResultUtil.success("登录成功");
     }
