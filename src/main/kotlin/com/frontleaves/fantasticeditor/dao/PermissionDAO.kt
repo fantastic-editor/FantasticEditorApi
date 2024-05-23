@@ -49,9 +49,9 @@ class PermissionDAO : ServiceImpl<PermissionMapper, SqlPermissionDO>(), IService
      * @param size 每页大小
      * @return 权限列表
      */
-    fun getPermissionsBySearch(search: String?, page: Long, size: Long): List<SqlPermissionDO> {
+    fun getPermissionsBySearch(search: String?, page: Long, size: Long): Page<SqlPermissionDO>? {
         return if (search.isNullOrBlank()) {
-            this.page(Page(page, size)).records
+            this.page(Page(page, size))
         } else {
             this.page(
                 Page(page, size),
@@ -59,7 +59,7 @@ class PermissionDAO : ServiceImpl<PermissionMapper, SqlPermissionDO>(), IService
                     .like(SqlPermissionDO::permission.name, search)
                     .or()
                     .like(SqlPermissionDO::description.name, search),
-            ).records
+            )
         }
     }
 }

@@ -31,9 +31,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 权限控制器
+ * 授权控制器
  * <p>
- * 用于处理权限相关的请求, 如登录、注册等
+ * 用于处理授权相关的请求, 如登录、注册等
  *
  * @author xiao_lfeng
  * @version v1.0.0
