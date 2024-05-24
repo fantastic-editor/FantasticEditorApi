@@ -148,7 +148,7 @@ class PublicExceptionHandler {
      * @param e 请求体参数异常 RequestBodyParametersException
      * @return 返回请求体参数异常信息
      */
-    @ExceptionHandler(RequestBodyParametersException::class)
+    /*@ExceptionHandler(RequestBodyParametersException::class)
     fun handleRequestBodyParametersException(
         e: RequestBodyParametersException,
     ): ResponseEntity<BaseResponse<List<RequestBodyParametersException.ErrorFunc>>> {
@@ -158,7 +158,7 @@ class PublicExceptionHandler {
             e.errorInformation[0].message,
             e.errorInformation,
         )
-    }
+    }*/
 
     /**
      * ## 请求路径参数异常处理

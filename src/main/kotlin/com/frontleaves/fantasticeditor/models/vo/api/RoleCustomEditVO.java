@@ -12,50 +12,36 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.entity.sql;
+package com.frontleaves.fantasticeditor.models.vo.api;
 
-import com.baomidou.mybatisplus.annotation.TableName;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.sql.Timestamp;
-
 /**
- * 角色实体类
- * <p/>
- * 用于定义角色实体类；
+ * 角色自定义编辑视图对象
+ * <hr/>
+ * 角色自定义编辑视图对象，用于接收角色自定义编辑的数据；用于编辑角色时需要传入的参数信息内容；
  *
  * @since v1.0.0
+ * @version v1.0.0
  * @author xiao_lfeng
  */
 @Data
 @NoArgsConstructor
-@TableName("fy_role")
 @Accessors(chain = true)
-public class SqlRoleDO {
-    /**
-     * 角色UUID
-     */
-    public String ruuid;
-    /**
-     * 角色名称
-     */
+public class RoleCustomEditVO {
+    @NotBlank(message = "角色名称不能为空")
     public String name;
-    /**
-     * 角色显示名称
-     */
+
+    @NotBlank(message = "角色显示名称不能为空")
     public String displayName;
-    /**
-     * 角色描述
-     */
+
+    @NotBlank(message = "角色描述不能为空")
     public String description;
-    /**
-     * 角色权限
-     */
-    public String permissions;
-    /**
-     * 修改时间
-     */
-    public Timestamp updatedAt;
+
+    @NotBlank(message = "角色权限不能为空")
+    public String[] permissions;
 }
+
