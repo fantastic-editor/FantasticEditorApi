@@ -127,11 +127,26 @@ class BosServiceImpl(
     }
 
     override fun modifyFile(fileName: String, stream: InputStream): Boolean {
-        TODO("Not yet implemented")
+        // 检查文件是否存在
+        if (bosClient.doesObjectExist(BceDataConstant.bosBucketName, "files/$fileName")) {
+            // 删除文件
+            bosClient.deleteObject(BceDataConstant.bosBucketName, "files/$fileName")
+            // 上传文件
+            bosClient.putObject(BceDataConstant.bosBucketName, "files/$fileName", stream.readAllBytes())
+            return true
+        } else {
+            return false
+        }
     }
 
-    override fun uploadTempFile(stream: InputStream): String {
-        TODO("Not yet implemented")
+    override fun uploadTempFile(stream: InputStream, suffix: String): String {
+        // 文件上传
+        val getFileName = StringBuilder(Util.makeNoDashUUID())
+            .append(".")
+            .append(suffix)
+            .toString()
+        bosClient.putObject(BceDataConstant.bosBucketName, "temp/$getFileName", stream.readAllBytes())
+        return getFileName
     }
 
     /**

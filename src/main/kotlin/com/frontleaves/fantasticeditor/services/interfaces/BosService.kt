@@ -53,7 +53,7 @@ interface BosService {
 
     /**
      * ## 删除文件
-     * 删除百度 BCE 服务中的文件，通过文件的命名信息将文件删除；若文件不存在返回false，若存在且删除成功则返回 true;
+     * 删除百度 BCE 服务中的文件，通过文件的命名信息将文件删除；若文件不存在返回 false，若存在且删除成功则返回 true;
      *
      * @param fileName 文件名
      * @param user 用户实体类
@@ -63,7 +63,7 @@ interface BosService {
 
     /**
      * ## 删除图片
-     * 删除百度 BCE 服务中的图片，通过图片的命名信息将图片删除；若图片不存在返回false，若存在且删除成功则返回 true;
+     * 删除百度 BCE 服务中的图片，通过图片的命名信息将图片删除；若图片不存在返回 false，若存在且删除成功则返回 true;
      *
      * @param fileName 图片名
      * @return 返回删除是否成功
@@ -72,19 +72,24 @@ interface BosService {
 
     /**
      * ## 修改文件
-     * 修改百度 BCE 服务中的文件，通过文件的命名信息将文件修改；若出现错误将抛出异常返回
+     * 修改百度 BCE 服务中的文件，通过文件的命名信息将文件修改；本质上是删除原文件，上传新文件，以达到替换的目的；
+     * 若文件不存在返回 false，若存在且修改成功则返回 true;
      *
      * @param fileName 文件名
      * @param stream 文件流
+     * @return 返回修改是否成功
      */
     fun modifyFile(fileName: String, stream: InputStream): Boolean
 
     /**
      * ## 上传临时文件
-     * 上传临时文件到百度 BCE 服务，通过数据流的形式将数据传入到 BCE 服务，随后返回文件的命名信息；若出现错误将抛出异常返回
+     * 上传临时文件到百度 BCE 服务，通过数据流的形式将数据传入到 BCE 服务，随后返回文件的命名信息；若出现错误将抛出异常返回；
+     * 临时文件的存储时间较短，一般用于一些临时的文件存储；例如短时间下载或者生成一些临时文件；
+     * 临时文件并不会直接删除，调用 tasks 中的定时任务进行删除；
      *
      * @param stream 文件流
+     * @param suffix 文件后缀
      * @return 返回文件的命名信息
      */
-    fun uploadTempFile(stream: InputStream): String
+    fun uploadTempFile(stream: InputStream, suffix: String): String
 }
