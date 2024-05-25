@@ -53,7 +53,7 @@ interface BosService {
 
     /**
      * ## 删除文件
-     * 删除百度 BCE 服务中的文件，通过文件的命名信息将文件删除；若出现错误将抛出异常返回
+     * 删除百度 BCE 服务中的文件，通过文件的命名信息将文件删除；若文件不存在返回false，若存在且删除成功则返回 true;
      *
      * @param fileName 文件名
      * @param user 用户实体类
@@ -63,7 +63,10 @@ interface BosService {
 
     /**
      * ## 删除图片
-     * 删除百度 BCE 服务中的图片，通过图片的命名信息将图片删除；若出现错误将抛出异常返回
+     * 删除百度 BCE 服务中的图片，通过图片的命名信息将图片删除；若图片不存在返回false，若存在且删除成功则返回 true;
+     *
+     * @param fileName 图片名
+     * @return 返回删除是否成功
      */
     fun deleteImage(fileName: String): Boolean
 

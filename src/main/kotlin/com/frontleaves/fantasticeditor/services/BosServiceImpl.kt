@@ -45,9 +45,8 @@ class BosServiceImpl(
         if (byteRead.size < 12) {
             throw RuntimeException("文件格式错误")
         }
-
         val fileType = bytesToHex(byteRead).uppercase(Locale.getDefault()).let {
-            it.takeIf { it.startsWith("FFD8FF") }?.let { "jpg" }
+            it.takeIf { it.startsWith("FFD8FF") }?.let { "jpeg" }
                 ?: it.takeIf { it.startsWith("89504E47") }?.let { "png" }
                 ?: it.takeIf { it.startsWith("47494638") }?.let { "gif" }
                 ?: it.takeIf { it.startsWith("52494646") && it.substring(8, 16) == "57454250" }?.let { "webp" }
@@ -69,7 +68,6 @@ class BosServiceImpl(
         if (byteRead.size < 12) {
             throw RuntimeException("文件格式错误")
         }
-
         val fileType = bytesToHex(byteRead).uppercase(Locale.getDefault()).run {
             this.takeIf { it.startsWith("D0CF11E0") }?.let { oldOffice ->
                 takeIf { oldOffice.contains("576F7264") }?.let { "doc" }
@@ -111,11 +109,21 @@ class BosServiceImpl(
     }
 
     override fun deleteFile(fileName: String, user: SqlUserDO): Boolean {
-        TODO("Not yet implemented")
+        // 检查文件是否存在
+        bosClient.doesObjectExist(BceDataConstant.bosBucketName, "files/${user.uuid}/$fileName")
+            .takeIf { it }?.let {
+                bosClient.deleteObject(BceDataConstant.bosBucketName, "files/${user.uuid}/$fileName")
+            } ?: return false
+        return true
     }
 
     override fun deleteImage(fileName: String): Boolean {
-        TODO("Not yet implemented")
+        // 检查文件是否存在
+        bosClient.doesObjectExist(BceDataConstant.bosBucketName, "avatars/$fileName")
+            .takeIf { it }?.let {
+                bosClient.deleteObject(BceDataConstant.bosBucketName, "avatars/$fileName")
+            } ?: return false
+        return true
     }
 
     override fun modifyFile(fileName: String, stream: InputStream): Boolean {
@@ -126,6 +134,13 @@ class BosServiceImpl(
         TODO("Not yet implemented")
     }
 
+    /**
+     * ## 字节转十六进制
+     * 将字节数组转换为十六进制字符串, 用于文件格式的判断, 以及文件的上传;
+     *
+     * @param bytes 字节数组
+     * @return 返回十六进制字符串
+     */
     private fun bytesToHex(bytes: ByteArray): String {
         val sb = java.lang.StringBuilder()
         for (b in bytes) {
