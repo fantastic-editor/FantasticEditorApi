@@ -80,6 +80,7 @@ class StartupConfig(
             prepare.table("role")
             prepare.table("vip")
             prepare.table("user")
+            prepare.table("document")
         }
     }
 

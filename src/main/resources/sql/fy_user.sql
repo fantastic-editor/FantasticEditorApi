@@ -81,4 +81,3 @@ create unique index fy_user_phone_uindex
     on fy_user (phone);
 create unique index fy_user_username_uindex
     on fy_user (username);
-

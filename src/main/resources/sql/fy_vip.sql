@@ -35,4 +35,3 @@ comment on column fy_role.updated_at is '更新时间';
 
 create unique index fy_vip_name_uindex
     on fy_vip (name);
-
