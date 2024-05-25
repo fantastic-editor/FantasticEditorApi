@@ -29,4 +29,5 @@ data object BaseDataConstant {
     var mailPort: Int = 25
     var mailUsername: String? = null
     var mailPassword: String? = null
+    var mailEncoding: String = "UTF-8"
 }

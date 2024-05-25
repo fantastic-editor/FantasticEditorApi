@@ -15,6 +15,7 @@
 package com.frontleaves.fantasticeditor.services;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.frontleaves.fantasticeditor.constant.MailTemplateEnum;
 import com.frontleaves.fantasticeditor.constant.SmsControl;
 import com.frontleaves.fantasticeditor.dao.RoleDAO;
 import com.frontleaves.fantasticeditor.dao.UserDAO;
@@ -26,6 +27,7 @@ import com.frontleaves.fantasticeditor.models.entity.sql.SqlRoleDO;
 import com.frontleaves.fantasticeditor.models.entity.sql.SqlUserDO;
 import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserLoginVO;
 import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserRegisterVO;
+import com.frontleaves.fantasticeditor.services.interfaces.MailService;
 import com.frontleaves.fantasticeditor.services.interfaces.SmsService;
 import com.frontleaves.fantasticeditor.services.interfaces.UserService;
 import com.frontleaves.fantasticeditor.utility.ErrorCode;
@@ -62,6 +64,7 @@ public class UserServiceImpl implements UserService {
     private final RedisUtil redisUtil;
     private final OperateUtil operateUtil;
     private final SmsService smsService;
+    private final MailService mailService;
 
     /**
      * 用户注册
@@ -224,5 +227,32 @@ public class UserServiceImpl implements UserService {
         if (!userDAO.update(getUser, new UpdateWrapper<SqlUserDO>().eq("uuid", getUser.getUuid()))) {
             throw new BusinessException("验证失败", ErrorCode.OPERATION_FAILED);
         }
+    }
+
+    @Override
+    public void sendMailVerify(@NotNull final String email) {
+        // 检查邮箱是否已被注册
+        SqlUserDO getUser = userDAO.getUserByEmail(email);
+        if (getUser == null) {
+            throw new BusinessException("邮箱未注册", ErrorCode.USER_NOT_EXIST);
+        }
+        // 检查邮箱是否已验证
+        if (getUser.getMailVerify()) {
+            throw new BusinessException("邮箱已验证", ErrorCode.OPERATION_FAILED);
+        }
+        // 检查前一次所发送的验证码是否已过期或达到可重新发送的标准
+        RedisMailCodeDO getMailCode = Util.INSTANCE.mapToObject(
+                redisUtil.hashGet("mail:code:" + email),
+                RedisMailCodeDO.class
+        );
+        // 生成验证码
+        String getNumberCode = Util.INSTANCE.generateNumber(6);
+        if (getMailCode != null) {
+            if (System.currentTimeMillis() - Long.parseLong(getMailCode.getSendAt()) < 60 * 1000) {
+                throw new BusinessException("发送过于频繁", ErrorCode.OPERATION_FAILED);
+            }
+        }
+        // 发送验证码
+        mailService.sendVerifyCodeMail(email, getNumberCode, MailTemplateEnum.USER_REGISTER);
     }
 }

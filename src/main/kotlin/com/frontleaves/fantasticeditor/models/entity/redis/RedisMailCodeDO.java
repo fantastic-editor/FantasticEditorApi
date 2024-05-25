@@ -34,7 +34,7 @@ public class RedisMailCodeDO {
     /**
      * 重发次数
      */
-    public Long frequency;
+    public String frequency;
     /**
      * 邮件验证码
      */
@@ -42,5 +42,5 @@ public class RedisMailCodeDO {
     /**
      * 发送时间
      */
-    public Long sendAt;
+    public String sendAt;
 }

@@ -171,6 +171,7 @@ class StartupConfig(
             BaseDataConstant.mailHost = env.getProperty("spring.mail.host")!!
             BaseDataConstant.mailUsername = env.getProperty("spring.mail.username")!!
             BaseDataConstant.mailPassword = env.getProperty("spring.mail.password")!!
+            BaseDataConstant.mailEncoding = env.getProperty("spring.mail.default-encoding")!!
         }
     }
 

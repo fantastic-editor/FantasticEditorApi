@@ -14,18 +14,17 @@
 
 package com.frontleaves.fantasticeditor.controllers.v1;
 
+import com.frontleaves.fantasticeditor.exceptions.BusinessException;
 import com.frontleaves.fantasticeditor.models.vo.api.user.UserMailVerifyVO;
 import com.frontleaves.fantasticeditor.services.interfaces.UserService;
 import com.frontleaves.fantasticeditor.utility.BaseResponse;
+import com.frontleaves.fantasticeditor.utility.ErrorCode;
 import com.frontleaves.fantasticeditor.utility.ResultUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 用户控制器
@@ -57,5 +56,25 @@ public class UserController {
     ) {
         userService.checkMailVerify(userMailVerifyVO.getEmail(), userMailVerifyVO.getVerifyCode());
         return ResultUtil.success("验证成功");
+    }
+
+    /**
+     * 重发邮件验证码
+     * <hr>
+     * 用于用户在注册时，未收到验证码或者验证码失效时，重新发送验证码；
+     *
+     * @param email 邮箱地址
+     * @return 重发结果
+     */
+    @GetMapping("/mail/resend")
+    public ResponseEntity<BaseResponse<Void>> authResendMailVerify(
+            @RequestParam("email") final String email
+    ) {
+        if (email.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$")) {
+            userService.sendMailVerify(email);
+            return ResultUtil.success("发送成功");
+        } else {
+            throw new BusinessException("邮箱格式错误", ErrorCode.REQUEST_BODY_PARAMETERS_ERROR);
+        }
     }
 }

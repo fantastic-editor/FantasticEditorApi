@@ -31,6 +31,7 @@ import org.springframework.mail.MailSendException
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring6.SpringTemplateEngine
 
@@ -61,18 +62,18 @@ class MailServiceImpl(
         // 检查验证码的重新发送时间
         val getMail = Util.mapToObject(redisUtil.hashGet("mail:code:$email"), RedisMailCodeDO::class.java)
         if (getMail != null) {
-            val getSendAfterTime = System.currentTimeMillis() - getMail.sendAt
+            val getSendAfterTime = System.currentTimeMillis() - getMail.sendAt.toLong()
             if (getSendAfterTime < 60000L) {
                 throw BusinessException(
                     "周期时间短信验证码发送频率过高，请等待 15 分钟（剩余 ${getSendAfterTime / 1000} 秒）",
                     ErrorCode.OVER_SPEED,
                 )
             }
-            if (getMail.frequency >= 5) {
+            if (getMail.frequency.toLong() >= 5) {
                 throw BusinessException("验证码发送次数过多，请等待 15 分钟", ErrorCode.OVER_SPEED)
             } else {
                 val sendMail = RedisMailCodeDO().also {
-                    it.sendAt = System.currentTimeMillis()
+                    it.sendAt = System.currentTimeMillis().toString()
                     it.frequency = getMail.frequency + 1
                     it.code = parameters["code"]
                 }
@@ -81,26 +82,26 @@ class MailServiceImpl(
         } else {
             if (parameters["code"] != null) {
                 val sendMail = RedisMailCodeDO().also {
-                    it.sendAt = System.currentTimeMillis()
-                    it.frequency = 1
+                    it.sendAt = System.currentTimeMillis().toString()
+                    it.frequency = "1"
                     it.code = parameters["code"]
                 }
                 redisUtil.hashSet("mail:code:$email", sendMail)
             }
         }
         // 检查邮件模板是否存在
-        val getFileInfo = ClassPathResource("mail/${template.template}.html")
+        val getFileInfo = ClassPathResource("templates/mail/${template.template}.html")
         if (!getFileInfo.exists()) {
             throw MailTemplateNotFoundException("邮件模板不存在")
         }
         // 模板自动注入参数
-        parameters as HashMap
-        parameters["title"] = BaseDataConstant.SERVICE_TITLE
-        parameters["subject"] = template.subject
+        val param = HashMap<String, Any?>(parameters)
+        param["title"] = BaseDataConstant.SERVICE_TITLE
+        param["subject"] = template.subject
         // 创建邮件发送内容
         val message: MimeMessage = javaMailSender.createMimeMessage()
-        val context = Context().also { ctx -> ctx.setVariables(parameters) }
-        val templateContext = templateEngine.process(getFileInfo.path, context)
+        val context = Context().also { ctx -> ctx.setVariables(param) }
+        val templateContext = templateEngine.process(getFileInfo.path.replace("templates/", ""), context)
         try {
             MimeMessageHelper(message, true).also { helper ->
                 helper.setFrom(BaseDataConstant.mailUsername!!)
@@ -124,6 +125,7 @@ class MailServiceImpl(
      * @param verifyCode 验证码
      * @param template 邮件模板
      */
+    @Transactional
     override fun sendVerifyCodeMail(email: String, verifyCode: String, template: MailTemplateEnum) {
         // 检查该模板是否允许发送验证码
         if (!template.hashCode) {

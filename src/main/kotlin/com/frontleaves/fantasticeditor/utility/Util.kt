@@ -161,7 +161,7 @@ object Util {
      * @param obj 对象
      * @return 对象
      */
-    fun <V : Any> mapToObject(map: Map<String, *>?, obj: Class<V>): V? {
+    fun <V : Any> mapToObject(map: Map<String, Any>?, obj: Class<V>): V? {
         if (!map.isNullOrEmpty()) {
             val instance = obj.getDeclaredConstructor().newInstance()
             for (field in obj.declaredFields) {

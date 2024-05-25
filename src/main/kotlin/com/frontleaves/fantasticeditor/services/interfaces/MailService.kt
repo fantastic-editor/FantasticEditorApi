@@ -39,7 +39,8 @@ interface MailService {
     /**
      * ## 发送验证码邮件
      * 发送验证码邮件, 邮件模板由 [MailTemplateEnum] 枚举类定义, 验证码由 [verifyCode] 指定; 邮件地址由 [email] 指定;
-     * 根据模板和验证码生成邮件内容, 并发送邮件
+     * 根据模板和验证码生成邮件内容, 并发送邮件；该接口将会调用 [sendMail] 接口进行发送邮件；并且将会生成验证码存储在 redis 缓存中；
+     * 验证码有效时间为十五分钟，无需进一步设置 Redis 缓存操作。
      *
      * @param email 邮件地址
      * @param verifyCode 验证码

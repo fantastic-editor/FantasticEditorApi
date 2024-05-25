@@ -62,4 +62,14 @@ interface UserService {
      * @return 成功发送返回真，否则返回假
      */
     fun checkMailVerify(email: String, verifyCode: String)
+
+    /**
+     * ## 发送校验邮箱验证码
+     * 用于用户登录进行的邮箱验证码操作，发送邮箱验证码有效时间 15 分钟，存储数据存储在 redis 缓存中；若不产生报错则发送成功；产生报错则
+     * 发送失败；对于错误的产生，请勿手动进行捕获，应当交由全局异常处理器进行处理。该服务层接口适用于用户注册时或注册后未进行邮箱验证的用户
+     * 进行邮箱验证。
+     *
+     * @return 成功发送返回真，否则返回假
+     */
+    fun sendMailVerify(email: String)
 }
