@@ -1,7 +1,7 @@
 /*
  * *******************************************************************************
  * Copyright (C) 2024-NOW(至今) 妙笔智编
- * Author: 锋楪技术团队123456
+ * Author: 锋楪技术团队
  *
  * 本文件包含 妙笔智编「FantasticEditor」 的源代码，该项目的所有源代码均遵循MIT开源许可证协议。
  * 本代码仅允许在十三届软件杯比赛授权比赛方可直接使用
@@ -14,16 +14,18 @@
 
 package com.frontleaves.fantasticeditor.services;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.frontleaves.fantasticeditor.constant.SmsControl;
 import com.frontleaves.fantasticeditor.dao.RoleDAO;
 import com.frontleaves.fantasticeditor.dao.UserDAO;
 import com.frontleaves.fantasticeditor.exceptions.BusinessException;
 import com.frontleaves.fantasticeditor.models.dto.UserCurrentDTO;
+import com.frontleaves.fantasticeditor.models.entity.redis.RedisMailCodeDO;
 import com.frontleaves.fantasticeditor.models.entity.redis.RedisSmsCodeDO;
 import com.frontleaves.fantasticeditor.models.entity.sql.SqlRoleDO;
 import com.frontleaves.fantasticeditor.models.entity.sql.SqlUserDO;
-import com.frontleaves.fantasticeditor.models.vo.api.AuthUserLoginVO;
-import com.frontleaves.fantasticeditor.models.vo.api.AuthUserRegisterVO;
+import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserLoginVO;
+import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserRegisterVO;
 import com.frontleaves.fantasticeditor.services.interfaces.SmsService;
 import com.frontleaves.fantasticeditor.services.interfaces.UserService;
 import com.frontleaves.fantasticeditor.utility.ErrorCode;
@@ -35,7 +37,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -136,10 +140,10 @@ public class UserServiceImpl implements UserService {
         if (redisUtil.hashSet("sms:code:" + phone, smsPhoneDO, 15 * 60)) {
             // 发送验证码
             if (!smsService.sendCode(phone, getNumberCode, SmsControl.USER_REGISTER)) {
-                throw new BusinessException("发送失败", ErrorCode.OPERATION_FAILED);
+                throw new BusinessException("发送失败", ErrorCode.VERIFY_CODE_ERROR);
             }
         } else {
-            throw new BusinessException("发送失败", ErrorCode.OPERATION_FAILED);
+            throw new BusinessException("发送失败", ErrorCode.VERIFY_CODE_ERROR);
         }
     }
 
@@ -186,6 +190,39 @@ public class UserServiceImpl implements UserService {
                 throw new BusinessException("用户名或密码错误", ErrorCode.OPERATION_FAILED);
             }
             return true;
+        }
+    }
+
+    @Override
+    @Transactional
+    public void checkMailVerify(@NotNull final String email, @NotNull final String verifyCode) {
+        // 获取验证码
+        RedisMailCodeDO getMailCode = Util.INSTANCE.mapToObject(
+                redisUtil.hashGet("mail:code:" + email),
+                RedisMailCodeDO.class
+        );
+        if (getMailCode == null) {
+            throw new BusinessException("验证码不存在", ErrorCode.VERIFY_CODE_ERROR);
+        }
+        // 检查验证码
+        if (!getMailCode.getCode().equals(verifyCode)) {
+            throw new BusinessException("验证码错误", ErrorCode.VERIFY_CODE_ERROR);
+        }
+        // 删除验证码
+        redisUtil.delete("mail:code:" + email);
+        // 检查用户是否已验证
+        SqlUserDO getUser = userDAO.getUserByEmail(email);
+        if (getUser == null) {
+            throw new BusinessException("用户不存在", ErrorCode.USER_NOT_EXIST);
+        }
+        if (getUser.getMailVerify()) {
+            throw new BusinessException("用户已验证", ErrorCode.OPERATION_FAILED);
+        }
+        // 验证成功
+        getUser.setMailVerify(true)
+                .setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        if (!userDAO.update(getUser, new UpdateWrapper<SqlUserDO>().eq("uuid", getUser.getUuid()))) {
+            throw new BusinessException("验证失败", ErrorCode.OPERATION_FAILED);
         }
     }
 }

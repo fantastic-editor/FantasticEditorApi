@@ -12,7 +12,7 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.vo.api;
+package com.frontleaves.fantasticeditor.models.vo.api.auth;
 
 
 import jakarta.validation.constraints.NotBlank;

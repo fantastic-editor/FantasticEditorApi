@@ -15,7 +15,7 @@
 package com.frontleaves.fantasticeditor.controllers.v1;
 
 import com.frontleaves.fantasticeditor.exceptions.BusinessException;
-import com.frontleaves.fantasticeditor.models.vo.api.RoleCustomEditVO;
+import com.frontleaves.fantasticeditor.models.vo.api.role.RoleCustomEditVO;
 import com.frontleaves.fantasticeditor.services.interfaces.RoleService;
 import com.frontleaves.fantasticeditor.utility.BaseResponse;
 import com.frontleaves.fantasticeditor.utility.ErrorCode;

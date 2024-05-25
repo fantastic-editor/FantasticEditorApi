@@ -16,8 +16,8 @@ package com.frontleaves.fantasticeditor.controllers.v1;
 
 import com.frontleaves.fantasticeditor.exceptions.library.CheckFailureException;
 import com.frontleaves.fantasticeditor.models.dto.UserCurrentDTO;
-import com.frontleaves.fantasticeditor.models.vo.api.AuthUserLoginVO;
-import com.frontleaves.fantasticeditor.models.vo.api.AuthUserRegisterVO;
+import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserLoginVO;
+import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserRegisterVO;
 import com.frontleaves.fantasticeditor.services.interfaces.SmsService;
 import com.frontleaves.fantasticeditor.services.interfaces.UserService;
 import com.frontleaves.fantasticeditor.utility.BaseResponse;
@@ -31,7 +31,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 权限控制器
+ * 授权控制器
  * <p>
  * 用于处理权限相关的请求, 如登录、注册等
  *

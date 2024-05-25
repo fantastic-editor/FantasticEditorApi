@@ -12,7 +12,7 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.vo.api;
+package com.frontleaves.fantasticeditor.models.vo.api.role;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

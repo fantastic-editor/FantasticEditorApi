@@ -17,7 +17,7 @@ package com.frontleaves.fantasticeditor.services;
 import com.frontleaves.fantasticeditor.dao.RoleDAO;
 import com.frontleaves.fantasticeditor.exceptions.BusinessException;
 import com.frontleaves.fantasticeditor.models.entity.sql.SqlRoleDO;
-import com.frontleaves.fantasticeditor.models.vo.api.RoleCustomEditVO;
+import com.frontleaves.fantasticeditor.models.vo.api.role.RoleCustomEditVO;
 import com.frontleaves.fantasticeditor.services.interfaces.RoleService;
 import com.frontleaves.fantasticeditor.utility.ErrorCode;
 import com.google.gson.Gson;

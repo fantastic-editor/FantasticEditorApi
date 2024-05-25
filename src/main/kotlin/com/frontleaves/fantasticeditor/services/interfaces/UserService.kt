@@ -15,8 +15,8 @@
 package com.frontleaves.fantasticeditor.services.interfaces
 
 import com.frontleaves.fantasticeditor.models.dto.UserCurrentDTO
-import com.frontleaves.fantasticeditor.models.vo.api.AuthUserLoginVO
-import com.frontleaves.fantasticeditor.models.vo.api.AuthUserRegisterVO
+import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserLoginVO
+import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserRegisterVO
 
 /**
  * ## 用户服务接口
@@ -52,4 +52,14 @@ interface UserService {
      * @return UserCurrentDTO
      */
     fun userLogin(authUserLoginVO: AuthUserLoginVO): Boolean
+
+    /**
+     * ## 检查邮箱验证码
+     * 用于用户登录进行的邮箱验证码操作，发送邮箱验证码有效时间十五分钟，存储数据存储在 redis 缓存中；根据数据检查的结果，若验证码检查通过返回
+     * true 否则返回 false，当验证成功时，对应的验证码将会删除，修改用户的状态为已验证；若用户的状态本身为已验证，则将会抛出错误不许操作接口；
+     * 若抛出后，如果验证码匹配成功将会回滚状态。
+     *
+     * @return 成功发送返回真，否则返回假
+     */
+    fun checkMailVerify(email: String, verifyCode: String)
 }

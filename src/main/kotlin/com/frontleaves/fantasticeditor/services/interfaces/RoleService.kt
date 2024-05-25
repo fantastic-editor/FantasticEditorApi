@@ -14,7 +14,7 @@
 
 package com.frontleaves.fantasticeditor.services.interfaces
 
-import com.frontleaves.fantasticeditor.models.vo.api.RoleCustomEditVO
+import com.frontleaves.fantasticeditor.models.vo.api.role.RoleCustomEditVO
 
 /**
  * # 角色服务接口
