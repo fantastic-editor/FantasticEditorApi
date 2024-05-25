@@ -14,10 +14,13 @@
 
 package com.frontleaves.fantasticeditor
 
+import com.frontleaves.fantasticeditor.annotations.KSlf4j.Companion.log
 import com.frontleaves.fantasticeditor.dao.UserDAO
+import com.frontleaves.fantasticeditor.services.interfaces.BceService
 import jakarta.annotation.Resource
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.core.io.ClassPathResource
 import java.util.*
 
 @SpringBootTest
@@ -26,9 +29,21 @@ class FantasticEditorApplicationTests {
     @Resource
     private lateinit var userDAO: UserDAO
 
+    @Resource
+    private lateinit var bceService: BceService
+
     @Test
     fun testUserDAO() {
         println(UUID.nameUUIDFromBytes("xiao_lfeng".toByteArray()).toString())
         userDAO.getUserByUUID("uuid")
+    }
+
+    @Test
+    fun testImageUpload() {
+        val getResource = ClassPathResource("static/images/demo-upload.png")
+        val inputStream = getResource.inputStream
+        // 上传文件信息
+        val uploadImage = bceService.uploadImage(inputStream)
+        log.info("upload image: $uploadImage")
     }
 }

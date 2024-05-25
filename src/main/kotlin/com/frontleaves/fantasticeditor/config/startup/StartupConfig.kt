@@ -165,6 +165,9 @@ class StartupConfig(
             BceDataConstant.bceSmsSignatureID = env.getProperty("baidu.sms.signature-id")
             BceDataConstant.bceBusinessTemplateID = env.getProperty("baidu.sms.template-business-id")
 
+            BceDataConstant.bosEndpoint = env.getProperty("baidu.bos.endpoint")!!
+            BceDataConstant.bosBucketName = env.getProperty("baidu.bos.bucket-name")!!
+
             BaseDataConstant.mailHost = env.getProperty("spring.mail.host")!!
             BaseDataConstant.mailUsername = env.getProperty("spring.mail.username")!!
             BaseDataConstant.mailPassword = env.getProperty("spring.mail.password")!!

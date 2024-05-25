@@ -25,4 +25,7 @@ data object BceDataConstant {
     var bceSmsSignatureID: String? = null
     var bceSmsTemplateID: String? = null
     var bceBusinessTemplateID: String? = null
+
+    var bosEndpoint: String? = null
+    var bosBucketName: String? = null
 }

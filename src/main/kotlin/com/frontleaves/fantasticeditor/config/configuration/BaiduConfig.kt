@@ -15,6 +15,8 @@
 package com.frontleaves.fantasticeditor.config.configuration
 
 import com.baidubce.auth.DefaultBceCredentials
+import com.baidubce.services.bos.BosClient
+import com.baidubce.services.bos.BosClientConfiguration
 import com.baidubce.services.sms.SmsClient
 import com.baidubce.services.sms.SmsClientConfiguration
 import org.springframework.context.annotation.Bean
@@ -40,5 +42,17 @@ class BaiduConfig(
             config.endpoint = "https://smsv3.bj.baidubce.com/"
         }
         return SmsClient(smsConfig)
+    }
+
+    @Bean
+    fun bosClient(): BosClient {
+        val getConfig = BosClientConfiguration().also {
+            it.credentials = DefaultBceCredentials(
+                env.getProperty("baidu.access-key"),
+                env.getProperty("baidu.secret-key"),
+            )
+            it.endpoint = env.getProperty("baidu.bos.endpoint")
+        }
+        return BosClient(getConfig)
     }
 }
