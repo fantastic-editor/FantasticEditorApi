@@ -25,10 +25,12 @@ import java.io.InputStream
  * @constructor 创建一个 BCE 服务接口
  * @author xiao_lfeng
  */
-interface BceService {
+interface BosService {
     /**
      * ## 上传图片
-     * 上传图片到百度 BCE 服务，通过数据流的形式将数据传入到 BCE 服务，随后返回图片的命名信息；若出现错误将抛出异常返回
+     * 上传图片到百度 BCE 服务，通过数据流的形式将数据传入到 BCE 服务，随后返回图片的命名信息；若出现错误将抛出异常返回；
+     * 图片格式支持 jpg, png, gif, webp；
+     * 注意：该方法不能够自动将图片信息直接存入数据库，仅是对图片的上传操作；
      *
      * @param stream 图片流
      * @throws RuntimeException 文件格式错误
@@ -39,9 +41,12 @@ interface BceService {
 
     /**
      * ## 上传文件
-     * 上传文件到百度 BCE 服务，通过数据流的形式将数据传入到 BCE 服务，随后返回文件的命名信息；若出现错误将抛出异常返回
+     * 上传文件到百度 BCE 服务，通过数据流的形式将数据传入到 BCE 服务，随后返回文件的命名信息；若出现错误将抛出异常返回;
+     * 支持的文件格式有：txt, doc, docx, xls, xlsx, ppt, pptx；
+     * 注意：该方法不能够自动将文件信息直接存入数据库，仅是对文件的上传操作；
      *
      * @param stream 文件流
+     * @param user 用户实体类
      * @return 返回文件的命名信息
      */
     fun uploadFile(stream: InputStream, user: SqlUserDO): String
@@ -51,8 +56,10 @@ interface BceService {
      * 删除百度 BCE 服务中的文件，通过文件的命名信息将文件删除；若出现错误将抛出异常返回
      *
      * @param fileName 文件名
+     * @param user 用户实体类
+     * @return 返回删除是否成功
      */
-    fun deleteFile(fileName: String): Boolean
+    fun deleteFile(fileName: String, user: SqlUserDO): Boolean
 
     /**
      * ## 删除图片
@@ -68,4 +75,13 @@ interface BceService {
      * @param stream 文件流
      */
     fun modifyFile(fileName: String, stream: InputStream): Boolean
+
+    /**
+     * ## 上传临时文件
+     * 上传临时文件到百度 BCE 服务，通过数据流的形式将数据传入到 BCE 服务，随后返回文件的命名信息；若出现错误将抛出异常返回
+     *
+     * @param stream 文件流
+     * @return 返回文件的命名信息
+     */
+    fun uploadTempFile(stream: InputStream): String
 }
