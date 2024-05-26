@@ -70,4 +70,28 @@ public class RoleController {
             throw new BusinessException("修改角色失败", ErrorCode.OPERATION_FAILED);
         }
     }
+
+    /**
+     * 添加角色
+     * <hr/>
+     * 添加角色，用于添加新的角色；
+     *
+     * @return 添加角色结果
+     */
+    @PostMapping("/add")
+    public ResponseEntity<BaseResponse<Void>> addRole(
+            @NotNull @RequestBody final RoleCustomEditVO roleCustomEditVO
+    ) {
+        // 对权限进行正则表达式检查
+        for (String permission : roleCustomEditVO.permissions) {
+            if (!permission.matches("^[a-zA-Z]+:[a-zA-Z]+$")) {
+                throw new BusinessException("权限格式错误", ErrorCode.REQUEST_BODY_PARAMETERS_ERROR);
+            }
+        }
+        if (roleService.addRole(roleCustomEditVO)) {
+            return ResultUtil.success("添加角色成功");
+        } else {
+            throw new BusinessException("添加角色失败", ErrorCode.OPERATION_FAILED);
+        }
+    }
 }

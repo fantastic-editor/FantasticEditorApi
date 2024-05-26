@@ -35,4 +35,14 @@ interface RoleService {
      * @return 编辑结果
      */
     fun editCustomRole(roleCustomEditVO: RoleCustomEditVO, roleId: String): Boolean
+    /**
+     * ## 添加角色
+     * 添加角色，根据传入 VO 信息对角色进行添加；
+     * 检查默认（内置）角色不允许被添加，只允许添加自定义得角色信息；若添加的角色名与数据库内容一致，则抛出错误
+     * 添加成功后返回操作成功的结果，否则返回失败，不允许操作的内容将会直接抛出异常；
+     *
+     * @param roleCustomEditVO 自定义角色编辑VO
+     * @return 添加结果
+     * */
+    fun addRole(roleCustomEditVO: RoleCustomEditVO): Boolean
 }

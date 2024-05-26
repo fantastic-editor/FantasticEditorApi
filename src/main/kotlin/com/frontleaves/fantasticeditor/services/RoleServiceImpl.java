@@ -20,6 +20,7 @@ import com.frontleaves.fantasticeditor.models.entity.sql.SqlRoleDO;
 import com.frontleaves.fantasticeditor.models.vo.api.role.RoleCustomEditVO;
 import com.frontleaves.fantasticeditor.services.interfaces.RoleService;
 import com.frontleaves.fantasticeditor.utility.ErrorCode;
+import com.frontleaves.fantasticeditor.utility.Util;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -73,5 +74,22 @@ public class RoleServiceImpl implements RoleService {
         } else {
             throw new BusinessException("角色不存在", ErrorCode.OPERATION_FAILED);
         }
+    }
+
+    @Override
+    public boolean addRole(@NotNull final RoleCustomEditVO roleCustomEditVO) {
+        // 检查新的角色名称是否已经存在
+        SqlRoleDO checkRole = roleDAO.getRoleByRoleName(roleCustomEditVO.getName());
+        if (checkRole != null) {
+            throw new BusinessException("角色名称已存在", ErrorCode.OPERATION_FAILED);
+        }
+        SqlRoleDO newRole = new SqlRoleDO()
+                .setRuuid(Util.INSTANCE.makeNoDashUUID())
+                .setName(roleCustomEditVO.getName())
+                .setDisplayName(roleCustomEditVO.getDisplayName())
+                .setDescription(roleCustomEditVO.getDescription())
+                .setUpdatedAt(new Timestamp(System.currentTimeMillis()))
+                .setPermissions(gson.toJson(roleCustomEditVO.getPermissions()));
+        return roleDAO.addRole(newRole);
     }
 }

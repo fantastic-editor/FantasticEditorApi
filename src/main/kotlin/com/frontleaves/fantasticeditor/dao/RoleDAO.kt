@@ -71,4 +71,16 @@ class RoleDAO(private val redisUtil: RedisUtil) : ServiceImpl<RoleMapper, SqlRol
             }
         }
     }
+
+    /**
+     * ## 添加角色
+     * 添加角色，根据传入角色信息对角色进行添加；
+     * 添加成功后返回操作成功的结果，否则返回失败；
+     *
+     * @param role 角色实体类
+     * @return 添加结果
+     * */
+    fun addRole(role: SqlRoleDO): Boolean {
+        return this.save(role)
+    }
 }
