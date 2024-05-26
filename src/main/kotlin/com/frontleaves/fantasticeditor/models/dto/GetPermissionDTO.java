@@ -11,28 +11,26 @@
  * 对因使用本软件内容而导致的任何直接或间接的损失不承担任何责任。
  * *******************************************************************************
  */
+package com.frontleaves.fantasticeditor.models.dto;
 
-package com.frontleaves.fantasticeditor.models.entity.sql;
-
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 /**
- * 权限实体类
+ * 当前用户权限数据传输对象
  * <p>
- * 用于定义权限实体类；
+ * 用于返回当前用户的权限信息; 有关用户的权限和权限描述;
+ * 在 {@code PermissionController} 中使用;
  *
  * @since v1.0.0
- * @author xiao_lfeng
+ * @author DC_DC
+ * Date: 2024/5/23/19:36
  */
 @Data
 @NoArgsConstructor
-@TableName("fy_permission")
-@Accessors(chain = true)
-public class SqlPermissionDO {
-    public Long pid;
+public class GetPermissionDTO {
+    // 权限
     public String permission;
+    // 权限描述
     public String description;
 }

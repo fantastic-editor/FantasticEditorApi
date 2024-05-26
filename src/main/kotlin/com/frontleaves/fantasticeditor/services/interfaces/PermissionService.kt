@@ -12,27 +12,29 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.entity.sql;
+package com.frontleaves.fantasticeditor.services.interfaces
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
+import com.frontleaves.fantasticeditor.models.entity.sql.SqlPermissionDO
 
 /**
- * 权限实体类
- * <p>
- * 用于定义权限实体类；
+ * ## 用户权限接口
+ * 用于定义用户权限接口
  *
  * @since v1.0.0
- * @author xiao_lfeng
+ * @constructor 创建一个用户权限接口
+ * @author DC_DC
  */
-@Data
-@NoArgsConstructor
-@TableName("fy_permission")
-@Accessors(chain = true)
-public class SqlPermissionDO {
-    public Long pid;
-    public String permission;
-    public String description;
+
+interface PermissionService {
+
+    /**
+     * ## 获取权限列表
+     * 获取权限列表, 返回权限列表, 可根据搜索条件进行搜索, 并分页返回; 若搜索条件为空, 则返回所有权限
+     *
+     * @param search 搜索条件
+     * @param page 页码
+     * @param size 每页大小
+     * @return 权限列表
+     */
+    fun getPermissionList(search: String?, page: Int?, size: Int?): List<SqlPermissionDO>
 }
