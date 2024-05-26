@@ -28,4 +28,5 @@ import com.frontleaves.fantasticeditor.models.entity.sql.SqlPermissionDO
 interface PermissionService {
 
     fun getPermissionList(search: String?, page: Int?, size: Int?): List<SqlPermissionDO>
+
 }

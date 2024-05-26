@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +34,21 @@ import java.util.List;
 public class PermissionController {
     private final PermissionService permissionService;
 
+    /**
+     * 获取权限列表
+     * <p>
+     * 获取权限列表
+     *
+     * @param search 搜索关键字
+     * @param page   页码
+     * @param size   每页大小
+     * @return 权限列表
+     */
     @GetMapping("/list")
     public ResponseEntity<BaseResponse<List<GetPermissionDTO>>> getPermissionList(
             @RequestParam(value = "search", required = false) final String search,
-            @RequestParam(value = "page", defaultValue = "1") final Integer page,
-            @RequestParam(value = "size", defaultValue = "20") final Integer size) {
+            @RequestParam(value = "page", defaultValue = "1") @Min(1) final Integer page,
+            @RequestParam(value = "size", defaultValue = "20") @Min(1) final Integer size) {
         List<SqlPermissionDO> sqlPermissionDOList = permissionService.getPermissionList(search, page, size);
         List<GetPermissionDTO> getPermissionDTOList = new ArrayList<>();
         for (SqlPermissionDO sqlPermissionDO : sqlPermissionDOList) {

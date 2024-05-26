@@ -43,17 +43,16 @@ public class PermissionServiceImpl implements PermissionService {
             @Nullable final Integer page,
             @Nullable final Integer size
     ) {
-        int page1 = 1;
-        int size1 = 20;
+        long page1 = 1;
+        long size1 = 20;
         String search1 = "";
-        if (page != null && size != null) {
+        if (page != null && page > 0) {
             page1 = page;
+        }
+        if (size != null && size > 0) {
             size1 = size;
-        } else if (size != null) {
-            size1 = size;
-        } else if (page != null) {
-            page1 = page;
-        } else if (search != null) {
+        }
+        if (search != null) {
             search1 = search;
         }
         Page<SqlPermissionDO> sqlPermissionDOList = permissionDAO.getPermissionsBySearch(search1, page1, size1);
