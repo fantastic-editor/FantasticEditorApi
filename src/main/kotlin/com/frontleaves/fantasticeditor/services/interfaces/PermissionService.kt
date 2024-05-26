@@ -27,6 +27,14 @@ import com.frontleaves.fantasticeditor.models.entity.sql.SqlPermissionDO
 
 interface PermissionService {
 
+    /**
+     * ## 获取权限列表
+     * 获取权限列表, 返回权限列表, 可根据搜索条件进行搜索, 并分页返回; 若搜索条件为空, 则返回所有权限
+     *
+     * @param search 搜索条件
+     * @param page 页码
+     * @param size 每页大小
+     * @return 权限列表
+     */
     fun getPermissionList(search: String?, page: Int?, size: Int?): List<SqlPermissionDO>
-
 }
