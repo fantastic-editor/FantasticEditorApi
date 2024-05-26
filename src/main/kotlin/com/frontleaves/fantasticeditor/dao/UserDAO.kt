@@ -98,4 +98,22 @@ class UserDAO(
             this.getOne(QueryWrapper<SqlUserDO>().eq("phone", phone))
         }
     }
+
+    /**
+     * ## 修改密码
+     * 用户通过旧密码进行修改密码
+     *
+     * @param uuid 用户UUID
+     * @param password 新密码
+     * @return 是否修改成功
+     */
+    fun editPassword(uuid: String, password: String): Boolean {
+        val user = this.getUserByUUID(uuid)
+        return if (user != null) {
+            user.password = password
+            this.update(user, QueryWrapper<SqlUserDO>().eq("uuid", uuid))
+        } else {
+            false
+        }
+    }
 }

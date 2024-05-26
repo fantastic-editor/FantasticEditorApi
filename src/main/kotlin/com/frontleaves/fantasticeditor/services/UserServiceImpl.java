@@ -25,6 +25,7 @@ import com.frontleaves.fantasticeditor.models.entity.redis.RedisMailCodeDO;
 import com.frontleaves.fantasticeditor.models.entity.redis.RedisSmsCodeDO;
 import com.frontleaves.fantasticeditor.models.entity.sql.SqlRoleDO;
 import com.frontleaves.fantasticeditor.models.entity.sql.SqlUserDO;
+import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserEditPasswordVO;
 import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserLoginVO;
 import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserRegisterVO;
 import com.frontleaves.fantasticeditor.services.interfaces.MailService;
@@ -42,6 +43,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -254,5 +256,35 @@ public class UserServiceImpl implements UserService {
         }
         // 发送验证码
         mailService.sendVerifyCodeMail(email, getNumberCode, MailTemplateEnum.USER_REGISTER);
+    }
+
+    @Override
+    public boolean editPassword(
+            @NotNull final AuthUserEditPasswordVO authUserEditPasswordVO,
+            @NotNull final String uuid
+    ) {
+        // 获取用户信息
+        SqlUserDO getUser = userDAO.getUserByUUID(uuid);
+        if (getUser == null) {
+            throw new BusinessException("用户不存在", ErrorCode.USER_NOT_EXIST);
+        }
+        // 校验旧密码是否正确
+        if (!Util.INSTANCE.verifyPassword(authUserEditPasswordVO.getOldPassword(), getUser.getPassword())) {
+            throw new BusinessException("旧密码错误", ErrorCode.OPERATION_FAILED);
+        }
+        // 判断新旧密码是否相同
+        if (authUserEditPasswordVO.getOldPassword().equals(authUserEditPasswordVO.getNewPassword())) {
+            throw new BusinessException("新旧密码相同", ErrorCode.OPERATION_FAILED);
+        }
+        // 修改密码
+        if (userDAO.editPassword(uuid, Util.INSTANCE.encryptPassword(authUserEditPasswordVO.getNewPassword()))) {
+            mailService.sendMail(
+                    getUser.getEmail(),
+                    MailTemplateEnum.USER_EDIT_PASSWORD, Map.of("username", getUser.getUsername())
+            );
+            return true;
+        } else {
+            throw new BusinessException("修改失败", ErrorCode.OPERATION_FAILED);
+        }
     }
 }

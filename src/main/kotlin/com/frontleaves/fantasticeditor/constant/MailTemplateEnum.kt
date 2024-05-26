@@ -26,4 +26,5 @@ package com.frontleaves.fantasticeditor.constant
 enum class MailTemplateEnum(val subject: String, val template: String, val description: String, val hashCode: Boolean) {
     USER_REGISTER("用户注册", "user-register", "用户进行注册时候所发送的内容", true),
     USER_LOGIN("用户登录", "user-login", "用户进行登录时候所发送的内容", true),
+    USER_EDIT_PASSWORD("用户修改密码", "user-edit-password", "用户进行修改密码时候所发送的内容", true),
 }
