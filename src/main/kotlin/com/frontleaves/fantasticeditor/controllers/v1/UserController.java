@@ -16,6 +16,7 @@ package com.frontleaves.fantasticeditor.controllers.v1;
 
 import com.frontleaves.fantasticeditor.exceptions.BusinessException;
 import com.frontleaves.fantasticeditor.models.vo.api.user.UserMailVerifyVO;
+import com.frontleaves.fantasticeditor.models.vo.api.user.UserPublicInfoVO;
 import com.frontleaves.fantasticeditor.services.interfaces.UserService;
 import com.frontleaves.fantasticeditor.utility.BaseResponse;
 import com.frontleaves.fantasticeditor.utility.ErrorCode;
@@ -25,6 +26,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 用户控制器
@@ -77,4 +82,46 @@ public class UserController {
             throw new BusinessException("邮箱格式错误", ErrorCode.REQUEST_BODY_PARAMETERS_ERROR);
         }
     }
+
+
+    /**
+     * 根据uuid、用户名、手机、邮箱进行查询用户的基本信息
+     * <hr>
+     * 根据传入的uuid、用户名、手机号、邮箱数组查询用户基本信息
+     * <li>uuids、usernames、phones、emails参数可为空</li>
+     *
+     * @param uuids 用户uuid数组
+     * @param usernames 用户名数组
+     * @param phones 用户手机号数组
+     * @param emails 用户邮箱数组
+     * @return 用户基本信息
+     */
+    @GetMapping("/info/get/profile")
+    public ResponseEntity<BaseResponse<List<UserPublicInfoVO>>> getUserProfileInfo(
+        @RequestParam(required = false, defaultValue = "") List<String> uuids,
+        @RequestParam(required = false, defaultValue = "") List<String> usernames,
+        @RequestParam(required = false, defaultValue = "") List<String> phones,
+        @RequestParam(required = false, defaultValue = "") List<String> emails
+    ) {
+
+        // 检查电话号码和电子邮件地址的格式
+        boolean allPhonesValid = phones.stream().allMatch(phone ->
+                Pattern.matches("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", phone));
+        if (!allPhonesValid) {
+            throw new BusinessException("手机号格式错误", ErrorCode.REQUEST_PARAMETERS_ERROR);
+        }
+        boolean allEmailsValid = emails.stream().allMatch(email ->
+                Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", email));
+        if (!allEmailsValid) {
+            throw new BusinessException("邮箱格式错误", ErrorCode.REQUEST_PARAMETERS_ERROR);
+        }
+
+        //获取用户基本信息
+        List<UserPublicInfoVO> userPublicInfoVOS =
+                userService.getUserProfileInfos(uuids, usernames, phones, emails);
+
+        return ResultUtil.success("获取用户基本信息成功", userPublicInfoVOS);
+    }
+
+
 }
