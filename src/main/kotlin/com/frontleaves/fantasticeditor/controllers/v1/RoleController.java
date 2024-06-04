@@ -16,6 +16,7 @@ package com.frontleaves.fantasticeditor.controllers.v1;
 
 import com.frontleaves.fantasticeditor.exceptions.BusinessException;
 import com.frontleaves.fantasticeditor.models.vo.api.role.RoleCustomEditVO;
+import com.frontleaves.fantasticeditor.models.vo.api.role.RoleInfoVO;
 import com.frontleaves.fantasticeditor.services.interfaces.RoleService;
 import com.frontleaves.fantasticeditor.utility.BaseResponse;
 import com.frontleaves.fantasticeditor.utility.ErrorCode;
@@ -25,6 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 角色控制器
@@ -93,5 +96,19 @@ public class RoleController {
         } else {
             throw new BusinessException("添加角色失败", ErrorCode.OPERATION_FAILED);
         }
+    }
+
+
+
+    @GetMapping("/info/get")
+    public ResponseEntity<BaseResponse<List<RoleInfoVO>>> getUserRoleInfo(
+            @RequestParam(required = false, defaultValue = "")  List<String> uuids,
+            @RequestParam(required = false, defaultValue = "")  List<String> usernames,
+            @RequestParam(required = false, defaultValue = "")  List<String> ruuids,
+            @RequestParam(required = false, defaultValue = "")  List<String> roleNames
+    ) {
+        List<RoleInfoVO> roleInfoVOS = roleService.getUserRoleInfo(
+                uuids, usernames, ruuids, roleNames);
+        return ResultUtil.success("获取用户角色信息成功", roleInfoVOS);
     }
 }
