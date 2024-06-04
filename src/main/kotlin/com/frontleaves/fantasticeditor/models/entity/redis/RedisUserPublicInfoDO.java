@@ -42,9 +42,13 @@ public class RedisUserPublicInfoDO {
 
 	public String basicInformation;
 
-	public String role;
+	public String roleId;
 
-	public String vip;
+	public String roleName;
+
+	public String vipId;
+
+	public String vipName;
 
 }
 

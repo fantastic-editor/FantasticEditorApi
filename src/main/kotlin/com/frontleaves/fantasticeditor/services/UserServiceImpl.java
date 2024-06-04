@@ -340,15 +340,17 @@ public class UserServiceImpl implements UserService {
             }
             //  进行封装
             Util.INSTANCE.copyPropertiesData(userDO, userVO);
-            //  设置用户Vip名称
+            //  设置用户Vip名称与id
             SqlVipDO vipDO = null;
             if (userDO.getVip() != null) {
                 vipDO = vipDAO.getVipByVUUID(userDO.getVip());
             }
-            userVO.setVipName((vipDO != null && vipDO.getName() != null) ? vipDO.getName() : "");
-            //  设置用户角色名称
+            userVO.setVipName((vipDO != null && vipDO.getDisplayName() != null) ? vipDO.getDisplayName() : "");
+            userVO.setVipId((vipDO != null && vipDO.getVuuid() != null) ? vipDO.getVuuid() : "");
+            //  设置用户角色名称与id
             SqlRoleDO roleDO = roleDAO.getRoleByRUUID(userDO.getRole());
-            userVO.setRoleName((roleDO != null && roleDO.getName() != null) ? roleDO.getName() : "");
+            userVO.setRoleName((roleDO != null && roleDO.getDisplayName() != null) ? roleDO.getDisplayName() : "");
+            userVO.setRoleId((roleDO != null && roleDO.getRuuid() != null) ? roleDO.getRuuid() : "");
 
             redisUtil.setHasKey(redisKey, Util.INSTANCE.objectToMap(userVO));
         }
