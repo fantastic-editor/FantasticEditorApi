@@ -19,14 +19,18 @@ import com.frontleaves.fantasticeditor.constant.MailTemplateEnum;
 import com.frontleaves.fantasticeditor.constant.SmsControl;
 import com.frontleaves.fantasticeditor.dao.RoleDAO;
 import com.frontleaves.fantasticeditor.dao.UserDAO;
+import com.frontleaves.fantasticeditor.dao.VipDAO;
 import com.frontleaves.fantasticeditor.exceptions.BusinessException;
 import com.frontleaves.fantasticeditor.models.dto.UserCurrentDTO;
 import com.frontleaves.fantasticeditor.models.entity.redis.RedisMailCodeDO;
 import com.frontleaves.fantasticeditor.models.entity.redis.RedisSmsCodeDO;
+import com.frontleaves.fantasticeditor.models.entity.redis.RedisUserPublicInfoDO;
 import com.frontleaves.fantasticeditor.models.entity.sql.SqlRoleDO;
 import com.frontleaves.fantasticeditor.models.entity.sql.SqlUserDO;
+import com.frontleaves.fantasticeditor.models.entity.sql.SqlVipDO;
 import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserLoginVO;
 import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserRegisterVO;
+import com.frontleaves.fantasticeditor.models.vo.api.user.UserPublicInfoVO;
 import com.frontleaves.fantasticeditor.services.interfaces.MailService;
 import com.frontleaves.fantasticeditor.services.interfaces.SmsService;
 import com.frontleaves.fantasticeditor.services.interfaces.UserService;
@@ -61,6 +65,7 @@ import java.util.regex.Pattern;
 public class UserServiceImpl implements UserService {
     private final UserDAO userDAO;
     private final RoleDAO roleDAO;
+    private final VipDAO vipDAO;
     private final RedisUtil redisUtil;
     private final OperateUtil operateUtil;
     private final SmsService smsService;
@@ -254,5 +259,113 @@ public class UserServiceImpl implements UserService {
         }
         // 发送验证码
         mailService.sendVerifyCodeMail(email, getNumberCode, MailTemplateEnum.USER_REGISTER);
+    }
+
+
+    @Override
+    public UserPublicInfoVO getMyUserProfileInfo(@NotNull String uuid) {
+
+        UserPublicInfoVO userPublicInfoVO = new UserPublicInfoVO();
+
+        //  redis查询的uuid
+        String redisKey = "user:uuid:"+uuid;
+
+        //  先从redis中查询 用户公开信息实体类
+        RedisUserPublicInfoDO getUserPInfoFromRedis =
+                Util.INSTANCE.mapToObject(
+                        redisUtil.hashGet(redisKey),
+                        RedisUserPublicInfoDO.class
+                );
+
+        //   如果redis数据不为空，返回redis的数据
+        if (getUserPInfoFromRedis != null) {
+            Util.INSTANCE.copyPropertiesData(getUserPInfoFromRedis, userPublicInfoVO);
+        }
+
+        //  如果redis数据为空，则进行封装，并将数据存储到redis中
+        //  从数据库获取User数据
+        SqlUserDO userDO = userDAO.getUserByUUID(uuid);
+        //  复制属性相同的数据
+        Util.INSTANCE.copyPropertiesData(userDO, userPublicInfoVO);
+        //  设置用户Vip名称
+        SqlVipDO vipDO = null;
+        if (userDO.getVip() != null) {
+            vipDO = vipDAO.getVipByVUUID(userDO.getVip());
+        }
+        userPublicInfoVO.setVipName
+                ((vipDO != null && vipDO.getName() != null) ? vipDO.getName() : "");
+        //  设置用户角色名称
+        SqlRoleDO roleDO = roleDAO.getRoleByRUUID(userDO.getRole());
+        userPublicInfoVO.setRoleName
+                ((roleDO != null && roleDO.getName() != null) ? roleDO.getName() : "");
+
+        //  设置redis数据
+        redisUtil.setHasKey(redisKey, Util.INSTANCE.objectToMap(userPublicInfoVO));
+
+        return  userPublicInfoVO;
+    }
+
+
+    /**
+     * 封装用户开放信息VO类
+     * <p>
+     * 将用户sql实体类封装为用户开放信息VO类，并根据搜索类型将结果储存到redis中
+     *
+     * @param searchType 搜索类型(uuid、username、phone、email)
+     * @param searchData 搜索数据
+     * @return 用户开发信息实体类
+     */
+    private UserPublicInfoVO searchUserPublicInfo(final String searchType,
+                                                  final String searchData) {
+
+        //  拼接redis的key
+        String redisKey = "userPInfo:"+searchType+":"+searchData;
+
+        //  定义用户公共信息类实体
+        UserPublicInfoVO userVO = new UserPublicInfoVO();
+
+        //  先从redis中查询 用户开发信息实体类
+        RedisUserPublicInfoDO getUserPInfoFromRedis =
+                Util.INSTANCE.mapToObject(
+                        redisUtil.hashGet(redisKey),
+                        RedisUserPublicInfoDO.class
+                );
+
+        //  如果redis没有数据、则进行封装，并将结果存储到redis中
+        if (getUserPInfoFromRedis == null) {
+            //  获取用户sql实体类
+            SqlUserDO userDO = switch (searchType) {
+                case "uuid" -> userDAO.getUserByUUID(searchData);
+                case "username" -> userDAO.getUserByUsername(searchData);
+                case "phone" -> userDAO.getUserByPhone(searchData);
+                case "email" -> userDAO.getUserByEmail(searchData);
+                default -> null;
+            };
+            //  如果用户sql实体类为空，返回null
+            if (userDO == null) {
+                return null;
+            }
+            //  进行封装
+            Util.INSTANCE.copyPropertiesData(userDO, userVO);
+            //  设置用户Vip名称
+            SqlVipDO vipDO = null;
+            if (userDO.getVip() != null) {
+                vipDO = vipDAO.getVipByVUUID(userDO.getVip());
+            }
+            userVO.setVipName((vipDO != null && vipDO.getName() != null) ? vipDO.getName() : "");
+            //  设置用户角色名称
+            SqlRoleDO roleDO = roleDAO.getRoleByRUUID(userDO.getRole());
+            userVO.setRoleName((roleDO != null && roleDO.getName() != null) ? roleDO.getName() : "");
+
+            redisUtil.setHasKey(redisKey, Util.INSTANCE.objectToMap(userVO));
+        }
+
+        //  如果查询到了数据，返回结果即可
+        if (getUserPInfoFromRedis != null) {
+            Util.INSTANCE.copyPropertiesData(getUserPInfoFromRedis, userVO);
+        }
+
+
+        return userVO;
     }
 }

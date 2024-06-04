@@ -16,10 +16,12 @@ package com.frontleaves.fantasticeditor.controllers.v1;
 
 import com.frontleaves.fantasticeditor.exceptions.BusinessException;
 import com.frontleaves.fantasticeditor.models.vo.api.user.UserMailVerifyVO;
+import com.frontleaves.fantasticeditor.models.vo.api.user.UserPublicInfoVO;
 import com.frontleaves.fantasticeditor.services.interfaces.UserService;
 import com.frontleaves.fantasticeditor.utility.BaseResponse;
 import com.frontleaves.fantasticeditor.utility.ErrorCode;
 import com.frontleaves.fantasticeditor.utility.ResultUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -77,4 +79,26 @@ public class UserController {
             throw new BusinessException("邮箱格式错误", ErrorCode.REQUEST_BODY_PARAMETERS_ERROR);
         }
     }
+
+    /**
+     * 通过uuid获取用户信息
+     * <hr>
+     * 根据uuid参数查询用户的基本信息，信息包括：角色组信息，权限信息，付费会员信息，以及个人其他信息
+     *
+     * @param uuid 用户uuid
+     * @return 用户公开信息
+     */
+    @GetMapping("/info/get/ByUUID/{uuid}")
+    public ResponseEntity<BaseResponse<UserPublicInfoVO>> getMyUserProfileInfo(
+            @PathVariable("uuid") final String uuid
+    ) {
+
+        if (uuid == null || uuid.isEmpty()) {
+            throw new BusinessException("uuid参数为空",ErrorCode.REQUEST_PARAMETERS_ERROR);
+        }
+
+        UserPublicInfoVO userVO = userService.getMyUserProfileInfo(uuid);
+        return ResultUtil.success("获取当前用户信息成功",userVO);
+    }
+
 }
