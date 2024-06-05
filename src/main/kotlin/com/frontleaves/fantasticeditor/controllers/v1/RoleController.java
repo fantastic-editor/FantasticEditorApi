@@ -1,14 +1,10 @@
 /*
- * *******************************************************************************
- * Copyright (C) 2024-NOW(至今) 妙笔智编
+ * ******************************************************************************* Copyright (C) 2024-NOW(至今) 妙笔智编
  * Author: 锋楪技术团队
  *
- * 本文件包含 妙笔智编「FantasticEditor」 的源代码，该项目的所有源代码均遵循MIT开源许可证协议。
- * 本代码仅允许在十三届软件杯比赛授权比赛方可直接使用
- * *******************************************************************************
- * 免责声明：
- * 使用本软件的风险由用户自担。作者或版权持有人在法律允许的最大范围内，
- * 对因使用本软件内容而导致的任何直接或间接的损失不承担任何责任。
+ * 本文件包含 妙笔智编「FantasticEditor」 的源代码，该项目的所有源代码均遵循MIT开源许可证协议。 本代码仅允许在十三届软件杯比赛授权比赛方可直接使用
+ * ******************************************************************************* 免责声明：
+ * 使用本软件的风险由用户自担。作者或版权持有人在法律允许的最大范围内， 对因使用本软件内容而导致的任何直接或间接的损失不承担任何责任。
  * *******************************************************************************
  */
 
@@ -54,9 +50,7 @@ public class RoleController {
      */
     @PostMapping("/{roleId}")
     public ResponseEntity<BaseResponse<Void>> editCustomRole(
-            @NotNull @RequestBody final RoleCustomEditVO roleCustomEditVO,
-            @NotNull @PathVariable final String roleId
-    ) {
+        @NotNull @RequestBody final RoleCustomEditVO roleCustomEditVO, @NotNull @PathVariable final String roleId) {
         // 检查 roleId 是否为不带破折号的 UUID
         if (!roleId.matches("^[a-fA-F0-9]{32}$")) {
             throw new BusinessException("角色ID格式错误", ErrorCode.REQUEST_PATH_ERROR);
@@ -82,9 +76,7 @@ public class RoleController {
      * @return 添加角色结果
      */
     @PostMapping("/add")
-    public ResponseEntity<BaseResponse<Void>> addRole(
-            @NotNull @RequestBody final RoleCustomEditVO roleCustomEditVO
-    ) {
+    public ResponseEntity<BaseResponse<Void>> addRole(@NotNull @RequestBody final RoleCustomEditVO roleCustomEditVO) {
         // 对权限进行正则表达式检查
         for (String permission : roleCustomEditVO.permissions) {
             if (!permission.matches("^[a-zA-Z]+:[a-zA-Z]+$")) {
@@ -98,17 +90,13 @@ public class RoleController {
         }
     }
 
-
-
     @GetMapping("/info/get")
     public ResponseEntity<BaseResponse<List<RoleInfoVO>>> getUserRoleInfo(
-            @RequestParam(required = false, defaultValue = "")  List<String> uuids,
-            @RequestParam(required = false, defaultValue = "")  List<String> usernames,
-            @RequestParam(required = false, defaultValue = "")  List<String> ruuids,
-            @RequestParam(required = false, defaultValue = "")  List<String> roleNames
-    ) {
-        List<RoleInfoVO> roleInfoVOS = roleService.getUserRoleInfo(
-                uuids, usernames, ruuids, roleNames);
-        return ResultUtil.success("获取用户角色信息成功", roleInfoVOS);
+        @RequestParam(required = false, defaultValue = "") final List<String> uuids,
+        @RequestParam(required = false, defaultValue = "") final List<String> usernames,
+        @RequestParam(required = false, defaultValue = "") final List<String> ruuids,
+        @RequestParam(required = false, defaultValue = "") final List<String> roleNames) {
+        List<RoleInfoVO> roleInfoVoS = roleService.getUserRoleInfo(uuids, usernames, ruuids, roleNames);
+        return ResultUtil.success("获取用户角色信息成功", roleInfoVoS);
     }
 }

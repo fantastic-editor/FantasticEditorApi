@@ -36,6 +36,7 @@ interface RoleService {
      * @return 编辑结果
      */
     fun editCustomRole(roleCustomEditVO: RoleCustomEditVO, roleId: String): Boolean
+
     /**
      * ## 添加角色
      * 添加角色，根据传入 VO 信息对角色进行添加；
@@ -58,8 +59,10 @@ interface RoleService {
      * @param roleName 角色名称
      * @return 角色信息
      */
-    fun getUserRoleInfo(uuids: List<String>,
-                        usernames: List<String>,
-                        ruuids: List<String>,
-                        roleNames: List<String>): List<RoleInfoVO>
+    fun getUserRoleInfo(
+        uuids: List<String>,
+        usernames: List<String>,
+        ruuids: List<String>,
+        roleNames: List<String>
+    ): List<RoleInfoVO>
 }
