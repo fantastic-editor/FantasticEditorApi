@@ -25,11 +25,8 @@ import com.frontleaves.fantasticeditor.services.interfaces.RoleService;
 import com.frontleaves.fantasticeditor.utility.ErrorCode;
 import com.frontleaves.fantasticeditor.utility.Util;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import lombok.RequiredArgsConstructor;
-import org.apache.avro.data.Json;
 import org.jetbrains.annotations.NotNull;
-import org.mortbay.util.ajax.JSON;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -108,7 +105,7 @@ public class RoleServiceImpl implements RoleService {
                                             @NotNull final List<String> ruuids,
                                             @NotNull final List<String> roleNames) {
 
-        List<RoleInfoVO> roleInfoVOS = new ArrayList<>();
+        List<RoleInfoVO> roleInfoVoS = new ArrayList<>();
 
         // 根据用户uuid获取角色信息
         for (String uuid : uuids) {
@@ -119,11 +116,11 @@ public class RoleServiceImpl implements RoleService {
             }
 
             //  根据用户的ruuid查询角色
-            if (sqlUserDO.getRole() != null || !sqlUserDO.getRole().isEmpty()) {
+            if (sqlUserDO.getRole() != null ) {
                 //  封装数据
                 RoleInfoVO roleInfoVO = encapsulateRoleByIdOrName(sqlUserDO.getRole(),"ruuid");
                 if (roleInfoVO != null) {
-                    roleInfoVOS.add(roleInfoVO);
+                    roleInfoVoS.add(roleInfoVO);
                 }
             }
         }
@@ -141,7 +138,7 @@ public class RoleServiceImpl implements RoleService {
                 //  封装数据
                 RoleInfoVO roleInfoVO = encapsulateRoleByIdOrName(sqlUserDO.getRole(),"ruuid");
                 if (roleInfoVO != null) {
-                    roleInfoVOS.add(roleInfoVO);
+                    roleInfoVoS.add(roleInfoVO);
                 }
             }
         }
@@ -153,7 +150,7 @@ public class RoleServiceImpl implements RoleService {
                 //  封装数据
                 RoleInfoVO roleInfoVO = encapsulateRoleByIdOrName(ruuid,"ruuid");
                 if (roleInfoVO != null) {
-                    roleInfoVOS.add(roleInfoVO);
+                    roleInfoVoS.add(roleInfoVO);
                 }
             }
         }
@@ -165,15 +162,18 @@ public class RoleServiceImpl implements RoleService {
                 //  封装数据
                 RoleInfoVO roleInfoVO = encapsulateRoleByIdOrName(roleName,"roleName");
                 if (roleInfoVO != null) {
-                    roleInfoVOS.add(roleInfoVO);
+                    roleInfoVoS.add(roleInfoVO);
                 }
             }
         }
 
-        return roleInfoVOS;
+        return roleInfoVoS;
     }
 
 
+
+    private final static String ROLE_TYPE_ROLE_NAME = "roleName";
+    private final static String ROLE_TYPE_ROLE_ID = "ruuid";
     /**
      * ## 封装角色信息
      * 根据ruuid或角色名称查询到角色数据，然后进行封装
@@ -186,9 +186,9 @@ public class RoleServiceImpl implements RoleService {
                                                   String type) {
         //  查询角色数据
         SqlRoleDO sqlRoleDO = null;
-        if (type.equals("ruuid")) {
+        if (ROLE_TYPE_ROLE_NAME.equals(type)) {
             sqlRoleDO = roleDAO.getRoleByRUUID(data);
-        } else if (type.equals("roleName")) {
+        } else if (ROLE_TYPE_ROLE_ID.equals(type)) {
             sqlRoleDO = roleDAO.getRoleByRoleName(data);
         }
         //  未查询，返回null
@@ -198,7 +198,7 @@ public class RoleServiceImpl implements RoleService {
         //  封装数据
         RoleInfoVO roleInfoVO = new RoleInfoVO();
         Util.INSTANCE.copyPropertiesData(sqlRoleDO, roleInfoVO);
-        if (sqlRoleDO.getPermissions() != "[]") {
+        if ( ! sqlRoleDO.getPermissions().equals(gson.toJson(new String[0])) ) {
             roleInfoVO.setPermissions(gson.fromJson(sqlRoleDO.getPermissions(),String[].class));
         } else {
             roleInfoVO.setPermissions(new String[0]);
