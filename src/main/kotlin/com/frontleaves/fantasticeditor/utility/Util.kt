@@ -248,7 +248,7 @@ object Util {
                     continue
                 }
 
-                //如果获取的值不为数字且等于“”，则跳过
+                //  如果获取的值不为数字且等于“”，则跳过
                 if ("" == value) {
                     continue
                 }
@@ -260,7 +260,8 @@ object Util {
                 targetField.set(target, value)
             }
         } catch (e: NoSuchFieldException) {
-
+            //
         }
+
     }
 }
