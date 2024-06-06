@@ -63,6 +63,6 @@ interface RoleService {
         uuids: List<String>,
         usernames: List<String>,
         ruuids: List<String>,
-        roleNames: List<String>
+        roleNames: List<String>,
     ): List<RoleInfoVO>
 }
