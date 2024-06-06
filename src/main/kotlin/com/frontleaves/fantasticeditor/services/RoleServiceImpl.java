@@ -155,8 +155,8 @@ public class RoleServiceImpl implements RoleService {
         return roleInfoVoS;
     }
 
-    private final String ROLE_TYPE_ROLE_NAME = "roleName";
-    private final String ROLE_TYPE_ROLE_ID = "ruuid";
+    private final String roleTypeName = "roleName";
+    private final String roleTypeId = "ruuid";
 
     /**
      * ## 封装角色信息 根据ruuid或角色名称查询到角色数据，然后进行封装
@@ -168,9 +168,9 @@ public class RoleServiceImpl implements RoleService {
     private RoleInfoVO encapsulateRoleByIdOrName(final String data, final String type) {
         // 查询角色数据
         SqlRoleDO sqlRoleDO = null;
-        if (ROLE_TYPE_ROLE_NAME.equals(type)) {
+        if (roleTypeName.equals(type)) {
             sqlRoleDO = roleDAO.getRoleByRUUID(data);
-        } else if (ROLE_TYPE_ROLE_ID.equals(type)) {
+        } else if (roleTypeId.equals(type)) {
             sqlRoleDO = roleDAO.getRoleByRoleName(data);
         }
         // 未查询，返回null
