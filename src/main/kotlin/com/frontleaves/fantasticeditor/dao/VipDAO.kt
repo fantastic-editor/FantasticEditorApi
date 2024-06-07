@@ -53,5 +53,4 @@ class VipDAO(private val redisUtil: RedisUtil) :
             this.getOne(QueryWrapper<SqlVipDO>().eq("vuuid", vuuid))
         }
     }
-
 }

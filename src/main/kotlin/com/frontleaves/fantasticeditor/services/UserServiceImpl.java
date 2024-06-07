@@ -366,10 +366,10 @@ public class UserServiceImpl implements UserService {
 			//  设置用户角色名称与id
 			SqlRoleDO roleDO = roleDAO.getRoleByRUUID(userDO.getRole());
 			userVO.setRoleName(
-					(roleDO != null && roleDO.getDisplayName() != null) ?
-							roleDO.getDisplayName() : "");
-			userVO.setRoleId((roleDO != null && roleDO.getRuuid() != null) ?
-					roleDO.getRuuid() : "");
+					(roleDO != null && roleDO.getDisplayName() != null)
+							? roleDO.getDisplayName() : "");
+			userVO.setRoleId((roleDO != null && roleDO.getRuuid() != null)
+					? roleDO.getRuuid() : "");
 
 			redisUtil.setHasKey(redisKey, Util.INSTANCE.objectToMap(userVO));
 		}

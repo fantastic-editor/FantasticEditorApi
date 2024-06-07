@@ -215,7 +215,6 @@ object Util {
         return target.getDeclaredConstructor().newInstance()
     }
 
-
     /**
      * 将属性从源对象复制到目标对象。
      *
@@ -249,7 +248,7 @@ object Util {
                     continue
                 }
 
-                //如果获取的值不为数字且等于“”，则跳过
+                //  如果获取的值不为数字且等于“”，则跳过
                 if ("" == value) {
                     continue
                 }
@@ -264,5 +263,4 @@ object Util {
             //  忽略异常
         }
     }
-
 }
