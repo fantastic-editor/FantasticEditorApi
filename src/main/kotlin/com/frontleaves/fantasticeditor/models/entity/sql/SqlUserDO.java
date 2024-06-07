@@ -26,27 +26,28 @@ import java.sql.Timestamp;
  * <p>
  * 用于定义用户实体类；
  *
- * @since v1.0.0
  * @author xiao_lfeng
+ * @since v1.0.0
  */
 @Data
 @NoArgsConstructor
 @TableName("fy_user")
 @Accessors(chain = true)
 public class SqlUserDO {
-    public String uuid;
-    public String username;
-    public String email;
-    public String phone;
-    public String password;
-    public String oldPassword;
-    public String avatar;
-    public String otpAuth;
-    public Boolean mailVerify;
-    public Boolean phoneVerify;
-    public String basicInformation;
-    public String role;
-    public String vip;
-    public Timestamp createdAt;
-    public Timestamp updatedAt;
+	public String uuid;
+	public String username;
+	public String email;
+	public String phone;
+	public String password;
+	public String oldPassword;
+	public String avatar;
+	public String otpAuth;
+	public Boolean mailVerify;
+	public Boolean phoneVerify;
+	public String basicInformation;
+	public String role;
+	public String vip;
+	public Timestamp createdAt;
+	public Timestamp updatedAt;
 }
+

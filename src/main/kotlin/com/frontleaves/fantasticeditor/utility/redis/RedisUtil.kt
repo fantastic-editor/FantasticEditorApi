@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+
 /**
  * # Redis 工具
  * 用于定义 Redis 工具

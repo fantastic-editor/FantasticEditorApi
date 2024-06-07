@@ -12,33 +12,41 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.entity.sql;
+package com.frontleaves.fantasticeditor.models.vo.api.user;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.sql.Timestamp;
-
 /**
- * 付费会员实体类
+ * 用户基本信息
  * <p>
- * 用于定义付费会员实体类；
  *
- * @author xiao_lfeng
+ * @author zrx
+ * @date 2024/5/31 21:33
  * @since v1.0.0
  */
 @Data
 @NoArgsConstructor
-@TableName("fy_vip")
 @Accessors(chain = true)
-public class SqlVipDO {
-	public String vuuid;
-	public String name;
-	public String displayName;
-	public Long price;
-	public String description;
-	public Timestamp updatedAt;
+public class UserPublicInfoVO {
+	public String uuid;
+
+	public String username;
+
+	public String email;
+
+	public String phone;
+
+	public String basicInformation;
+
+	public String roleId;
+
+	public String roleName;
+
+	public String vipId;
+
+	public String vipName;
 }
+
 

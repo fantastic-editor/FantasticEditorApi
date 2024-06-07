@@ -12,33 +12,44 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.entity.sql;
+package com.frontleaves.fantasticeditor.models.entity.redis;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.sql.Timestamp;
-
 /**
- * 付费会员实体类
+ * Redis用户基本信息实体
  * <p>
- * 用于定义付费会员实体类；
- *
- * @author xiao_lfeng
+ * 用于存储用户基本信息的实体
  * @since v1.0.0
+ * @version v1.0.0
+ * @author zrx
+ * @date 2024/6/1 8:45
  */
 @Data
 @NoArgsConstructor
-@TableName("fy_vip")
 @Accessors(chain = true)
-public class SqlVipDO {
-	public String vuuid;
-	public String name;
-	public String displayName;
-	public Long price;
-	public String description;
-	public Timestamp updatedAt;
+public class RedisUserPublicInfoDO {
+
+	public String uuid;
+
+	public String username;
+
+	public String email;
+
+	public String phone;
+
+	public String basicInformation;
+
+	public String roleId;
+
+	public String roleName;
+
+	public String vipId;
+
+	public String vipName;
+
 }
+
 

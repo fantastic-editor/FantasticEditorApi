@@ -12,33 +12,19 @@
  * *******************************************************************************
  */
 
-package com.frontleaves.fantasticeditor.models.entity.sql;
+package com.frontleaves.fantasticeditor.mappers
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
-import java.sql.Timestamp;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper
+import com.frontleaves.fantasticeditor.models.entity.sql.SqlVipDO
+import org.apache.ibatis.annotations.Mapper
 
 /**
- * 付费会员实体类
- * <p>
- * 用于定义付费会员实体类；
+ * # 会员映射器
+ * 用于定义会员映射器；
  *
- * @author xiao_lfeng
  * @since v1.0.0
+ * @constructor 创建一个会员映射器
+ * @author zrx
  */
-@Data
-@NoArgsConstructor
-@TableName("fy_vip")
-@Accessors(chain = true)
-public class SqlVipDO {
-	public String vuuid;
-	public String name;
-	public String displayName;
-	public Long price;
-	public String description;
-	public Timestamp updatedAt;
-}
-
+@Mapper
+interface VipMapper : BaseMapper<SqlVipDO>
