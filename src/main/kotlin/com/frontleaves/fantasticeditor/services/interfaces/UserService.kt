@@ -18,7 +18,6 @@ import com.frontleaves.fantasticeditor.models.dto.UserCurrentDTO
 import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserLoginVO
 import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserRegisterVO
 import com.frontleaves.fantasticeditor.models.vo.api.user.UserPublicInfoVO
-import jakarta.servlet.http.HttpServletRequest
 
 /**
  * ## 用户服务接口
@@ -76,7 +75,7 @@ interface UserService {
     fun sendMailVerify(email: String)
 
     /**
-     * 
+     *
      *
      *
      * @return 用户公开信息实体类

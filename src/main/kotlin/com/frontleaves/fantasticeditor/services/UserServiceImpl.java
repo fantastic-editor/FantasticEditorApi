@@ -358,14 +358,18 @@ public class UserServiceImpl implements UserService {
 			}
 
 			userVO.setVipName(
-					(vipDO != null && vipDO.getDisplayName() != null) ? vipDO.getDisplayName() : "");
+					(vipDO != null && vipDO.getDisplayName() != null)
+							? vipDO.getDisplayName() : "");
 			userVO.setVipId(
-					(vipDO != null && vipDO.getVuuid() != null) ? vipDO.getVuuid() : "");
+					(vipDO != null && vipDO.getVuuid() != null)
+							? vipDO.getVuuid() : "");
 			//  设置用户角色名称与id
 			SqlRoleDO roleDO = roleDAO.getRoleByRUUID(userDO.getRole());
 			userVO.setRoleName(
-					(roleDO != null && roleDO.getDisplayName() != null) ? roleDO.getDisplayName() : "");
-			userVO.setRoleId((roleDO != null && roleDO.getRuuid() != null) ? roleDO.getRuuid() : "");
+					(roleDO != null && roleDO.getDisplayName() != null) ?
+							roleDO.getDisplayName() : "");
+			userVO.setRoleId((roleDO != null && roleDO.getRuuid() != null) ?
+					roleDO.getRuuid() : "");
 
 			redisUtil.setHasKey(redisKey, Util.INSTANCE.objectToMap(userVO));
 		}
