@@ -75,8 +75,10 @@ interface UserService {
     fun sendMailVerify(email: String)
 
 
-    fun getUserProfileInfos(uuids: MutableList<String>,
-                            usernames: MutableList<String>,
-                            phones: MutableList<String>,
-                            emails: MutableList<String>) : List<UserPublicInfoVO>
+    fun getUserProfileInfos(
+        uuids: MutableList<String>,
+        usernames: MutableList<String>,
+        phones: MutableList<String>,
+        emails: MutableList<String>,
+    ): List<UserPublicInfoVO>
 }

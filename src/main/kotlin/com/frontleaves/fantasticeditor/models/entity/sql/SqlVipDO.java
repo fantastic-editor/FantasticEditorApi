@@ -26,18 +26,19 @@ import java.sql.Timestamp;
  * <p>
  * 用于定义付费会员实体类；
  *
- * @since v1.0.0
  * @author xiao_lfeng
+ * @since v1.0.0
  */
 @Data
 @NoArgsConstructor
 @TableName("fy_vip")
 @Accessors(chain = true)
 public class SqlVipDO {
-    public String vuuid;
-    public String name;
-    public String displayName;
-    public Long price;
-    public String description;
-    public Timestamp updatedAt;
+	public String vuuid;
+	public String name;
+	public String displayName;
+	public Long price;
+	public String description;
+	public Timestamp updatedAt;
 }
+

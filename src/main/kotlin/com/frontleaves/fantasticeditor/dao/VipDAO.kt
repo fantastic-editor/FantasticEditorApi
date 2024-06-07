@@ -17,9 +17,7 @@ package com.frontleaves.fantasticeditor.dao
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.extension.service.IService
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
-import com.frontleaves.fantasticeditor.mappers.UserMapper
 import com.frontleaves.fantasticeditor.mappers.VipMapper
-import com.frontleaves.fantasticeditor.models.entity.sql.SqlUserDO
 import com.frontleaves.fantasticeditor.models.entity.sql.SqlVipDO
 import com.frontleaves.fantasticeditor.utility.Util
 import com.frontleaves.fantasticeditor.utility.redis.RedisUtil
@@ -37,8 +35,7 @@ import org.springframework.stereotype.Repository
  * @author zrx
  */
 @Repository
-class VipDAO (private val redisUtil: RedisUtil,)
-    : ServiceImpl<VipMapper, SqlVipDO>(), IService<SqlVipDO> {
+class VipDAO(private val redisUtil: RedisUtil) : ServiceImpl<VipMapper, SqlVipDO>(), IService<SqlVipDO> {
 
     /**
      * ## 通过UUID获取会员
@@ -47,12 +44,11 @@ class VipDAO (private val redisUtil: RedisUtil,)
      * @param vuuid 会员UUID
      * @return 会员实体类
      */
-    fun getVipByVUUID(vuuid: String) : SqlVipDO? {
+    fun getVipByVUUID(vuuid: String): SqlVipDO? {
         return redisUtil.hashGet("vip:vuuid:$vuuid").takeIf { !it.isNullOrEmpty() }?.let {
             Util.mapToObject(it, SqlVipDO::class.java)
         } ?: run {
             this.getOne(QueryWrapper<SqlVipDO>().eq("vuuid", vuuid))
         }
     }
-
 }
