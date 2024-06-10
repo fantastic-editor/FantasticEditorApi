@@ -17,6 +17,7 @@ package com.frontleaves.fantasticeditor.utility
 import com.frontleaves.fantasticeditor.exceptions.BusinessException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.crypto.bcrypt.BCrypt
+import java.lang.reflect.Field
 import java.util.*
 
 /**
@@ -212,5 +213,54 @@ object Util {
             }
         }
         return target.getDeclaredConstructor().newInstance()
+    }
+
+    /**
+     * 将属性从源对象复制到目标对象。
+     *
+     * @param S 源对象的类型。
+     * @param T 目标对象的类型。
+     * @param source 从中复制属性的源对象。
+     * @param target 属性将复制到的目标对象。
+     */
+    fun <S : Any, T : Any> copyPropertiesData(source: S, target: T) {
+        val sourceClass: Class<*> = source.javaClass
+        val targetClass: Class<*> = target.javaClass
+
+        try {
+            val sourceFields: Array<Field> = sourceClass.declaredFields
+            for (sourceField in sourceFields) {
+                val fieldName: String = sourceField.name
+                val targetField: Field
+                targetField = try {
+                    targetClass.getDeclaredField(fieldName)
+                } catch (e: NoSuchFieldException) {
+                    // 目标对象不存在该属性，忽略
+                    continue
+                }
+
+                sourceField.isAccessible = true
+                targetField.isAccessible = true
+
+                val value: Any? = sourceField.get(source)
+
+                if (value == null) {
+                    continue
+                }
+
+                //  如果获取的值不为数字且等于“”，则跳过
+                if ("" == value) {
+                    continue
+                }
+
+                if (sourceField.type != targetField.type) {
+                    continue
+                }
+
+                targetField.set(target, value)
+            }
+        } catch (e: NoSuchFieldException) {
+            //  忽略异常
+        }
     }
 }

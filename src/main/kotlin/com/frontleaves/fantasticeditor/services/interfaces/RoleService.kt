@@ -15,6 +15,7 @@
 package com.frontleaves.fantasticeditor.services.interfaces
 
 import com.frontleaves.fantasticeditor.models.vo.api.role.RoleCustomEditVO
+import com.frontleaves.fantasticeditor.models.vo.api.role.RoleInfoVO
 
 /**
  * # 角色服务接口
@@ -35,6 +36,7 @@ interface RoleService {
      * @return 编辑结果
      */
     fun editCustomRole(roleCustomEditVO: RoleCustomEditVO, roleId: String): Boolean
+
     /**
      * ## 添加角色
      * 添加角色，根据传入 VO 信息对角色进行添加；
@@ -45,4 +47,22 @@ interface RoleService {
      * @return 添加结果
      * */
     fun addRole(roleCustomEditVO: RoleCustomEditVO): Boolean
+
+    /**
+     * ## 获取角色信息
+     * 通过uuid、username获取用户所属的角色信息
+     * 通过ruuid、roleName获取角色信息
+     *
+     * @param uuid 用户id
+     * @param username 用户名
+     * @param ruuid 角色id
+     * @param roleName 角色名称
+     * @return 角色信息
+     */
+    fun getUserRoleInfo(
+        uuids: List<String>,
+        usernames: List<String>,
+        ruuids: List<String>,
+        roleNames: List<String>,
+    ): List<RoleInfoVO>
 }
