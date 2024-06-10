@@ -128,7 +128,7 @@ class MailServiceImpl(
     @Transactional
     override fun sendVerifyCodeMail(email: String, verifyCode: String, template: MailTemplateEnum) {
         // 检查该模板是否允许发送验证码
-        if (!template.hashCode) {
+        if (!template.hasCode) {
             throw MailTemplateNotFoundException("该模板不支持发送验证码")
         }
         val parameters = mapOf("code" to verifyCode)

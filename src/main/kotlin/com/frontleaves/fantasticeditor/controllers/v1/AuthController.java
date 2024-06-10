@@ -16,6 +16,7 @@ package com.frontleaves.fantasticeditor.controllers.v1;
 
 import com.frontleaves.fantasticeditor.exceptions.library.CheckFailureException;
 import com.frontleaves.fantasticeditor.models.dto.UserCurrentDTO;
+import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserEditPasswordVO;
 import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserLoginVO;
 import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserRegisterVO;
 import com.frontleaves.fantasticeditor.services.interfaces.SmsService;
@@ -107,5 +108,26 @@ public class AuthController {
         // 发送验证码
         userService.sendRegisterPhoneCode(phone);
         return ResultUtil.success("发送成功");
+    }
+
+    /**
+     * 修改密码
+     * <p>
+     * 修改密码
+     *
+     * @param authUserEditPasswordVO 修改密码信息
+     * @return 修改结果
+     */
+    @PostMapping("/edit/password")
+    public ResponseEntity<BaseResponse<Void>> editPassword(
+            @NotNull @RequestBody final AuthUserEditPasswordVO authUserEditPasswordVO,
+            @RequestHeader("X-USER-UUID") final String userUuid
+    ) {
+        // 修改密码
+        if (userService.editPassword(authUserEditPasswordVO, userUuid)) {
+            return ResultUtil.success("修改密码成功");
+        } else {
+            throw new CheckFailureException("修改密码失败");
+        }
     }
 }

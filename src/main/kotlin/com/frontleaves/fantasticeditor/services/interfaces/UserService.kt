@@ -15,6 +15,7 @@
 package com.frontleaves.fantasticeditor.services.interfaces
 
 import com.frontleaves.fantasticeditor.models.dto.UserCurrentDTO
+import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserEditPasswordVO
 import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserLoginVO
 import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserRegisterVO
 
@@ -72,4 +73,5 @@ interface UserService {
      * @return 成功发送返回真，否则返回假
      */
     fun sendMailVerify(email: String)
+    fun editPassword(authUserEditPasswordVO: AuthUserEditPasswordVO, uuid: String): Boolean
 }
