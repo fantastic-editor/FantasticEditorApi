@@ -17,6 +17,7 @@ package com.frontleaves.fantasticeditor.services.interfaces
 import com.frontleaves.fantasticeditor.models.dto.UserCurrentDTO
 import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserLoginVO
 import com.frontleaves.fantasticeditor.models.vo.api.auth.AuthUserRegisterVO
+import com.frontleaves.fantasticeditor.models.vo.api.user.UserPublicInfoVO
 
 /**
  * ## 用户服务接口
@@ -72,4 +73,12 @@ interface UserService {
      * @return 成功发送返回真，否则返回假
      */
     fun sendMailVerify(email: String)
+
+    /**
+     *
+     *
+     *
+     * @return 用户公开信息实体类
+     */
+    fun getMyUserProfileInfo(uuid: String): UserPublicInfoVO
 }
